@@ -1,14 +1,19 @@
 // pages/Login.js
 import React from "react";
+import Image from "next/image";
 
 const Login = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left half with background image */}
-      <div
-        className="flex-1 bg-cover"
-        style={{ backgroundImage: "url('/medease/images/background.jpg')" }}
-      />
+      <div className="flex-1 relative">
+        <Image
+          src="/images/background.jpg"
+          layout="fill"
+          objectFit="cover"
+          alt="Background"
+        />
+      </div>
 
       {/* Right half with login form */}
       <div className="flex-1 flex items-center justify-center">
