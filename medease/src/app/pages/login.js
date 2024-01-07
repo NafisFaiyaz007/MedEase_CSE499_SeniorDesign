@@ -1,6 +1,8 @@
 // pages/Login.js
 import React from "react";
 import Image from "next/image";
+import Link from "next/link"; // Import the Link component from Next.js
+
 
 const Login = () => {
   return (
@@ -72,9 +74,9 @@ const Login = () => {
             </form>
             <p className="mt-4 text-gray-600 text-sm">
               Don't have an account?{" "}
-              <a href="signup.js" className="text-blue-500 hover:underline">
+              <Link href="/medease/src/app/pages/signup.js" className="text-blue-500 hover:underline">
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
