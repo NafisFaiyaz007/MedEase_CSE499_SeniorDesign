@@ -1,10 +1,12 @@
+'use client'
 // pages/Login.js
 import React from "react";
 import Image from "next/image";
 import Link from "next/link"; // Import the Link component from Next.js
-
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const router = useRouter()
   return (
     <div className="min-h-screen relative">
       {/* Background image */}
@@ -74,7 +76,7 @@ const Login = () => {
             </form>
             <p className="mt-4 text-gray-600 text-sm">
               Don't have an account?{" "}
-              <Link href="/medease/src/app/pages/signup.js" className="text-blue-500 hover:underline">
+              <Link href={"/signup"} className="text-blue-500 hover:underline">
                 Sign up
               </Link>
             </p>
