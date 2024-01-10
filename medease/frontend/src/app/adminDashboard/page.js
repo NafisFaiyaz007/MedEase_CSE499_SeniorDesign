@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
+import Navbar from "../components/navbar";
 
 // Dummy analytics data, replace with your actual data
 const analyticsData = {
@@ -98,33 +99,8 @@ const analyticsCards = [
         <title>Admin Dashboard</title>
       </Head>
       {/* Navbar */}
-      <nav className="bg-slate-200 backdrop-blur-md px-6 py-3 shadow-md mb-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            {/* Image Icon */}
-            <div className="mx-4">
-              <Image
-                src="/images/logo.png"
-                alt="Admin Icon"
-                width={200}
-                height={40} // Adjust the height value accordingly
-              />
-            </div>
-            {/* Admin Dashboard Text */}
-          </div>
-          {/* Logged-in User Info */}
-          <div className="flex items-center">
-            <p className="text-gray-900 m-4">Logged in as {adminName}</p>
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="text-white  bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </nav>
+      {/* Navbar Component */}
+      <Navbar adminName={adminName} handleLogout={handleLogout} />
 
       {/* Content */}
       <div className="container mx-auto p-4">
@@ -154,6 +130,17 @@ const analyticsCards = [
             } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
           >
             Create Account
+          </button>
+
+          <button
+            onClick={() => setActiveTab("DeleteAccount")}
+            className={`${
+              activeTab === "createAccount"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-600"
+            } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+          >
+            Delete Account
           </button>
         </div>
 
