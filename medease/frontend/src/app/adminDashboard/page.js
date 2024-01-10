@@ -25,27 +25,27 @@ const analyticsCards = [
   {
     title: "Total Users",
     count: analyticsData.totalUsers,
-    icon: "/medease/frontend/public/images/admin.png", // Replace with your actual image path
+    icon: "/images/admin.png", // Replace with your actual image path
   },
   {
     title: "Total Patients",
     count: analyticsData.totalPatients,
-    icon: "/medease/frontend/public/images/patient.png", // Replace with your actual image path
+    icon: "/images/patient.png", // Replace with your actual image path
   },
   {
     title: "Total Doctors",
     count: analyticsData.totalDoctors,
-    icon: "/medease/frontend/public/images/doctor.png", // Replace with your actual image path
+    icon: "/images/doctor.png", // Replace with your actual image path
   },
   {
     title: "Total Hospitals",
     count: analyticsData.totalHospitals,
-    icon: "/medease/frontend/public/images/hospital.png", // Replace with your actual image path
+    icon: "/images/hospital.png", // Replace with your actual image path
   },
   {
     title: "Total Pharmacies",
     count: analyticsData.totalPharmacies,
-    icon: "/medease/frontend/public/images/pharmacy.png", // Replace with your actual image path
+    icon: "/images/pharmacy.png", // Replace with your actual image path
   },
 ];
 
@@ -88,7 +88,7 @@ const analyticsCards = [
     {
       type: "pharmacy",
       title: "Create Pharmacy Account",
-      icon: "/images/pharmacy.jng",
+      icon: "/images/pharmacy.png",
     },
   ];
 
@@ -129,7 +129,9 @@ const analyticsCards = [
       {/* Content */}
       <div className="container mx-auto p-4">
         {/* Admin Dashboard Text */}
-        <h1 className="text-3xl font-semibold my-6 text-white">Admin Dashboard</h1>
+        <h1 className="text-3xl font-semibold my-6 text-white">
+          Admin Dashboard
+        </h1>
 
         {/* Tabs */}
         <div className="flex space-x-4 mb-6">
@@ -139,7 +141,7 @@ const analyticsCards = [
               activeTab === "dashboard"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-600"
-            } px-6 py-3 rounded-md focus:outline-none transition duration-300`}
+            } px-6 py-3 rounded-md focus:outline-none  hover:bg-blue-800 hover:text-white transition duration-300`}
           >
             Dashboard
           </button>
@@ -149,7 +151,7 @@ const analyticsCards = [
               activeTab === "createAccount"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-600"
-            } px-6 py-3 rounded-md focus:outline-none transition duration-300`}
+            } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
           >
             Create Account
           </button>
@@ -272,7 +274,7 @@ const analyticsCards = [
                   <button
                     type="button"
                     onClick={handleCreateAccountModalClose}
-                    className="text-gray-600 hover:text-gray-800 focus:outline-none transition duration-300"
+                    className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-300 focus:outline-none transition duration-300"
                   >
                     Cancel
                   </button>
