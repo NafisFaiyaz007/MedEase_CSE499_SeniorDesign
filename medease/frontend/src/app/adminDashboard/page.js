@@ -21,33 +21,33 @@ const AdminDashboard = () => {
 
   const adminName = "John Doe"; // Replace with the actual admin name
 
-  const analyticsCards = [
-    {
-      title: "Total Users",
-      count: analyticsData.totalUsers,
-      icon: "/icons/users.svg", // Replace with your actual icon path
-    },
-    {
-      title: "Total Patients",
-      count: analyticsData.totalPatients,
-      icon: "/icons/patients.svg", // Replace with your actual icon path
-    },
-    {
-      title: "Total Doctors",
-      count: analyticsData.totalDoctors,
-      icon: "/icons/doctors.svg", // Replace with your actual icon path
-    },
-    {
-      title: "Total Hospitals",
-      count: analyticsData.totalHospitals,
-      icon: "/icons/hospitals.svg", // Replace with your actual icon path
-    },
-    {
-      title: "Total Pharmacies",
-      count: analyticsData.totalPharmacies,
-      icon: "/icons/pharmacies.svg", // Replace with your actual icon path
-    },
-  ];
+const analyticsCards = [
+  {
+    title: "Total Users",
+    count: analyticsData.totalUsers,
+    icon: "/medease/frontend/public/images/admin.png", // Replace with your actual image path
+  },
+  {
+    title: "Total Patients",
+    count: analyticsData.totalPatients,
+    icon: "/medease/frontend/public/images/patient.png", // Replace with your actual image path
+  },
+  {
+    title: "Total Doctors",
+    count: analyticsData.totalDoctors,
+    icon: "/medease/frontend/public/images/doctor.png", // Replace with your actual image path
+  },
+  {
+    title: "Total Hospitals",
+    count: analyticsData.totalHospitals,
+    icon: "/medease/frontend/public/images/hospital.png", // Replace with your actual image path
+  },
+  {
+    title: "Total Pharmacies",
+    count: analyticsData.totalPharmacies,
+    icon: "/medease/frontend/public/images/pharmacy.png", // Replace with your actual image path
+  },
+];
 
   const handleLogout = () => {
     // Implement your logout logic here
