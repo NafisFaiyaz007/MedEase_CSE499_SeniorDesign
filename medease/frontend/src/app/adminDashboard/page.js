@@ -190,7 +190,7 @@ const analyticsCards = [
               <div
                 key={index}
                 onClick={() => handleCreateAccountClick(account.type)}
-                className="bg-white p-6 rounded-md shadow-md flex flex-col items-center justify-between cursor-pointer transition duration-300 transform hover:scale-105"
+                className="bg-white hover:bg-gray-400 p-6 rounded-md shadow-md flex flex-col items-center justify-between cursor-pointer transition duration-300 transform hover:scale-105"
               >
                 <Image
                   src={account.icon}
