@@ -77,17 +77,18 @@ const analyticsCards = [
     {
       type: "hospital",
       title: "Create Hospital Account",
-      icon: "/images/hospital.jpg",
+      icon: "/images/hospital.png",
+      
     },
     {
       type: "doctor",
       title: "Create Doctor Account",
-      icon: "/images/doctor.jpg",
+      icon: "/images/doctor.png",
     },
     {
       type: "pharmacy",
       title: "Create Pharmacy Account",
-      icon: "/images/pharmacy.jpg",
+      icon: "/images/pharmacy.jng",
     },
   ];
 
@@ -96,20 +97,28 @@ const analyticsCards = [
       <Head>
         <title>Admin Dashboard</title>
       </Head>
-
       {/* Navbar */}
-      <nav className="bg-white p-4 bg-opacity-60 backdrop-blur-md shadow-md mb-4">
+      <nav className="bg-slate-200 backdrop-blur-md px-6 py-3 shadow-md mb-4">
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-semibold text-blue-100">
-              Admin Dashboard
-            </h1>
-          </div>
           <div className="flex items-center">
-            <p className="text-gray-600 mr-4">Logged in as {adminName}</p>
+            {/* Image Icon */}
+            <div className="mx-4">
+              <Image
+                src="/images/logo.png"
+                alt="Admin Icon"
+                width={200}
+                height={40} // Adjust the height value accordingly
+              />
+            </div>
+            {/* Admin Dashboard Text */}
+          </div>
+          {/* Logged-in User Info */}
+          <div className="flex items-center">
+            <p className="text-gray-900 m-4">Logged in as {adminName}</p>
+            {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="text-white bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+              className="text-white  bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
             >
               Logout
             </button>
@@ -119,6 +128,9 @@ const analyticsCards = [
 
       {/* Content */}
       <div className="container mx-auto p-4">
+        {/* Admin Dashboard Text */}
+        <h1 className="text-3xl font-semibold my-6 text-white">Admin Dashboard</h1>
+
         {/* Tabs */}
         <div className="flex space-x-4 mb-6">
           <button
