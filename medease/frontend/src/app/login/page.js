@@ -67,11 +67,11 @@ const Login = () => {
                   placeholder="Enter your password"
                 />
               </div>
-              <Link href="/adminDashboard">
-                type="submit"
-                <a className="bg-blue-600 text-white p-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 transition duration-300">
+              <Link href="/adminDashboard"
+                
+                 className="bg-blue-600 text-white p-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 transition duration-300">
                   Login
-                </a>
+                
               </Link>
             </form>
             <p className="mt-4 text-gray-600 text-sm">

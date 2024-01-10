@@ -1,4 +1,4 @@
-
+'use client'
 // pages/admin/dashboard.js
 import React from "react";
 import Link from "next/link";
