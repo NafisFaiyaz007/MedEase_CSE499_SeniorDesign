@@ -2,8 +2,10 @@ const express = require('express');
 const dbConnection = require('./db');
 // const bodyParser = require('body-parser');
 const app = express();
+var cors = require('cors')
 const port = 8000;
 
+app.use(cors())
 app.get('/', (req, res) => {
   res.send('Welcome to my MedEase!');
 });

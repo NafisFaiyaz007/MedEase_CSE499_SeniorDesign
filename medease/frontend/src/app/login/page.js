@@ -1,12 +1,45 @@
 'use client'
 // pages/Login.js
-import React from "react";
+import {React, useState}  from "react";
 import Image from "next/image";
 import Link from "next/link"; // Import the Link component from Next.js
 import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 const Login = () => {
   const router = useRouter()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/users/login', {
+      email,
+      password
+      
+      });
+
+      // Handle successful login (e.g., store token, redirect, etc.)
+      console.log('Login successful:', response.data);
+      // Redirect based on user type
+      const userType = response.data.userType; // Assuming the server sends the user type in the response
+      if (userType === 1) {
+        router.push('/adminDashboard'); // Redirect to admin page
+      } else if (userType === 2){
+        router.push('/hospitalDashboard'); // Redirect to home page or another appropriate page
+      }
+        else if (userType === 3){
+        router.push('/doctorDashboard');
+        }
+        else if (userType === 4){
+        router.push('/patientDashboard');
+        }
+        else 
+        router.push('/pharmacyDashboard');
+    } catch (error) {
+      // Handle login error
+      console.error('Login error:', error.response ? error.response.data : error.message);
+    }
+  };
   return (
     <div className="min-h-screen relative">
       {/* Background image */}
@@ -39,17 +72,19 @@ const Login = () => {
             <form className="w-full">
               <div className="mb-6">
                 <label
-                  htmlFor="username"
+                  htmlFor="email"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  Username
+                  Email
                 </label>
                 <input
                   type="text"
-                  id="username"
-                  name="username"
+                  id="email"
+                  name="email"
                   className="mt-1 p-4 w-full border rounded-lg"
-                  placeholder="Enter your username"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-6">
@@ -65,9 +100,10 @@ const Login = () => {
                   name="password"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your password"
+                  value={password} onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Link href="/adminDashboard"
+              <Link href= "" onClick={handleLogin}
                 
                  className="bg-blue-600 text-white p-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 transition duration-300">
                   Login

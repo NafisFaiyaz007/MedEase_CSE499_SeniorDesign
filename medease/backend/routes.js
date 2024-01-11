@@ -12,22 +12,30 @@ router.get('/s', (req, res) => {
   });
 // User creation
 router.post('/register', async (req, res) => {
-  try {
-    const { name, email, dateOfBirth, phone, userType, password  } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Save user to the database
-    const [results] = await connection.execute(
-      'INSERT INTO users (Name, Email, dateOfBirth, Phone, userType, Password) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, email, dateOfBirth, phone, userType, hashedPassword]
-    );
-
-    res.json({ userId: results.insertId, message: 'User created successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+    try {
+      const { name, email, dateOfBirth, phone, address, userType, password } = req.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const fields = ['name', 'email', 'dateOfBirth', 'phone', 'address', 'userType', 'password'];
+      const values = [name, email, dateOfBirth, phone, address, userType, hashedPassword];
+  
+      // Remove undefined or null values to handle optional fields
+      const validValues = values.filter(value => value !== undefined && value !== null);
+  
+      const placeholders = validValues.map(() => '?').join(', ');
+  
+      const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
+  
+      // Save user to the database
+      const [results] = await connection.execute(query, validValues);
+  
+      // Handle successful insertion
+      res.json({ userId: results.insertId, message: 'User created successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 
 // User login
 router.post('/login', async (req, res) => {
@@ -55,7 +63,7 @@ router.post('/login', async (req, res) => {
       expiresIn: '1h',
     });
 
-    res.json({ token });
+    res.json({ token, userType: user[0].userType });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

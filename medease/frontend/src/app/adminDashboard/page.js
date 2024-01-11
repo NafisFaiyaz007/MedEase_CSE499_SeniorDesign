@@ -5,6 +5,8 @@ import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import Navbar from "../components/navbar";
+import axios from 'axios';
+
 
 // Dummy analytics data, replace with your actual data
 const analyticsData = {
@@ -64,8 +66,34 @@ const analyticsCards = [
     setShowCreateAccountModal(false);
   };
 
-  const handleCreateAccountSubmit = (formData) => {
+  const handleCreateAccountSubmit = async (formData) => {
     // Implement logic to handle form submission (e.g., send data to server)
+    try {
+      let uType = 5;
+      if(selectedAccountType.toLocaleLowerCase() === 'hospital')
+        uType = 2
+      else if(selectedAccountType.toLowerCase() === 'doctor')
+        uType = 3;
+      
+      const response = await axios.post('http://localhost:8000/api/users/register', {
+        ...formData,
+        "userType": uType,   
+        "dateOfBirth": null,
+      });
+
+      console.log(response.data);
+      // Handle success or redirect to login page
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code other than 2xx
+        console.error('Registration error:', error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from the server');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up the request', error.message);
+      }}
     console.log(
       `Form submitted for ${selectedAccountType} with data:`,
       formData
@@ -223,7 +251,7 @@ const analyticsCards = [
                 {/* Add form fields here */}
                 <div className="mb-4">
                   <label
-                    htmlFor="accountName"
+                    htmlFor="name"
                     className="block text-sm font-medium text-gray-700"
                   >
                     {selectedAccountType === "hospital"
@@ -235,23 +263,73 @@ const analyticsCards = [
                   </label>
                   <input
                     type="text"
-                    id="accountName"
-                    name="accountName"
+                    id="name"
+                    name="name"
                     required
                     className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div className="mb-4">
                   <label
-                    htmlFor="accountLocation"
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    {selectedAccountType === "hospital"
+                      ? "Hospital"
+                      : selectedAccountType === "doctor"
+                      ? "Doctor"
+                      : "Pharmacy"}{" "}
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    required
+                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    required
+                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Location
                   </label>
                   <input
                     type="text"
-                    id="accountLocation"
-                    name="accountLocation"
+                    id="address"
+                    name="address"
+                    required
+                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
                     required
                     className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   />
