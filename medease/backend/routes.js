@@ -7,24 +7,50 @@ const jwt = require('jsonwebtoken');
 router.get('/message', (req, res) => {
     res.send("get method");
 });
-router.get('/s', (req, res) => {
-    res.send('User routes are working!');
-  });
 // User creation
 router.post('/register', async (req, res) => {
     try {
-      const { name, email, dateOfBirth, phone, address, userType, password } = req.body;
+      const { name, email, dateOfBirth, sex, phone, address, userType, password } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
   
-      const fields = ['name', 'email', 'dateOfBirth', 'phone', 'address', 'userType', 'password'];
-      const values = [name, email, dateOfBirth, phone, address, userType, hashedPassword];
+      const values = [name, email, dateOfBirth, sex, phone, address, userType, hashedPassword];
   
       // Remove undefined or null values to handle optional fields
       const validValues = values.filter(value => value !== undefined && value !== null);
-  
+
       const placeholders = validValues.map(() => '?').join(', ');
   
-      const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
+      // const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
+      const query = `INSERT INTO users (
+        ${Object.entries({
+          name: name,
+          email: email,
+          dateOfBirth: dateOfBirth,
+          sex: sex,
+          phone: phone,
+          address: address,
+          userType: userType,
+          password: hashedPassword,
+        })
+          .filter(([key, value]) => value !== undefined && value !== null)
+          .map(([key]) => key)
+          .join(', ')}
+      ) VALUES (
+        ${Object.entries({
+          name: name,
+          email: email,
+          dateOfBirth: dateOfBirth,
+          sex: sex,
+          phone: phone,
+          address: address,
+          userType: userType,
+          password: hashedPassword,
+        })
+          .filter(([key, value]) => value !== undefined && value !== null)
+          .map(([key, value]) => value)
+          .map(() => '?')
+          .join(', ')}
+      )`;
   
       // Save user to the database
       const [results] = await connection.execute(query, validValues);

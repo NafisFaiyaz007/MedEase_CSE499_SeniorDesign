@@ -1,8 +1,35 @@
+'use client'
 // pages/Signup.js
 import React from "react";
 import Image from "next/image";
+import axios from 'axios';
+import { useRouter } from "next/navigation";
+
 
 const Signup = () => {
+  const router = useRouter()
+  const handleSubmit = async (data) => {
+    console.log(data);
+    try {
+      const response = await axios.post('http://localhost:8000/api/users/register', {
+        ...data,
+      });
+
+      console.log(response.data);
+      router.push('/login');
+      // Handle success or redirect to login page
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code other than 2xx
+        console.error('Registration error:', error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from the server');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up the request', error.message);
+      }}
+  };
   return (
     <div className="min-h-screen relative">
       {/* Background image */}
@@ -34,20 +61,30 @@ const Signup = () => {
             <h2 className="text-3xl font-semibold text-blue-500 mb-4">
               Sign Up
             </h2>
-            <form className="w-full">
+            <form className="w-full" onSubmit={(e) => {
+                  e.preventDefault();
+                  // Extract form data and pass it to the submit handler
+                  const formData = new FormData(e.target);
+                  const data = {};
+                  formData.forEach((value, key) => {
+                    data[key] = value;
+                  });
+                  data["userType"] = 4;
+                  handleSubmit(data);
+                }}>
               <div className="mb-6">
                 <label
-                  htmlFor="username"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  Username
+                  Name
                 </label>
                 <input
                   type="text"
-                  id="username"
-                  name="username"
+                  id="name"
+                  name="name"
                   className="mt-1 p-4 w-full border rounded-lg"
-                  placeholder="Enter your username"
+                  placeholder="Enter your name"
                 />
               </div>
               <div className="mb-6">
@@ -67,15 +104,15 @@ const Signup = () => {
               </div>
               <div className="mb-6">
                 <label
-                  htmlFor="phoneNumber"
+                  htmlFor="phone"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
                   Phone Number
                 </label>
                 <input
                   type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
+                  id="phone"
+                  name="phone"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your phone number"
                 />
@@ -114,6 +151,21 @@ const Signup = () => {
               </div>
               <div className="mb-6">
                 <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  className="mt-1 p-4 w-full border rounded-lg"
+                  placeholder="Enter your address"
+                />
+              </div>
+              {/* <div className="mb-6">
+                <label
                   htmlFor="accountType"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
@@ -128,6 +180,21 @@ const Signup = () => {
                   <option value="doctor">Doctor</option>
                   <option value="other">Other</option>
                 </select>
+              </div> */}
+              <div className="mb-6">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="mt-1 p-4 w-full border rounded-lg"
+                  placeholder="Enter your password"
+                />
               </div>
               <button
                 type="submit"

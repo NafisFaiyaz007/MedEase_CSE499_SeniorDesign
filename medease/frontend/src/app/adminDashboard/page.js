@@ -74,11 +74,10 @@ const analyticsCards = [
         uType = 2
       else if(selectedAccountType.toLowerCase() === 'doctor')
         uType = 3;
-      
+      console.log(formData);
       const response = await axios.post('http://localhost:8000/api/users/register', {
         ...formData,
         "userType": uType,   
-        "dateOfBirth": null,
       });
 
       console.log(response.data);
