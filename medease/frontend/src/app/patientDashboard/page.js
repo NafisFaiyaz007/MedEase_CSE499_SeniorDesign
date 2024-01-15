@@ -10,6 +10,20 @@ const PatientDashboard = () => {
   const [activeTab, setActiveTab] = useState("viewProfile");
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
+  const [patientData, setPatientData] = useState({
+    name: "John Doe",
+    age: 30,
+    gender: "Male",
+    email: "john.doe@example.com",
+    upcomingAppointments: [
+      {
+        doctor: "Dr. Smith",
+        date: "2023-12-20",
+        time: "10:00 AM",
+      },
+      // Add more appointments as needed
+    ],
+  });
   const patientName = "John Doe"; // Replace with the actual patient's name
 
   const handleLogout = () => {
@@ -66,6 +80,7 @@ const PatientDashboard = () => {
     // You may want to show a confirmation modal and proceed accordingly
   };
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
       <Head>
@@ -79,7 +94,9 @@ const PatientDashboard = () => {
         {/* Left half */}
         <div className="flex flex-col items-start mr-8">
           {/* Patient Dashboard Text */}
-          <h1 className="text-3xl font-semibold my-6 text-white">Patient Dashboard</h1>
+          <h1 className="text-3xl font-semibold my-6 text-white">
+            Patient Dashboard
+          </h1>
 
           {/* Tabs */}
           <div className="flex flex-col space-y-4">
@@ -176,6 +193,51 @@ const PatientDashboard = () => {
                 View Profile
               </h2>
               {/* Implement your logic for displaying and editing patient profile */}
+              {/* Personal Information Section */}
+              {/* Personal Information Section */}
+              <div className="bg-white p-6 rounded-md shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Personal Information:
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-gray-700">
+                      <strong>Name:</strong> {patientData.name}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Age:</strong> {patientData.age}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Gender:</strong> {patientData.gender}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700">
+                      <strong>Email:</strong> {patientData.email}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Upcoming Appointments Section */}
+              {patientData.upcomingAppointments.length > 0 && (
+                <div className="bg-white p-6 rounded-md shadow-md">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    Upcoming Appointments:
+                  </h3>
+                  <ul className="list-disc list-inside text-gray-700">
+                    {patientData.upcomingAppointments.map(
+                      (appointment, index) => (
+                        <li key={index} className="mb-2">
+                          <strong>Doctor:</strong> {appointment.doctor},{" "}
+                          <strong>Date:</strong> {appointment.date},{" "}
+                          <strong>Time:</strong> {appointment.time}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
@@ -186,21 +248,50 @@ const PatientDashboard = () => {
               </h2>
               {/* Upload File Section */}
               <div className="mb-4">
+                <label htmlFor="fileInput" className="block text-white mb-2">
+                  Choose File:
+                </label>
                 <input
                   type="file"
+                  id="fileInput"
                   onChange={(e) => handleUploadFile(e.target.files[0])}
                   className="border p-2"
                 />
               </div>
               {/* View Uploaded Files Section */}
               {uploadedFiles.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                <div className="bg-white p-4 rounded-md shadow-md">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     Uploaded Files:
                   </h3>
-                  <ul className="list-disc list-inside text-white">
+                  <ul className="list-disc list-inside text-gray-700">
                     {uploadedFiles.map((file, index) => (
-                      <li key={index}>{file.name}</li>
+                      <li
+                        key={index}
+                        className="mb-2 flex items-center justify-between"
+                      >
+                        <span>{file.name}</span>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                            onClick={() => handleDownloadFile(file)}
+                          >
+                            Download
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                            onClick={() => handleRemoveFile(index)}
+                          >
+                            Remove
+                          </button>
+                          <button
+                            className="bg-green-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                            onClick={() => handleSendFile(file)}
+                          >
+                            Send
+                          </button>
+                        </div>
+                      </li>
                     ))}
                   </ul>
                 </div>
