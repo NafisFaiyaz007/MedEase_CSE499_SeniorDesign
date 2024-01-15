@@ -114,16 +114,7 @@ const HospitalDashboard = () => {
             >
               Create Doctor
             </button>
-            <button
-              onClick={() => setActiveTab("validateDoctor")}
-              className={`${
-                activeTab === "validateDoctor"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Validate Doctor
-            </button>
+            
             <button
               onClick={() => setActiveTab("deleteDoctor")}
               className={`${
