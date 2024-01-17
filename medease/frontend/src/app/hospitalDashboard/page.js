@@ -13,6 +13,8 @@ const hospitalData = {
   totalBedsAvailable: 30,
 };
 
+
+
 const HospitalDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [doctorForm, setDoctorForm] = useState({
@@ -45,6 +47,48 @@ const HospitalDashboard = () => {
       icon: "/images/bed.png", // Replace with your actual image path
     },
   ];
+
+  const [admissionsToApprove, setAdmissionsToApprove] = useState([
+    // Dummy data, replace with actual admissions data
+    { patientName: "John Doe", reason: "Emergency", date: "2023-12-20" },
+    { patientName: "Jane Smith", reason: "Surgery", date: "2023-12-21" },
+    // Add more admissions as needed
+  ]);
+
+  const handleApproveAdmission = (admission) => {
+    // Implement logic to approve the admission
+    console.log("Approving admission:", admission);
+    // You may want to make an API call or update the state accordingly
+  };
+
+  const handleRejectAdmission = (admission) => {
+    // Implement logic to reject the admission
+    console.log("Rejecting admission:", admission);
+    // You may want to make an API call or update the state accordingly
+  };
+
+  // Sample data for the list of doctors (replace with actual data)
+  const doctorList = [
+    { id: 1, name: "Dr. Smith" },
+    { id: 2, name: "Dr. Johnson" },
+    // Add more doctors as needed
+  ];
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  const handleDoctorSelection = (doctor) => {
+    setSelectedDoctor(doctor);
+  };
+
+  const handleDeleteDoctor = () => {
+    if (selectedDoctor) {
+      // Implement logic to delete the selected doctor
+      console.log("Deleting doctor:", selectedDoctor);
+      // You may want to make an API call or update the state accordingly
+      // For simplicity, let's clear the selected doctor after deletion
+      setSelectedDoctor(null);
+    }
+  };
 
   const handleLogout = () => {
     // Implement your logout logic here
@@ -114,7 +158,7 @@ const HospitalDashboard = () => {
             >
               Create Doctor
             </button>
-            
+
             <button
               onClick={() => setActiveTab("deleteDoctor")}
               className={`${
@@ -310,6 +354,94 @@ const HospitalDashboard = () => {
               >
                 Update
               </button>
+            </div>
+          )}
+
+          {activeTab === "approveAdmission" && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold text-white mb-4 text-center">
+                Approve Admissions
+              </h2>
+
+              {/* List of Admissions to Approve */}
+              {admissionsToApprove.length > 0 ? (
+                <ul className="space-y-4">
+                  {admissionsToApprove.map((admission, index) => (
+                    <li
+                      key={index}
+                      className="bg-white p-4 rounded-md shadow-md flex justify-between items-center"
+                    >
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                          {admission.patientName}
+                        </h3>
+                        <p className="text-sm text-gray-500 mb-2">
+                          Reason: {admission.reason}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Date: {admission.date}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-4">
+                        <button
+                          className="bg-green-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-green-700 transition duration-300"
+                          onClick={() => handleApproveAdmission(admission)}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+                          onClick={() => handleRejectAdmission(admission)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-white text-center">
+                  No admissions to approve.
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Delete Doctor Section */}
+          {activeTab === "deleteDoctor" && (
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-white mb-4">
+                Delete Doctor
+              </h2>
+              {/* List of Doctors */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {doctorList.map((doctor) => (
+                  <div
+                    key={doctor.id}
+                    className={`bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105`}
+                  >
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                      {doctor.name}
+                    </h3>
+                    {/* Delete Button */}
+                    <button
+                      onClick={() => handleDoctorSelection(doctor)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+                    >
+                      Delete Doctor
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {/* Delete Button */}
+              {selectedDoctor && (
+                <button
+                  onClick={handleDeleteDoctor}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+                >
+                  Delete Selected Doctor
+                </button>
+              )}
             </div>
           )}
         </div>

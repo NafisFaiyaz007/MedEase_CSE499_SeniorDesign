@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Navbar = ({ adminName, handleLogout }) => {
   return (
-    <nav className="bg-slate-200 backdrop-blur-lg opacity-95 px-6 py-3 shadow-md mb-4">
+    <nav className="bg-slate-200 backdrop-blur-lg opacity-95 px-6 py-0 shadow-md mb-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           {/* Image Icon */}
@@ -25,7 +25,7 @@ const Navbar = ({ adminName, handleLogout }) => {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="text-white bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="text-white bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-900 transition duration-300"
           >
             Logout
           </button>
