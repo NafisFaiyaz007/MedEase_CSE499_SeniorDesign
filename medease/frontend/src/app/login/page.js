@@ -60,7 +60,7 @@ const Login = () => {
 
         {/* Right half with login form */}
         <div className="flex-1 flex items-center justify-center z-10">
-          <div className="bg-white bg-opacity-75 p-8 rounded-lg max-w-md w-full">
+          <div className="bg-gray-200 bg-opacity-85 p-8 rounded-lg max-w-md w-full shadow-2xl">
             <Image
               src="/images/logo.png"
               alt="Logo"
@@ -73,7 +73,7 @@ const Login = () => {
               <div className="mb-6">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-600 mb-1"
+                  className="block text-sm font-medium text-gray-900 mb-1"
                 >
                   Email
                 </label>
@@ -81,7 +81,7 @@ const Login = () => {
                   type="text"
                   id="email"
                   name="email"
-                  className="mt-1 p-4 w-full border rounded-lg"
+                  className="mt-1 p-4 w-full border border-gray-600 rounded-lg"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -90,7 +90,7 @@ const Login = () => {
               <div className="mb-6">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-600 mb-1"
+                  className="block text-sm font-medium text-gray-900  mb-1"
                 >
                   Password
                 </label>
@@ -98,16 +98,18 @@ const Login = () => {
                   type="password"
                   id="password"
                   name="password"
-                  className="mt-1 p-4 w-full border rounded-lg"
+                  className="mt-1 p-4 w-full border border-gray-600  rounded-lg"
                   placeholder="Enter your password"
-                  value={password} onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Link href= "" onClick={handleLogin}
-                
-                 className="bg-blue-600 text-white p-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 transition duration-300">
-                  Login
-                
+              <Link
+                href=""
+                onClick={handleLogin}
+                className="bg-blue-600 text-white p-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+              >
+                Login
               </Link>
             </form>
             <p className="mt-4 text-gray-600 text-sm">
