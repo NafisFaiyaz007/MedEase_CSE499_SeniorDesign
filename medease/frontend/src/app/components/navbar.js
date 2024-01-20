@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Navbar = ({ adminName, handleLogout }) => {
   return (
-    <nav className="bg-slate-200 backdrop-blur-lg opacity-95 px-6 py-0 shadow-md mb-4">
+    <nav className="bg-slate-200 backdrop-blur-lg opacity-75 px-6 py-0 shadow-md mb-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           {/* Image Icon */}

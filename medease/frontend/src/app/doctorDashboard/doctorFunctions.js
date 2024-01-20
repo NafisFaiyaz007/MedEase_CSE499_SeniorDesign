@@ -40,3 +40,40 @@ export const handleSetPhysicalAppointment = () => {
    const { name, value } = e.target;
    setDoctorInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
  };
+
+ // pages/doctor/doctorFunctions.js
+
+export const handleDeletePatient = (patientId) => {
+  // Implement logic to delete the patient with the given ID
+  console.log(`Deleting patient with ID: ${patientId}`);
+};
+
+export const handleExaminePatient = (patientId) => {
+  // Implement logic to mark the patient as examined
+  console.log(`Examining patient with ID: ${patientId}`);
+};
+
+export const setPhysicalAppointment= (patientId)=>{
+  // implement the logic to set plysical appointment with a patient
+};
+
+ export const handleDateChange = (date) => {
+   setSelectedDate(date);
+ };
+
+ export const handleTimeChange = (time) => {
+   setSelectedTime(time);
+ };
+
+ export const handleSetAvailabilityDoctor = () => {
+   // Implement logic to set the availability with selectedDate and selectedTime
+   console.log("Setting availability:", selectedDate, selectedTime);
+ };
+
+ export const handleViewReports = (patient) => {
+    setSelectedPatient(patient);
+  };
+
+ export const handleCloseModal = () => {
+    setSelectedPatient(null);
+  };

@@ -3,9 +3,11 @@
 "use client"
 import React, { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import Navbar from "../../app/components/navbar";
 import * as DoctorFunctions from "./doctorFunctions";
+import DoctorPatientList from "./doctorPatientList";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const DoctorDashboard = () => {
@@ -26,7 +28,8 @@ const DoctorDashboard = () => {
     console.log("Logout clicked");
   };
 
-
+const [selectedDate, setSelectedDate] = useState(null);
+const [selectedTime, setSelectedTime] = useState(null);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
       <Head>
@@ -66,7 +69,7 @@ const DoctorDashboard = () => {
             >
               Set Availability
             </button>
-            
+
             <button
               onClick={() => setActiveTab("checkPatientList")}
               className={`${
@@ -87,16 +90,7 @@ const DoctorDashboard = () => {
             >
               View Schedule
             </button>
-            <button
-              onClick={() => setActiveTab("setPhysicalAppointment")}
-              className={`${
-                activeTab === "setPhysicalAppointment"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Set Physical Appointment
-            </button>
+           
           </div>
         </div>
 
@@ -221,22 +215,56 @@ const DoctorDashboard = () => {
               <h2 className="text-xl font-semibold text-white mb-4">
                 Set Availability
               </h2>
-              {/* Add content for setting availability */}
+              {/* Date Picker */}
+              <div className="m-4">
+                <label htmlFor="datePicker" className="text-white m-3">
+                  Select Date:
+                </label>
+                <DatePicker
+                  id="datePicker"
+                  selected={selectedDate}
+                  onChange={DoctorFunctions.handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
+                />
+              </div>
+
+              {/* Time Picker */}
+              <div className="m-4">
+                <label htmlFor="timePicker" className="text-white m-3">
+                  Select Time:
+                </label>
+                <input
+                  type="time"
+                  id="timePicker"
+                  value={selectedTime}
+                  onChange={(e) => DoctorFunctions.handleTimeChange(e.target.value)}
+                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
+                />
+              </div>
+
+              {/* Set Availability Button */}
+              <button
+                onClick={DoctorFunctions.handleSetAvailabilityDoctor}
+                className="bg-blue-500 text-white m-6 px-4 py-2 rounded-md focus:outline-none hover:bg-blue-800 transition duration-300"
+              >
+                Set Availability
+              </button>
             </div>
           )}
-
-        
 
           {/* Check Patient List */}
           {activeTab === "checkPatientList" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Check Patient List
-              </h2>
-              {/* Add content for checking patient list */}
-            </div>
+            <DoctorPatientList
+              patientList={[
+                { id: 1, name: "Patient 1", age: 30, gender: "Male" },
+                { id: 2, name: "Patient 2", age: 25, gender: "Female" },
+                // Add more patient data as needed
+              ]}
+              onDelete={DoctorFunctions.handleDeletePatient}
+              onExamine={DoctorFunctions.handleExaminePatient}
+            />
           )}
-
           {/* View Schedule */}
           {activeTab === "viewSchedule" && (
             <div className="space-y-4">
@@ -247,15 +275,7 @@ const DoctorDashboard = () => {
             </div>
           )}
 
-          {/* Set Physical Appointment */}
-          {activeTab === "setPhysicalAppointment" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Set Physical Appointment
-              </h2>
-              {/* Add content for setting physical appointment */}
-            </div>
-          )}
+         
         </div>
       </div>
     </div>
