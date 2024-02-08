@@ -1,5 +1,5 @@
 let hashMap = new Map();
-
+//Next week: what features will be implemented?
 async function createNode() {
   const { createHelia } = await import('helia');
   const { unixfs } = await import('@helia/unixfs');
