@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Feb 13, 2024 at 07:37 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Host: localhost
+-- Generation Time: Feb 13, 2024 at 04:41 PM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,7 +32,7 @@ CREATE TABLE `admissions` (
   `patient_id` int(11) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `admission_date` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admissions`
@@ -61,7 +61,7 @@ CREATE TABLE `appointments` (
   `doctor_id` int(11) DEFAULT NULL,
   `patient_id` int(11) DEFAULT NULL,
   `appointment_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `appointments`
@@ -93,24 +93,38 @@ CREATE TABLE `doctors` (
   `phone_number` varchar(20) DEFAULT NULL,
   `hospital` varchar(255) DEFAULT NULL,
   `designation` varchar(255) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `age` int(11) DEFAULT NULL,
+  `hospital_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `doctors`
 --
 
-INSERT INTO `doctors` (`doctor_id`, `name`, `degree`, `specialization`, `phone_number`, `hospital`, `designation`, `age`) VALUES
-(1, 'Dr. John Smith', 'MD', 'Cardiology', '+1234567890', 'Hospital XYZ', 'Cardiologist', 45),
-(2, 'Dr. Emily Johnson', 'MD', 'Pediatrics', '+1987654321', 'Hospital XYZ', 'Pediatrician', 38),
-(3, 'Dr. Michael Brown', 'MD', 'Orthopedics', '+1122334455', 'Hospital XYZ', 'Orthopedic Surgeon', 50),
-(4, 'Dr. Sarah Lee', 'MD', 'Dermatology', '+1555555555', 'Hospital XYZ', 'Dermatologist', 42),
-(5, 'Dr. David Wang', 'MD', 'Neurology', '+1777777777', 'Hospital XYZ', 'Neurologist', 47),
-(6, 'Dr. Jennifer Chen', 'MD', 'Ophthalmology', '+1999999999', 'Hospital XYZ', 'Ophthalmologist', 41),
-(7, 'Dr. Richard Martinez', 'MD', 'Gastroenterology', '+1666666666', 'Hospital XYZ', 'Gastroenterologist', 48),
-(8, 'Dr. Jessica Taylor', 'MD', 'Psychiatry', '+1888888888', 'Hospital XYZ', 'Psychiatrist', 40),
-(9, 'Dr. Christopher White', 'MD', 'Urology', '+1444444444', 'Hospital XYZ', 'Urologist', 52),
-(10, 'Dr. Elizabeth Anderson', 'MD', 'Obstetrics and Gynecology', '+1222222222', 'Hospital XYZ', 'OB/GYN', 39);
+INSERT INTO `doctors` (`doctor_id`, `name`, `degree`, `specialization`, `phone_number`, `hospital`, `designation`, `age`, `hospital_id`) VALUES
+(1, 'Dr. John Smith', 'MD', 'Cardiology', '+1234567890', 'Hospital XYZ', 'Cardiologist', 45, NULL),
+(2, 'Dr. Emily Johnson', 'MD', 'Pediatrics', '+1987654321', 'Hospital XYZ', 'Pediatrician', 38, NULL),
+(3, 'Dr. Michael Brown', 'MD', 'Orthopedics', '+1122334455', 'Hospital XYZ', 'Orthopedic Surgeon', 50, NULL),
+(4, 'Dr. Sarah Lee', 'MD', 'Dermatology', '+1555555555', 'Hospital XYZ', 'Dermatologist', 42, NULL),
+(5, 'Dr. David Wang', 'MD', 'Neurology', '+1777777777', 'Hospital XYZ', 'Neurologist', 47, NULL),
+(6, 'Dr. Jennifer Chen', 'MD', 'Ophthalmology', '+1999999999', 'Hospital XYZ', 'Ophthalmologist', 41, NULL),
+(7, 'Dr. Richard Martinez', 'MD', 'Gastroenterology', '+1666666666', 'Hospital XYZ', 'Gastroenterologist', 48, NULL),
+(8, 'Dr. Jessica Taylor', 'MD', 'Psychiatry', '+1888888888', 'Hospital XYZ', 'Psychiatrist', 40, NULL),
+(9, 'Dr. Christopher White', 'MD', 'Urology', '+1444444444', 'Hospital XYZ', 'Urologist', 52, NULL),
+(10, 'Dr. Elizabeth Anderson', 'MD', 'Obstetrics and Gynecology', '+1222222222', 'Hospital XYZ', 'OB/GYN', 39, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+CREATE TABLE `hospitals` (
+  `hospital_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `phone_number` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -120,27 +134,28 @@ INSERT INTO `doctors` (`doctor_id`, `name`, `degree`, `specialization`, `phone_n
 
 CREATE TABLE `patients` (
   `patient_id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `dateOfBirth` date NOT NULL,
   `gender` enum('Male','Female','Other') DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
-  `phone_number` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `phone_number` varchar(20) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `patients`
 --
 
-INSERT INTO `patients` (`patient_id`, `name`, `gender`, `age`, `phone_number`) VALUES
-(1, 'John Doe', 'Male', 35, '+1234567890'),
-(2, 'Jane Smith', 'Female', 28, '+1987654321'),
-(3, 'Alice Johnson', 'Female', 45, '+1122334455'),
-(4, 'Bob Brown', 'Male', 50, '+1555555555'),
-(5, 'Emily Lee', 'Female', 60, '+1777777777'),
-(6, 'James Wang', 'Male', 55, '+1999999999'),
-(7, 'Olivia Chen', 'Female', 30, '+1666666666'),
-(8, 'William Martinez', 'Male', 42, '+1888888888'),
-(9, 'Sophia Taylor', 'Female', 38, '+1444444444'),
-(10, 'Michael White', 'Male', 47, '+1222222222');
+INSERT INTO `patients` (`patient_id`, `dateOfBirth`, `gender`, `phone_number`, `address`, `user_id`) VALUES
+(1, '0000-00-00', 'Male', '+1234567890', '', NULL),
+(2, '0000-00-00', 'Female', '+1987654321', '', NULL),
+(3, '0000-00-00', 'Female', '+1122334455', '', NULL),
+(4, '0000-00-00', 'Male', '+1555555555', '', NULL),
+(5, '0000-00-00', 'Female', '+1777777777', '', NULL),
+(6, '0000-00-00', 'Male', '+1999999999', '', NULL),
+(7, '0000-00-00', 'Female', '+1666666666', '', NULL),
+(8, '0000-00-00', 'Male', '+1888888888', '', NULL),
+(9, '0000-00-00', 'Female', '+1444444444', '', NULL),
+(10, '0000-00-00', 'Male', '+1222222222', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -153,40 +168,35 @@ CREATE TABLE `users` (
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `userType` int(11) NOT NULL,
-  `dateOfBirth` date DEFAULT NULL,
-  `sex` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `phone` varchar(255) NOT NULL,
-  `isValidated` int(11) DEFAULT NULL,
   `Image` blob DEFAULT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `userType`, `dateOfBirth`, `sex`, `address`, `phone`, `isValidated`, `Image`, `password`) VALUES
-(2, 'ia', 'sa@gmail.com', 1, '1978-09-21', NULL, NULL, '099119', NULL, NULL, 'sadansd'),
-(3, 'Steve Smith', 'ssmith@gmail.com', 1, '1980-01-21', NULL, NULL, '01911221', NULL, NULL, '$2b$10$LIbtrBVzMV2cKEr7CvyoveM7aXwwskSw1Ga6rr/QlxoZJUqR/M72W'),
-(6, 'Steve waugh', 'swaugh@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$4kGoDibPF6/LUPBcP/b5d.wuhOdE1KpOiG0M8XVZf4/vH1JoUn3li'),
-(7, 'Steve waugh', 'swauagh@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$PoVA89Qah.CpiEzrka8SjO.nEHASXHEFJIzhKOXlXaxzg8OpiQ4am'),
-(8, 'Steve waugh', 'swauaasgh@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$NMsFlEZBKLOMl9ThFR8Tt.OduN.MXVkN9p3onj8GN7.bBsommaQca'),
-(9, 'Steve waugh', '2swauaasgh@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$uXwlIHy0S/cBjDtHlu3pped2KIjK/dXM7YuXBJ1.b77cO4j6nMz0i'),
-(10, 'Steve waugh', '22swauaasgh@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$MNcBoW.oCgYRKjLcygmS0.E6OntniGMppSkRfhvUQQYRJxmmdKkSW'),
-(11, 'Steve waugh', 'sad@gmail.com', 1, '1940-11-01', NULL, NULL, '0212', NULL, NULL, '$2b$10$RvMR83HmxLbmCSis4ScCQu44sozCLkHh.nPACZoc2wOYODVdOnSN.'),
-(12, 'k', 'k', 3, NULL, NULL, 'k', '0213', NULL, NULL, 'k'),
-(13, 'sdasd', 'sdsa', 3, NULL, NULL, 'sadsa', '02i20', NULL, NULL, 'sdkasdwd9w'),
-(15, 'Dummy Hospital', 'dummyhospital@gmail.com', 2, '1900-01-23', NULL, 'k', '021', NULL, NULL, '$2b$10$gdjo3BsTQGEnn2rKl1hbDOP7mIuWyC5RjGQQYNDrKR84TSA/HGVWa'),
-(16, 'sad', '11q1w@ad.com', 3, NULL, NULL, 'jjjijsd', '9090', NULL, NULL, '$2b$10$k4sJwmXA2PHygFGP3NBWWu0lWAOearvp2xe3K8qpgghuR0K0k.ocC'),
-(17, 'psd', 'daw', 5, NULL, NULL, 'wdw', 'sdw', NULL, NULL, '$2b$10$opvR0iNjIG9PodfshRicBeV5GXgNC6EJHFa2f7QWLOfe0/vxt6qii'),
-(18, 'mmo', 'kmlm', 2, NULL, NULL, 'mklmk', 'mklm', NULL, NULL, '$2b$10$3GqZb8F5Ra2za6xSnO.PQu2TNIgqGJsBKhLhFKaEPnM3GqZFUL4Xa'),
-(19, 'nkjn', 'nkjn', 3, NULL, NULL, 'jkn', 'n', NULL, NULL, '$2b$10$6rksHnsDSILfwRglQlCkZ.d9/AeOVtVcshrW5SBfZuqmhe0qX.6/u'),
-(20, 'mm', 'nn@bhb', 4, NULL, NULL, 'ibn', '89798', NULL, NULL, '$2b$10$qmgUKAHlfO9lwozS8JEXl.6EimD5pXuWein7/rgq/t6HO48Vur8y6'),
-(22, 'mm', 'nn@bhba', 4, NULL, NULL, 'ibn', '89798', NULL, NULL, '$2b$10$uWu8iebyd0zYEwBK28rU4.EX1k44vQJb0bn7QOdg/DuGbuAjKUuxy'),
-(23, 'dummy user', 'dummyuser@gmail.com', 4, NULL, 'male', 'Dhaka, Bangladesh', '01928381727', NULL, NULL, '$2b$10$6h3fL5yRh41g60asgviCnueuABvm4HcBRp.2nu/TtGGiDWRaIAcPW'),
-(24, 'dummy user2', 'dummyuser2@gmail.com', 4, NULL, 'female', 'Chittagong, Bangladesh', '019337282891', NULL, NULL, '$2b$10$s/8LuIJia1VhsKTufJf6Lu.IllcSrLOCT1giC0q9MaS2GF97KGKTW'),
-(25, 'ksakdom', 'mnlms@nd', 4, NULL, 'male', 'sadm', '23921803981', NULL, NULL, '$2b$10$8yQrp6tEHlQMn9nNuP2KKeDsSantfFIninwYmBNojS1AmPiTwcxgG');
+INSERT INTO `users` (`id`, `name`, `email`, `userType`, `Image`, `password`) VALUES
+(2, 'ia', 'sa@gmail.com', 1, NULL, 'sadansd'),
+(3, 'Steve Smith', 'ssmith@gmail.com', 1, NULL, '$2b$10$LIbtrBVzMV2cKEr7CvyoveM7aXwwskSw1Ga6rr/QlxoZJUqR/M72W'),
+(6, 'Steve waugh', 'swaugh@gmail.com', 1, NULL, '$2b$10$4kGoDibPF6/LUPBcP/b5d.wuhOdE1KpOiG0M8XVZf4/vH1JoUn3li'),
+(7, 'Steve waugh', 'swauagh@gmail.com', 1, NULL, '$2b$10$PoVA89Qah.CpiEzrka8SjO.nEHASXHEFJIzhKOXlXaxzg8OpiQ4am'),
+(8, 'Steve waugh', 'swauaasgh@gmail.com', 1, NULL, '$2b$10$NMsFlEZBKLOMl9ThFR8Tt.OduN.MXVkN9p3onj8GN7.bBsommaQca'),
+(9, 'Steve waugh', '2swauaasgh@gmail.com', 1, NULL, '$2b$10$uXwlIHy0S/cBjDtHlu3pped2KIjK/dXM7YuXBJ1.b77cO4j6nMz0i'),
+(10, 'Steve waugh', '22swauaasgh@gmail.com', 1, NULL, '$2b$10$MNcBoW.oCgYRKjLcygmS0.E6OntniGMppSkRfhvUQQYRJxmmdKkSW'),
+(11, 'Steve waugh', 'sad@gmail.com', 1, NULL, '$2b$10$RvMR83HmxLbmCSis4ScCQu44sozCLkHh.nPACZoc2wOYODVdOnSN.'),
+(12, 'k', 'k', 3, NULL, 'k'),
+(13, 'sdasd', 'sdsa', 3, NULL, 'sdkasdwd9w'),
+(15, 'Dummy Hospital', 'dummyhospital@gmail.com', 2, NULL, '$2b$10$gdjo3BsTQGEnn2rKl1hbDOP7mIuWyC5RjGQQYNDrKR84TSA/HGVWa'),
+(16, 'sad', '11q1w@ad.com', 3, NULL, '$2b$10$k4sJwmXA2PHygFGP3NBWWu0lWAOearvp2xe3K8qpgghuR0K0k.ocC'),
+(17, 'psd', 'daw', 5, NULL, '$2b$10$opvR0iNjIG9PodfshRicBeV5GXgNC6EJHFa2f7QWLOfe0/vxt6qii'),
+(18, 'mmo', 'kmlm', 2, NULL, '$2b$10$3GqZb8F5Ra2za6xSnO.PQu2TNIgqGJsBKhLhFKaEPnM3GqZFUL4Xa'),
+(19, 'nkjn', 'nkjn', 3, NULL, '$2b$10$6rksHnsDSILfwRglQlCkZ.d9/AeOVtVcshrW5SBfZuqmhe0qX.6/u'),
+(20, 'mm', 'nn@bhb', 4, NULL, '$2b$10$qmgUKAHlfO9lwozS8JEXl.6EimD5pXuWein7/rgq/t6HO48Vur8y6'),
+(22, 'mm', 'nn@bhba', 4, NULL, '$2b$10$uWu8iebyd0zYEwBK28rU4.EX1k44vQJb0bn7QOdg/DuGbuAjKUuxy'),
+(23, 'dummy user', 'dummyuser@gmail.com', 4, NULL, '$2b$10$6h3fL5yRh41g60asgviCnueuABvm4HcBRp.2nu/TtGGiDWRaIAcPW'),
+(24, 'dummy user2', 'dummyuser2@gmail.com', 4, NULL, '$2b$10$s/8LuIJia1VhsKTufJf6Lu.IllcSrLOCT1giC0q9MaS2GF97KGKTW'),
+(25, 'ksakdom', 'mnlms@nd', 4, NULL, '$2b$10$8yQrp6tEHlQMn9nNuP2KKeDsSantfFIninwYmBNojS1AmPiTwcxgG');
 
 -- --------------------------------------------------------
 
@@ -197,7 +207,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `userType`, `dateOfBirth`, `sex`, `a
 CREATE TABLE `user_types` (
   `id` int(11) NOT NULL,
   `role` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_types`
@@ -233,13 +243,22 @@ ALTER TABLE `appointments`
 -- Indexes for table `doctors`
 --
 ALTER TABLE `doctors`
-  ADD PRIMARY KEY (`doctor_id`);
+  ADD PRIMARY KEY (`doctor_id`),
+  ADD KEY `fk_hospital_id` (`hospital_id`);
+
+--
+-- Indexes for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD PRIMARY KEY (`hospital_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `patients`
 --
 ALTER TABLE `patients`
-  ADD PRIMARY KEY (`patient_id`);
+  ADD PRIMARY KEY (`patient_id`),
+  ADD KEY `fk_user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -278,6 +297,12 @@ ALTER TABLE `doctors`
   MODIFY `doctor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  MODIFY `hospital_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
@@ -305,6 +330,24 @@ ALTER TABLE `admissions`
 ALTER TABLE `appointments`
   ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`doctor_id`),
   ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`);
+
+--
+-- Constraints for table `doctors`
+--
+ALTER TABLE `doctors`
+  ADD CONSTRAINT `fk_hospital_id` FOREIGN KEY (`hospital_id`) REFERENCES `hospitals` (`hospital_id`);
+
+--
+-- Constraints for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD CONSTRAINT `hospitals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `patients`
+--
+ALTER TABLE `patients`
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `users`
