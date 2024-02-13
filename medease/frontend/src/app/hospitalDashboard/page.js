@@ -103,8 +103,9 @@ const HospitalDashboard = () => {
 
   const handleCreateDoctor = async () => {
     try {
+      console.log(doctorForm);
       // Send a POST request to your backend API to create a new doctor
-      const response = await axios.post("/api/doctors", doctorForm);
+      const response = await axios.post("http://localhost:8000/api/users/register", ...doctorForm);
 
       // Handle success - clear the form and display a success message
       console.log("Doctor created successfully:", response.data);
