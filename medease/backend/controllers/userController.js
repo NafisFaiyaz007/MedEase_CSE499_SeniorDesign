@@ -2,56 +2,71 @@ const connection = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const registerHospital = async (req, res) => {
+  try {
+    const { name, email, phone, address, userType, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
- const registerUser = async (req, res) => {
+    const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
+    // Save user to the database
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+    //Insert into patients table
+    const query2 = `INSERT INTO hospitals (user_id, phone_number, address) VALUES (?, ?, ?)`;
+     
+    const [results2] = await connection.execute(query2, [results.insertId, phone, address]);
+
+    // Handle successful insertion
+    res.json({ userId: results.insertId, message: 'User Hospital created successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const registerDoctor = async (req, res) => {
+  try {
+    const { name, email, degree, specialization, designation, dateOfBirth, phone, address, userType, password, hospital_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
+    // Save user to the database
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+    //Insert into patients table
+    const query2 = `INSERT INTO doctors (user_id, dateOfBirth, phone_number, address, degree, specialization, designation, hospital_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+     
+    const [results2] = await connection.execute(query2, [results.insertId, dateOfBirth, phone, address, degree, specialization, designation, hospital_id]);
+
+    // Handle successful insertion
+    res.json({ userId: results.insertId, message: 'User Doctor created successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+ const registerPatient = async (req, res) => {
     try {
-      const { name, email, dateOfBirth, sex, phone, address, userType, password } = req.body;
+      const { name, email, dateOfBirth, gender, phone, address, userType, password } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
   
-      const values = [name, email, dateOfBirth, sex, phone, address, userType, hashedPassword];
+      const values = [name, email, dateOfBirth, gender, phone, address, userType, hashedPassword];
   
       // Remove undefined or null values to handle optional fields
-      const validValues = values.filter(value => value !== undefined && value !== null);
+      // const validValues = values.filter(value => value !== undefined && value !== null);
 
-      const placeholders = validValues.map(() => '?').join(', ');
+      // const placeholders = validValues.map(() => '?').join(', ');
   
       // const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
-      const query = `INSERT INTO users (
-        ${Object.entries({
-          name: name,
-          email: email,
-          dateOfBirth: dateOfBirth,
-          sex: sex,
-          phone: phone,
-          address: address,
-          userType: userType,
-          password: hashedPassword,
-        })
-          .filter(([key, value]) => value !== undefined && value !== null)
-          .map(([key]) => key)
-          .join(', ')}
-      ) VALUES (
-        ${Object.entries({
-          name: name,
-          email: email,
-          dateOfBirth: dateOfBirth,
-          sex: sex,
-          phone: phone,
-          address: address,
-          userType: userType,
-          password: hashedPassword,
-        })
-          .filter(([key, value]) => value !== undefined && value !== null)
-          .map(([key, value]) => value)
-          .map(() => '?')
-          .join(', ')}
-      )`;
-  
+      const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
       // Save user to the database
-      const [results] = await connection.execute(query, validValues);
+      const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+      //Insert into patients table
+      const query2 = `INSERT INTO patients (user_id, dateOfBirth, gender, phone_number, address) VALUES (?, ?, ?, ?, ?)`;
+       
+      const [results2] = await connection.execute(query2, [results.insertId, dateOfBirth, gender, phone, address]);
   
       // Handle successful insertion
-      res.json({ userId: results.insertId, message: 'User created successfully' });
+      res.json({ userId: results.insertId, message: 'User Patient created successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -113,5 +128,5 @@ const jwt = require('jsonwebtoken');
     }
   }
   module.exports = {
-    registerUser, login, logout
+    registerHospital, registerDoctor, registerPatient, login, logout
   }

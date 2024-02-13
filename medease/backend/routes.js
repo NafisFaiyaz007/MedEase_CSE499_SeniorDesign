@@ -9,7 +9,9 @@ router.get('/message', (req, res) => {
     res.send("get method");
 });
 // User creation
-router.post('/register', userController.registerUser);
+router.post('/registerHospital', userController.registerHospital);
+router.post('/registerDoctor', userController.registerDoctor);
+router.post('/registerPatient', userController.registerPatient);
 
 // User login
 router.post('/login', userController.login);

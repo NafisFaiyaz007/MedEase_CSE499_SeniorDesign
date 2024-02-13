@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 13, 2024 at 04:41 PM
+-- Generation Time: Feb 13, 2024 at 06:45 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.1.6
 
@@ -87,31 +87,32 @@ INSERT INTO `appointments` (`appointment_id`, `doctor_id`, `patient_id`, `appoin
 
 CREATE TABLE `doctors` (
   `doctor_id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `dateOfBirth` date NOT NULL,
   `degree` varchar(255) DEFAULT NULL,
   `specialization` varchar(255) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
-  `hospital` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `designation` varchar(255) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
-  `hospital_id` int(11) DEFAULT NULL
+  `hospital_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `doctors`
 --
 
-INSERT INTO `doctors` (`doctor_id`, `name`, `degree`, `specialization`, `phone_number`, `hospital`, `designation`, `age`, `hospital_id`) VALUES
-(1, 'Dr. John Smith', 'MD', 'Cardiology', '+1234567890', 'Hospital XYZ', 'Cardiologist', 45, NULL),
-(2, 'Dr. Emily Johnson', 'MD', 'Pediatrics', '+1987654321', 'Hospital XYZ', 'Pediatrician', 38, NULL),
-(3, 'Dr. Michael Brown', 'MD', 'Orthopedics', '+1122334455', 'Hospital XYZ', 'Orthopedic Surgeon', 50, NULL),
-(4, 'Dr. Sarah Lee', 'MD', 'Dermatology', '+1555555555', 'Hospital XYZ', 'Dermatologist', 42, NULL),
-(5, 'Dr. David Wang', 'MD', 'Neurology', '+1777777777', 'Hospital XYZ', 'Neurologist', 47, NULL),
-(6, 'Dr. Jennifer Chen', 'MD', 'Ophthalmology', '+1999999999', 'Hospital XYZ', 'Ophthalmologist', 41, NULL),
-(7, 'Dr. Richard Martinez', 'MD', 'Gastroenterology', '+1666666666', 'Hospital XYZ', 'Gastroenterologist', 48, NULL),
-(8, 'Dr. Jessica Taylor', 'MD', 'Psychiatry', '+1888888888', 'Hospital XYZ', 'Psychiatrist', 40, NULL),
-(9, 'Dr. Christopher White', 'MD', 'Urology', '+1444444444', 'Hospital XYZ', 'Urologist', 52, NULL),
-(10, 'Dr. Elizabeth Anderson', 'MD', 'Obstetrics and Gynecology', '+1222222222', 'Hospital XYZ', 'OB/GYN', 39, NULL);
+INSERT INTO `doctors` (`doctor_id`, `dateOfBirth`, `degree`, `specialization`, `phone_number`, `address`, `designation`, `hospital_id`, `user_id`) VALUES
+(1, '0000-00-00', 'MD', 'Cardiology', '+1234567890', 'Hospital XYZ', 'Cardiologist', NULL, NULL),
+(2, '0000-00-00', 'MD', 'Pediatrics', '+1987654321', 'Hospital XYZ', 'Pediatrician', NULL, NULL),
+(3, '0000-00-00', 'MD', 'Orthopedics', '+1122334455', 'Hospital XYZ', 'Orthopedic Surgeon', NULL, NULL),
+(4, '0000-00-00', 'MD', 'Dermatology', '+1555555555', 'Hospital XYZ', 'Dermatologist', NULL, NULL),
+(5, '0000-00-00', 'MD', 'Neurology', '+1777777777', 'Hospital XYZ', 'Neurologist', NULL, NULL),
+(6, '0000-00-00', 'MD', 'Ophthalmology', '+1999999999', 'Hospital XYZ', 'Ophthalmologist', NULL, NULL),
+(7, '0000-00-00', 'MD', 'Gastroenterology', '+1666666666', 'Hospital XYZ', 'Gastroenterologist', NULL, NULL),
+(8, '0000-00-00', 'MD', 'Psychiatry', '+1888888888', 'Hospital XYZ', 'Psychiatrist', NULL, NULL),
+(9, '0000-00-00', 'MD', 'Urology', '+1444444444', 'Hospital XYZ', 'Urologist', NULL, NULL),
+(10, '0000-00-00', 'MD', 'Obstetrics and Gynecology', '+1222222222', 'Hospital XYZ', 'OB/GYN', NULL, NULL),
+(11, '1970-11-24', 'MBBS', 'Cardiology', '01911221', 'Dhaka', 'Cardiologist', 1, 35);
 
 -- --------------------------------------------------------
 
@@ -125,6 +126,14 @@ CREATE TABLE `hospitals` (
   `address` varchar(255) NOT NULL,
   `phone_number` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hospitals`
+--
+
+INSERT INTO `hospitals` (`hospital_id`, `user_id`, `address`, `phone_number`) VALUES
+(1, 32, 'Dhaka', '01911221'),
+(2, 33, 'Dhaka', '01911221');
 
 -- --------------------------------------------------------
 
@@ -155,7 +164,8 @@ INSERT INTO `patients` (`patient_id`, `dateOfBirth`, `gender`, `phone_number`, `
 (7, '0000-00-00', 'Female', '+1666666666', '', NULL),
 (8, '0000-00-00', 'Male', '+1888888888', '', NULL),
 (9, '0000-00-00', 'Female', '+1444444444', '', NULL),
-(10, '0000-00-00', 'Male', '+1222222222', '', NULL);
+(10, '0000-00-00', 'Male', '+1222222222', '', NULL),
+(11, '1980-01-21', 'Male', '01911221', 'nsjdnow', 28);
 
 -- --------------------------------------------------------
 
@@ -196,7 +206,14 @@ INSERT INTO `users` (`id`, `name`, `email`, `userType`, `Image`, `password`) VAL
 (22, 'mm', 'nn@bhba', 4, NULL, '$2b$10$uWu8iebyd0zYEwBK28rU4.EX1k44vQJb0bn7QOdg/DuGbuAjKUuxy'),
 (23, 'dummy user', 'dummyuser@gmail.com', 4, NULL, '$2b$10$6h3fL5yRh41g60asgviCnueuABvm4HcBRp.2nu/TtGGiDWRaIAcPW'),
 (24, 'dummy user2', 'dummyuser2@gmail.com', 4, NULL, '$2b$10$s/8LuIJia1VhsKTufJf6Lu.IllcSrLOCT1giC0q9MaS2GF97KGKTW'),
-(25, 'ksakdom', 'mnlms@nd', 4, NULL, '$2b$10$8yQrp6tEHlQMn9nNuP2KKeDsSantfFIninwYmBNojS1AmPiTwcxgG');
+(25, 'ksakdom', 'mnlms@nd', 4, NULL, '$2b$10$8yQrp6tEHlQMn9nNuP2KKeDsSantfFIninwYmBNojS1AmPiTwcxgG'),
+(26, 'Sam Smith', 'smithsam@gmail.com', 1, NULL, '$2b$10$U8MwV3WOIxtbGDQgqXb0F.w.SNQJDVVYUEPeWVsUlSfmJQWEXwexi'),
+(28, 'Sam Smith', 'smithsam1@gmail.com', 1, NULL, '$2b$10$zc8rhLrYlggLNgb6mROo0e9kcOWMS3D7NywXEewjDWm/7SuYZZOmu'),
+(30, 'Dhaka Medical', 'dmh@gmail.com', 2, NULL, '$2b$10$gyxKouxM3UAq3O1Mqc.Na.OFSrCROhQvL6mk7MCDlCre5N7Tbus3S'),
+(32, 'Dhaka Medical', 'dmh1@gmail.com', 2, NULL, '$2b$10$536CmaAUjh79c4SWR0WI6OAQ8fybpJV8pr7oA3YQCasILJP3rliM6'),
+(33, 'Dr Habib', 'drhabib@gmail.com', 3, NULL, '$2b$10$HRxkB3reR82DndEkXwwh7.RA2XLMDlDIM6lSvA2ueV5eqdUTzHOeW'),
+(34, 'Dr Habib', 'drhabib1@gmail.com', 3, NULL, '$2b$10$HnrL7WSoc8TWO/RIJv4/ue5jcTg/rG/j8anTUOJz4n/pOrRKhZOpa'),
+(35, 'Dr Habib', 'drhabib11@gmail.com', 3, NULL, '$2b$10$xBL4WTANSW68Wng0LIm9dO27Hf/wgjFH5C5SV9lytfgM5y/61GUWC');
 
 -- --------------------------------------------------------
 
@@ -244,7 +261,8 @@ ALTER TABLE `appointments`
 --
 ALTER TABLE `doctors`
   ADD PRIMARY KEY (`doctor_id`),
-  ADD KEY `fk_hospital_id` (`hospital_id`);
+  ADD KEY `fk_hospital_id` (`hospital_id`),
+  ADD KEY `fk_usr_id` (`user_id`);
 
 --
 -- Indexes for table `hospitals`
@@ -294,25 +312,25 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `doctor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `doctor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  MODIFY `hospital_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `hospital_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Constraints for dumped tables
@@ -335,7 +353,8 @@ ALTER TABLE `appointments`
 -- Constraints for table `doctors`
 --
 ALTER TABLE `doctors`
-  ADD CONSTRAINT `fk_hospital_id` FOREIGN KEY (`hospital_id`) REFERENCES `hospitals` (`hospital_id`);
+  ADD CONSTRAINT `fk_hospital_id` FOREIGN KEY (`hospital_id`) REFERENCES `hospitals` (`hospital_id`),
+  ADD CONSTRAINT `fk_usr_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `hospitals`
