@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Navbar from "../../app/components/navbar";
+import axios from "axios"; // Import axios for making HTTP requests
 
 // Dummy data, replace with actual data
 const hospitalData = {
@@ -100,12 +101,28 @@ const HospitalDashboard = () => {
     setDoctorForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const handleCreateDoctor = () => {
-    // Implement logic to create a doctor with the data in doctorForm
-    console.log("Creating doctor:", doctorForm);
-    // You may want to make an API call or update the state accordingly
-    // For simplicity, let's clear the form after submission
-    setDoctorForm({ doctorName: "", specialization: "" });
+  const handleCreateDoctor = async () => {
+    try {
+      // Send a POST request to your backend API to create a new doctor
+      const response = await axios.post("/api/doctors", doctorForm);
+
+      // Handle success - clear the form and display a success message
+      console.log("Doctor created successfully:", response.data);
+      setDoctorForm({
+        doctorName: "",
+        degree: "",
+        specialization: "",
+        phoneNumber: "",
+        hospital: "",
+        designation: "",
+        age: "",
+      });
+      // Optionally, you can display a success message to the user
+    } catch (error) {
+      // Handle error - display an error message to the user
+      console.error("Error creating doctor:", error);
+      // Optionally, you can display an error message to the user
+    }
   };
 
   const handleBedsCounterIncrement = () => {
