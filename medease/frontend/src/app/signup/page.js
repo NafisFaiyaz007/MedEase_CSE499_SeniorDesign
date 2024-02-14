@@ -11,7 +11,7 @@ const Signup = () => {
   const handleSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post('http://localhost:8000/api/users/register', {
+      const response = await axios.post('http://localhost:8000/api/users/registerPatient', {
         ...data,
       });
 
@@ -134,14 +134,14 @@ const Signup = () => {
               </div>
               <div className="mb-6">
                 <label
-                  htmlFor="sex"
+                  htmlFor="gender"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  Sex
+                  gender
                 </label>
                 <select
-                  id="sex"
-                  name="sex"
+                  id="gender"
+                  name="gender"
                   className="mt-1 p-4 w-full border rounded-lg"
                 >
                   <option value="male">Male</option>

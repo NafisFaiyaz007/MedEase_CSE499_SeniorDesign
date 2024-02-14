@@ -33,22 +33,24 @@ export const handleDoctorFormChange = (e) => {
   // Implement logic to handle form change
 };
 
-export const handleCreateDoctor = async () => {
+export const handleCreateDoctor = async (doctorForm) => {
   try {
+    console.log(doctorForm);
     // Send a POST request to your backend API to create a new doctor
-    const response = await axios.post("/api/doctors", doctorForm);
+    const response = await axios.post("http://localhost:8000/api/users/registerDoctor", {...doctorForm});
 
     // Handle success - clear the form and display a success message
     console.log("Doctor created successfully:", response.data);
-    setDoctorForm({
-      doctorName: "",
-      degree: "",
-      specialization: "",
-      phoneNumber: "",
-      hospital: "",
-      designation: "",
-      age: "",
-    });
+    // setDoctorForm({
+    //   name: "",
+    //   email: "",
+    //   degree: "",
+    //   specialization: "",
+    //   phoneNumber: "",
+    //   hospital: "",
+    //   designation: "",
+    //   dateOfBirth: "",
+    // });
     // Optionally, you can display a success message to the user
   } catch (error) {
     // Handle error - display an error message to the user
