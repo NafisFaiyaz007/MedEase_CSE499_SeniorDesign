@@ -8,6 +8,10 @@ import * as DoctorFunctions from "./doctorFunctions";
 import DoctorPatientList from "./doctorPatientList";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import EditAccountForm from "./editAccountForm";
+import SetAvailabilityForm from "./setAvailabilityForm";
+import ViewSchedule from "./viewSchedule";
+import DoctorDashboardHeader from "./doctorButtons";
 
 
 const DoctorDashboard = () => {
@@ -41,216 +45,34 @@ const [selectedTime, setSelectedTime] = useState(null);
       {/* Content */}
       <div className="container mx-auto p-4 flex items-center justify-center">
         {/* Left half */}
-        <div className="flex flex-col items-start mr-8">
-          {/* Doctor Dashboard Text */}
-          <h1 className="text-3xl font-semibold my-6 text-white">
-            Doctor Dashboard
-          </h1>
-
-          {/* Tabs */}
-          <div className="flex flex-col space-y-4">
-            <button
-              onClick={() => setActiveTab("editAccount")}
-              className={`${
-                activeTab === "editAccount"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Edit Account
-            </button>
-            <button
-              onClick={() => setActiveTab("setAvailability")}
-              className={`${
-                activeTab === "setAvailability"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Set Availability
-            </button>
-
-            <button
-              onClick={() => setActiveTab("checkPatientList")}
-              className={`${
-                activeTab === "checkPatientList"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Check Patient List
-            </button>
-            <button
-              onClick={() => setActiveTab("viewSchedule")}
-              className={`${
-                activeTab === "viewSchedule"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              View Schedule
-            </button>
-           
-          </div>
-        </div>
+        <DoctorDashboardHeader
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
 
         {/* Right half */}
         <div className="flex-1">
           {/* Content based on active tab */}
           {activeTab === "editAccount" && (
-            <div className="space-y-10 w-80">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Edit Account
-              </h2>
-              <form className="flex flex-col space-y-2">
-                {/* Doctor Information Fields */}
-                <label htmlFor="doctorName" className="text-white">
-                  Doctor Name
-                </label>
-                <input
-                  type="text"
-                  id="doctorName"
-                  name="doctorName"
-                  value={doctorInfo.doctorName}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="degree" className="text-white">
-                  Degree
-                </label>
-                <input
-                  type="text"
-                  id="degree"
-                  name="degree"
-                  value={doctorInfo.degree}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="specialization" className="text-white">
-                  Specialization
-                </label>
-                <input
-                  type="text"
-                  id="specialization"
-                  name="specialization"
-                  value={doctorInfo.specialization}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="phoneNumber" className="text-white">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={doctorInfo.phoneNumber}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="hospital" className="text-white">
-                  Hospital
-                </label>
-                <input
-                  type="text"
-                  id="hospital"
-                  name="hospital"
-                  value={doctorInfo.hospital}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="designation" className="text-white">
-                  Designation
-                </label>
-                <input
-                  type="text"
-                  id="designation"
-                  name="designation"
-                  value={doctorInfo.designation}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                <label htmlFor="age" className="text-white">
-                  Age
-                </label>
-                <input
-                  type="text"
-                  id="age"
-                  name="age"
-                  value={doctorInfo.age}
-                  onChange={DoctorFunctions.handleEditAccountChange}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-
-                {/* Add more fields as needed */}
-
-                {/* Save Changes Button */}
-                <button
-                  onClick={DoctorFunctions.handleEditAccount}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-800 transition duration-300"
-                >
-                  Save Changes
-                </button>
-
-                {/* Delete Account Button */}
-                <button
-                  onClick={DoctorFunctions.handleDeleteAccount}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-800 transition duration-300 mt-4"
-                >
-                  Delete Account
-                </button>
-              </form>
-            </div>
+            <EditAccountForm
+              doctorInfo={doctorInfo}
+              handleEditAccount={DoctorFunctions.handleEditAccount}
+              handleDeleteAccount={DoctorFunctions.handleDeleteAccount}
+              handleEditAccountChange={DoctorFunctions.handleEditAccountChange}
+            />
           )}
 
           {/* Set Availability */}
           {activeTab === "setAvailability" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Set Availability
-              </h2>
-              {/* Date Picker */}
-              <div className="m-4">
-                <label htmlFor="datePicker" className="text-white m-3">
-                  Select Date:
-                </label>
-                <DatePicker
-                  id="datePicker"
-                  selected={selectedDate}
-                  onChange={DoctorFunctions.handleDateChange}
-                  dateFormat="dd/MM/yyyy"
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-              </div>
-
-              {/* Time Picker */}
-              <div className="m-4">
-                <label htmlFor="timePicker" className="text-white m-3">
-                  Select Time:
-                </label>
-                <input
-                  type="time"
-                  id="timePicker"
-                  value={selectedTime}
-                  onChange={(e) => DoctorFunctions.handleTimeChange(e.target.value)}
-                  className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
-                />
-              </div>
-
-              {/* Set Availability Button */}
-              <button
-                onClick={DoctorFunctions.handleSetAvailabilityDoctor}
-                className="bg-blue-500 text-white m-6 px-4 py-2 rounded-md focus:outline-none hover:bg-blue-800 transition duration-300"
-              >
-                Set Availability
-              </button>
-            </div>
+            <SetAvailabilityForm
+              selectedDate={selectedDate}
+              selectedTime={selectedTime}
+              handleDateChange={DoctorFunctions.handleDateChange}
+              handleTimeChange={DoctorFunctions.handleTimeChange}
+              handleSetAvailabilityDoctor={
+                DoctorFunctions.handleSetAvailabilityDoctor
+              }
+            />
           )}
 
           {/* Check Patient List */}
@@ -266,16 +88,7 @@ const [selectedTime, setSelectedTime] = useState(null);
             />
           )}
           {/* View Schedule */}
-          {activeTab === "viewSchedule" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                View Schedule
-              </h2>
-              {/* Add content for viewing schedule */}
-            </div>
-          )}
-
-         
+          {activeTab === "viewSchedule" && <ViewSchedule />}
         </div>
       </div>
     </div>
