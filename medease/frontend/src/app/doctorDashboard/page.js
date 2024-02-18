@@ -6,7 +6,6 @@ import Head from "next/head";
 import Navbar from "../../app/components/navbar";
 import * as DoctorFunctions from "./doctorFunctions";
 import DoctorPatientList from "./doctorPatientList";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import EditAccountForm from "./editAccountForm";
 import SetAvailabilityForm from "./setAvailabilityForm";

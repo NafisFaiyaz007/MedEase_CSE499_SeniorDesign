@@ -3,35 +3,16 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Navbar from "../../app/components/navbar";
 import { create } from "ipfs-http-client";
+import ViewProfile from "./viewProfile";
+import UploadDocuments from "./uploadDocument";
+import PatientDashboardHeader from "./patientDashboardHeader"
 
-const apiKey = "c1d1d437336b46dc8b66cf24d67fd2ba";
-const ipfs = create({
-  host: "ipfs.infura.io",
-  port: 5001,
-  protocol: "https",
-  headers: {
-    authorization: `Bearer ${apiKey}`,
-  },
-});
 
 const PatientDashboard = () => {
   const [activeTab, setActiveTab] = useState("viewProfile");
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const [patientData, setPatientData] = useState({
-    name: "John Doe",
-    age: 30,
-    gender: "Male",
-    email: "john.doe@example.com",
-    upcomingAppointments: [
-      {
-        doctor: "Dr. Smith",
-        date: "2023-12-20",
-        time: "10:00 AM",
-      },
-      // Add more appointments as needed
-    ],
-  });
+
   const patientName = "John Doe"; // Replace with the actual patient's name
 
   const handleLogout = () => {
@@ -39,54 +20,60 @@ const PatientDashboard = () => {
     console.log("Logout clicked");
   };
 
-  const handleUploadFile = async (file) => {
-    // Implement logic to upload the file
-    console.log("Uploading file:", file)
-  try {
-    // Read the file content
-    const fileBuffer = await file.arrayBuffer();
+// const handleRemoveFile = async (file)=>{
+//   console.log("handle remove file")
+// }
+// const handleSendFile = async (file) => {
+//   console.log("handle remove file");
+// };
+//   const handleUploadFile = async (file) => {
+//     // Implement logic to upload the file
+//     console.log("Uploading file:", file)
+//   try {
+//     // Read the file content
+//     const fileBuffer = await file.arrayBuffer();
 
-    // Upload file to IPFS
-    const result = await ipfs.add({ content: fileBuffer });
-    const ipfsHash = result.cid.toString();
+//     // Upload file to IPFS
+//     const result = await ipfs.add({ content: fileBuffer });
+//     const ipfsHash = result.cid.toString();
 
-    console.log("File uploaded to IPFS. IPFS Hash:", ipfsHash);
+//     console.log("File uploaded to IPFS. IPFS Hash:", ipfsHash);
 
-    // Update state with the IPFS hash or perform further actions
-    setUploadedFiles((prevFiles) => [
-      ...prevFiles,
-      { name: file.name, ipfsHash },
-    ]);
-  } catch (error) {
-    console.error("Error uploading file to IPFS:", error);
-  }
-    setUploadedFiles((prevFiles) => [...prevFiles, file]);
-  };
+//     // Update state with the IPFS hash or perform further actions
+//     setUploadedFiles((prevFiles) => [
+//       ...prevFiles,
+//       { name: file.name, ipfsHash },
+//     ]);
+//   } catch (error) {
+//     console.error("Error uploading file to IPFS:", error);
+//   }
+//     setUploadedFiles((prevFiles) => [...prevFiles, file]);
+//   };
 
-  const handleDownloadFile = async (file) => {
-    try {
-      // Fetch file from IPFS using its hash
-      const fileContent = await ipfs.cat(file.ipfsHash);
+//   const handleDownloadFile = async (file) => {
+//     try {
+//       // Fetch file from IPFS using its hash
+//       const fileContent = await ipfs.cat(file.ipfsHash);
 
-      // Convert file content to a Blob
-      const blob = new Blob([fileContent], {
-        type: "application/octet-stream",
-      });
+//       // Convert file content to a Blob
+//       const blob = new Blob([fileContent], {
+//         type: "application/octet-stream",
+//       });
 
-      // Create a download link and trigger a click event to download the file
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = file.name;
-      link.click();
-    } catch (error) {
-      console.error("Error downloading file from IPFS:", error);
-    }
-  };
-  const handleViewProfile = () => {
-    // Implement logic to view patient's profile
-    console.log("Viewing patient profile");
-    // You may want to navigate to a new page or update the state accordingly
-  };
+//       // Create a download link and trigger a click event to download the file
+//       const link = document.createElement("a");
+//       link.href = URL.createObjectURL(blob);
+//       link.download = file.name;
+//       link.click();
+//     } catch (error) {
+//       console.error("Error downloading file from IPFS:", error);
+//     }
+//   };
+  // const handleViewProfile = () => {
+  //   // Implement logic to view patient's profile
+  //   console.log("Viewing patient profile");
+  //   // You may want to navigate to a new page or update the state accordingly
+  // };
 
   const handleBrowseDoctors = () => {
     // Implement logic to browse doctors
@@ -169,7 +156,7 @@ const PatientDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900">
       <Head>
         <title>Patient Dashboard</title>
       </Head>
@@ -179,184 +166,26 @@ const PatientDashboard = () => {
       {/* Content */}
       <div className="container mx-auto p-4 flex items-center justify-center">
         {/* Left half */}
-        <div className="flex flex-col items-start mr-8">
-          {/* Patient Dashboard Text */}
-          <h1 className="text-3xl font-semibold my-6 text-white">
-            Patient Dashboard
-          </h1>
-
-          {/* Tabs */}
-          <div className="flex flex-col space-y-4">
-            <button
-              onClick={() => setActiveTab("viewProfile")}
-              className={`${
-                activeTab === "viewProfile"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              View Profile
-            </button>
-            <button
-              onClick={() => setActiveTab("uploadDocuments")}
-              className={`${
-                activeTab === "uploadDocuments"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Upload/View Documents
-            </button>
-            <button
-              onClick={() => setActiveTab("browseDoctors")}
-              className={`${
-                activeTab === "browseDoctors"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Browse Doctors
-            </button>
-
-            <button
-              onClick={() => setActiveTab("bookHospitalBed")}
-              className={`${
-                activeTab === "bookHospitalBed"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Book Hospital Bed
-            </button>
-
-            <button
-              onClick={() => setActiveTab("editAccount")}
-              className={`${
-                activeTab === "editAccount"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
-            >
-              Edit Account
-            </button>
-            
-            {/* Add more tabs for other use cases */}
-          </div>
-        </div>
+        <PatientDashboardHeader
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
 
         {/* Right half */}
         <div className="flex-1">
           {/* Content based on active tab */}
           {activeTab === "viewProfile" && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                View Profile
-              </h2>
-              {/* Implement your logic for displaying and editing patient profile */}
-              {/* Personal Information Section */}
-              {/* Personal Information Section */}
-              <div className="bg-white p-6 rounded-md shadow-md">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Personal Information:
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-gray-700">
-                      <strong>Name:</strong> {patientData.name}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Age:</strong> {patientData.age}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Gender:</strong> {patientData.gender}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">
-                      <strong>Email:</strong> {patientData.email}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Upcoming Appointments Section */}
-              {patientData.upcomingAppointments.length > 0 && (
-                <div className="bg-white p-6 rounded-md shadow-md">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Upcoming Appointments:
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-700">
-                    {patientData.upcomingAppointments.map(
-                      (appointment, index) => (
-                        <li key={index} className="mb-2">
-                          <strong>Doctor:</strong> {appointment.doctor},{" "}
-                          <strong>Date:</strong> {appointment.date},{" "}
-                          <strong>Time:</strong> {appointment.time}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              )}
-            </div>
+            <ViewProfile/>
           )}
 
           {activeTab === "uploadDocuments" && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                Upload/View Documents
-              </h2>
-              {/* Upload File Section */}
-              <div className="mb-4">
-                <label htmlFor="fileInput" className="block text-white mb-2">
-                  Choose File:
-                </label>
-                <input
-                  type="file"
-                  id="fileInput"
-                  onChange={(e) => handleUploadFile(e.target.files[0])}
-                  className="border p-2"
-                />
-              </div>
-              {/* View Uploaded Files Section */}
-              {uploadedFiles.length > 0 && (
-                <div className="bg-white p-4 rounded-md shadow-md">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Uploaded Files:
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-700">
-                    {uploadedFiles.map((file, index) => (
-                      <li
-                        key={index}
-                        className="mb-2 flex items-center justify-between"
-                      >
-                        <span>{file.name}</span>
-                        <div className="flex items-center space-x-2">
-                          <button
-                            className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
-                            onClick={() => handleDownloadFile(file)}
-                          >
-                            Download
-                          </button>
-                          <button
-                            className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
-                            onClick={() => handleRemoveFile(index)}
-                          >
-                            Remove
-                          </button>
-                          <button
-                            className="bg-green-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
-                            onClick={() => handleSendFile(file)}
-                          >
-                            Send
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+            <UploadDocuments
+              // handleUploadFile={handleUploadFile}
+              // uploadedFiles={uploadedFiles}
+              // handleDownloadFile={handleDownloadFile}
+              // handleRemoveFile={handleRemoveFile}
+              // handleSendFile={handleSendFile}
+            />
           )}
 
           {/* Add content for other tabs */}
@@ -383,7 +212,7 @@ const PatientDashboard = () => {
                       <p className="text-gray-800">{doctor.description}</p>
                     </div>
                     <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700 transition duration-300 self-end"
+                      className="bg-purple-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-purple-700 transition duration-300 self-end"
                       onClick={() => handleSetAppointment(doctor)}
                     >
                       Set Appointment
@@ -414,7 +243,7 @@ const PatientDashboard = () => {
                       <p className="text-gray-800">{hospital.description}</p>
                     </div>
                     <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700 transition duration-300 self-end"
+                      className="bg-purple-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-purple-700 transition duration-300 self-end"
                       onClick={() => handleBookBed(hospital)}
                     >
                       Book Bed
@@ -443,7 +272,7 @@ const PatientDashboard = () => {
                     placeholder={patientData.name}
                     // Implement the onChange handler to update state
                     onChange={(e) => handleEditAccountChange(e)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-purple-500"
                   />
                 </div>
                 <div>
@@ -456,7 +285,7 @@ const PatientDashboard = () => {
                     name="editAge"
                     placeholder={patientData.age}
                     onChange={(e) => handleEditAccountChange(e)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-purple-500"
                   />
                 </div>
                 <div>
@@ -469,7 +298,7 @@ const PatientDashboard = () => {
                     name="editAddress"
                     placeholder={patientData.address}
                     onChange={(e) => handleEditAccountChange(e)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-purple-500"
                   />
                 </div>
                 <div>
@@ -482,7 +311,7 @@ const PatientDashboard = () => {
                     name="editPhoneNumber"
                     placeholder={patientData.phoneNumber}
                     onChange={(e) => handleEditAccountChange(e)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-purple-500"
                   />
                 </div>
                 {/* Add more fields for other account information (gender, email, etc.) */}
@@ -490,7 +319,7 @@ const PatientDashboard = () => {
                   <button
                     type="button"
                     onClick={handleEditAccount}
-                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-700 transition duration-300"
+                    className="w-full bg-purple-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-purple-700 transition duration-300"
                   >
                     Save Changes
                   </button>
