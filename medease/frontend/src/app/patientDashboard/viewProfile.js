@@ -1,7 +1,7 @@
 // ViewProfile.js
 import React, {useState} from "react";
 
-const ViewProfile = ({  }) => {
+const ViewProfile = () => {
   // Your ViewProfile component code here
   const handleViewProfile = () => {
      // Implement logic to view patient's profile
