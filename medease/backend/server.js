@@ -67,14 +67,7 @@ app.get('/api/analytics', (req, res) => {
 });
 
 // Function to execute a MySQL query
-function executeQuery(query) {
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
+async function executeQuery(query, params = []) {
+  const [results] = await dbConnection.execute(query, params);
+  return results;
 }
