@@ -1,15 +1,4 @@
 import React, { useState } from "react";
-import { create } from "ipfs-http-client";
-
-const apiKey = "c1d1d437336b46dc8b66cf24d67fd2ba";
-const ipfs = create({
-  host: "ipfs.infura.io",
-  port: 5001,
-  protocol: "https",
-  headers: {
-    authorization: `Bearer ${apiKey}`,
-  },
-});
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -19,51 +8,22 @@ const UploadDocuments = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+
   const handleSendFile = async (file) => {
-    console.log("handle remove file");
+    console.log("handle send file");
   };
+
   const handleUploadFile = async (file) => {
-    // Implement logic to upload the file
-    console.log("Uploading file:", file);
-    try {
-      // Read the file content
-      const fileBuffer = await file.arrayBuffer();
-
-      // Upload file to IPFS
-      const result = await ipfs.add({ content: fileBuffer });
-      const ipfsHash = result.cid.toString();
-
-      console.log("File uploaded to IPFS. IPFS Hash:", ipfsHash);
-
-      // Update state with the IPFS hash or perform further actions
-      setUploadedFiles((prevFiles) => [
-        ...prevFiles,
-        { name: file.name, ipfsHash },
-      ]);
-    } catch (error) {
-      console.error("Error uploading file to IPFS:", error);
-    }
     setUploadedFiles((prevFiles) => [...prevFiles, file]);
   };
 
   const handleDownloadFile = async (file) => {
-    try {
-      // Fetch file from IPFS using its hash
-      const fileContent = await ipfs.cat(file.ipfsHash);
+    console.log("handle download file");
+  };
 
-      // Convert file content to a Blob
-      const blob = new Blob([fileContent], {
-        type: "application/octet-stream",
-      });
-
-      // Create a download link and trigger a click event to download the file
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = file.name;
-      link.click();
-    } catch (error) {
-      console.error("Error downloading file from IPFS:", error);
-    }
+  const handleViewFile = async (file) => {
+    // Open modal or implement file viewer logic here
+    console.log("handle view file", file);
   };
 
   return (
@@ -114,6 +74,12 @@ const UploadDocuments = () => {
                     onClick={() => handleSendFile(file)}
                   >
                     Send
+                  </button>
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-700"
+                    onClick={() => handleViewFile(file)}
+                  >
+                    View
                   </button>
                 </div>
               </li>
