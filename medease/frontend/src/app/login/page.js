@@ -66,7 +66,7 @@ const Login = () => {
 
         {/* Right half with login form */}
         <div className="flex-1 flex items-center justify-center z-10">
-          <div className="bg-gray-200 bg-opacity-85 p-8 rounded-lg max-w-md w-full shadow-2xl">
+          <div className="bg-gray-200 text-gray-700 font-bold bg-opacity-85 p-8 rounded-lg max-w-md w-full shadow-2xl">
             <Image
               src="/images/logo.png"
               alt="Logo"

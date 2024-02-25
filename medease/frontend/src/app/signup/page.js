@@ -50,7 +50,7 @@ const Signup = () => {
 
         {/* Right half with signup form */}
         <div className="flex-1 flex items-center justify-center z-10">
-          <div className="bg-gray-300 shadow-2xl bg-opacity-85 m-8 p-8 rounded-lg max-w-md w-full">
+          <div className="bg-gray-300 text-gray-700 font-bold shadow-2xl bg-opacity-85 m-8 p-8 rounded-lg max-w-md w-full">
             <Image
               src="/images/logo.png"
               alt="Logo"
