@@ -71,3 +71,16 @@ async function executeQuery(query, params = []) {
   const [results] = await dbConnection.execute(query, params);
   return results;
 }
+
+// API endpoint to fetch all doctors
+app.get('/api/doctors', async (req, res) => {
+  const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+
+  try {
+    const doctors = await executeQuery(query);
+    res.json(doctors);
+  } catch (error) {
+    console.error("Error fetching doctors from MySQL:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});

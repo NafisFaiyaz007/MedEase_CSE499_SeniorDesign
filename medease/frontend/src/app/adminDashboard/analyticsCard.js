@@ -8,7 +8,7 @@ const AnalyticsCard = () => {
     const fetchData = async () => {
       try {
         // Fetch data from your API or backend endpoint
-        const response = await fetch("/api/analytics"); // Adjust the API endpoint accordingly
+        const response = await fetch("http://localhost:8000/api/analytics"); // Adjust the API endpoint accordingly
         const data = await response.json();
         setAnalyticsData(data);
       } catch (error) {
