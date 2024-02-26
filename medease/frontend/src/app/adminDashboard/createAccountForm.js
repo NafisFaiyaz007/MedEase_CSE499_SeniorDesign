@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const CreateAccountForm = () => {
-  const [selectedAccountType, setSelectedAccountType] = useState("doctor");
-  const [showCreateAccountModal, setShowCreateAccountModal] = useState(true);
+const CreateAccountForm = ({
+  selectedAccountType,
+  showCreateAccountModal,
+  setShowCreateAccountModal,
+}) => {
+  //const [selectedAccountType, setSelectedAccountType] = useState("");
+  //const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
 
-  const handleCreateAccountModalClose = () => {
+  const handleCloseModal = () => {
     setShowCreateAccountModal(false);
+  };
+  const handleOpenModal = () => {
+    setShowCreateAccountModal(true);
   };
 
   const handleCreateAccountSubmit = async (formData) => {
     // Implement logic to handle form submission (e.g., send data to server)
     try {
       let uType = 5;
-      if (selectedAccountType.toLocaleLowerCase() === "hospital") uType = 2;
+      if (selectedAccountType.toLowerCase() === "hospital") uType = 2;
       else if (selectedAccountType.toLowerCase() === "doctor") uType = 3;
       console.log(formData);
       const response = await axios.post(
@@ -40,6 +47,8 @@ const CreateAccountForm = () => {
   };
 
   return (
+  
+    
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -50,9 +59,10 @@ const CreateAccountForm = () => {
           data[key] = value;
         });
         handleCreateAccountSubmit(data);
+        setShowCreateAccountModal(false);
       }}
     >
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label
           htmlFor="accountType"
           className="block text-sm font-medium text-gray-700"
@@ -65,15 +75,25 @@ const CreateAccountForm = () => {
           className="mt-1 p-2 w-full text-black border rounded-md focus:outline-none focus:border-blue-500"
           onChange={(e) => setSelectedAccountType(e.target.value)}
           value={selectedAccountType}
+          onClick={handleOpenModal}
         >
           <option value="doctor">Doctor</option>
           <option value="hospital">Hospital</option>
         </select>
-      </div>
-
+      </div> */}
+               <h2 className="text-2xl text-black font-semibold mb-4">
+                Create{" "}
+                {selectedAccountType === "hospital"
+                  ? "Hospital"
+                  : selectedAccountType === "doctor"
+                  ? "Doctor"
+                  : "Pharmacy"}{" "}
+                Account
+              </h2> 
       {selectedAccountType === "doctor" && (
         <>
           {/* Render doctor fields */}
+          <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
           <div className="mb-4">
             {/* Add labels and input fields for doctor */}
             <div className="mb-4">
@@ -209,12 +229,14 @@ const CreateAccountForm = () => {
                   />
                 </div> */}
           </div>
+          </div>
         </>
       )}
 
       {selectedAccountType === "hospital" && (
         <>
           {/* Render hospital fields */}
+          <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
           <div className="mb-4">
             <div className="mb-4">
               <label
@@ -281,6 +303,7 @@ const CreateAccountForm = () => {
             </div>
             {/* Add labels and input fields for hospital */}
           </div>
+          </div>
         </>
       )}
 
@@ -290,7 +313,7 @@ const CreateAccountForm = () => {
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={handleCreateAccountModalClose}
+          onClick={handleCloseModal}
           className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-300 focus:outline-none transition duration-300"
         >
           Cancel

@@ -124,26 +124,19 @@ const AdminDashboard = () => {
             ))}
           </div>
         )}
-
-        {/* Create Account Modal */}
-        {showCreateAccountModal && (
-          // <CreateAccountModal/>
-          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-            <div className="absolute  w-full h-full bg-gray-900 opacity-50"></div>
-            <div className="bg-gray-400 p-8 rounded-md shadow-md z-10">
-              <h2 className="text-2xl text-black font-semibold mb-4">
-                Create{" "}
-                {selectedAccountType === "hospital"
-                  ? "Hospital"
-                  : selectedAccountType === "doctor"
-                  ? "Doctor"
-                  : "Pharmacy"}{" "}
-                Account
-              </h2>
-              <CreateAccountForm/>
-            </div>
+      {/* Create Account Modal */}
+      {showCreateAccountModal && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+          <div className="absolute w-full h-full bg-gray-900 opacity-50"></div>
+          <div className="bg-gray-400 p-8 rounded-md shadow-md z-10">
+            <CreateAccountForm
+              selectedAccountType={selectedAccountType}
+              showCreateAccountModal={showCreateAccountModal}
+              setShowCreateAccountModal={setShowCreateAccountModal}
+            />
           </div>
-        )}
+        </div>
+      )}
       </div>
     </div>
   );
