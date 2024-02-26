@@ -22,8 +22,8 @@ const CreateAccountForm = ({
       let uType;
       let url = ""
       if (selectedAccountType.toLowerCase() === "hospital") {
-      uType = 2;
-      url = "http://localhost:8000/api/users/registerHospital";
+        uType = 2;
+        url = "http://localhost:8000/api/users/registerHospital";
       }
       else if (selectedAccountType.toLowerCase() === "doctor") {
         uType = 3;
@@ -54,8 +54,8 @@ const CreateAccountForm = ({
   };
 
   return (
-  
-    
+
+
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -88,199 +88,199 @@ const CreateAccountForm = ({
           <option value="hospital">Hospital</option>
         </select>
       </div> */}
-               <h2 className="text-2xl text-black font-semibold mb-4">
-                Create{" "}
-                {selectedAccountType === "hospital"
-                  ? "Hospital"
-                  : selectedAccountType === "doctor"
-                  ? "Doctor"
-                  : "Pharmacy"}{" "}
-                Account
-              </h2> 
+      <h2 className="text-2xl text-black font-semibold mb-4">
+        Create{" "}
+        {selectedAccountType === "hospital"
+          ? "Hospital"
+          : selectedAccountType === "doctor"
+            ? "Doctor"
+            : "Pharmacy"}{" "}
+        Account
+      </h2>
       {selectedAccountType === "doctor" && (
         <>
           {/* Render doctor fields */}
           <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
-          <div className="mb-4">
-            {/* Add labels and input fields for doctor */}
             <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {selectedAccountType === "hospital"
-                  ? "Hospital"
-                  : selectedAccountType === "doctor"
-                  ? "Doctor"
-                  : "Pharmacy"}{" "}
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                className="mt-1 p-2 w-full text-black border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="text"
-                id="email"
-                name="email"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
+              {/* Add labels and input fields for doctor */}
               <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phone Number
-              </label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="degree"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {selectedAccountType === "hospital"
-                  ? "Hospital"
-                  : selectedAccountType === "doctor"
-                  ? "Doctor"
-                  : "Pharmacy"}{" "}
-                Degree
-              </label>
-              <input
-                type="text"
-                id="degree"
-                name="degree"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="specialization"
-                className="block text-sm font-medium text-gray-700"
-              >
-                specialization
-              </label>
-              <input
-                type="text"
-                id="specialization"
-                name="specialization"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="hospital"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Hospital
-              </label>
-              <input
-                type="text"
-                id="hospital"
-                name="hospital"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="designation"
-                className="block text-sm font-medium text-gray-700"
-              >
-                designation
-              </label>
-              <input
-                type="text"
-                id="designation"
-                name="designation"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="dateOfBirth"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Date of Birth
-              </label>
-              <input
-                // type="age"
-                id="dateOfBirth"
-                name="dateOfBirth"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="hospital_id"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Hospital ID
-              </label>
-              <input
-                type="text"
-                id="hospital_id"
-                name="hospital_id"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {selectedAccountType === "hospital"
+                    ? "Hospital"
+                    : selectedAccountType === "doctor"
+                      ? "Doctor"
+                      : "Pharmacy"}{" "}
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  className="mt-1 p-2 w-full text-black border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+                <div className="mb-4">
                   <label
-                    htmlFor="address"
+                    htmlFor="phone"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Address
+                    Phone Number
                   </label>
                   <input
                     type="text"
-                    id="address"
-                    name="address"
+                    id="phone"
+                    name="phone"
                     required
                     className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   />
                 </div>
-                <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="degree"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {selectedAccountType === "hospital"
+                    ? "Hospital"
+                    : selectedAccountType === "doctor"
+                      ? "Doctor"
+                      : "Pharmacy"}{" "}
+                  Degree
+                </label>
+                <input
+                  type="text"
+                  id="degree"
+                  name="degree"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="specialization"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  specialization
+                </label>
+                <input
+                  type="text"
+                  id="specialization"
+                  name="specialization"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="hospital"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Hospital
+                </label>
+                <input
+                  type="text"
+                  id="hospital"
+                  name="hospital"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="designation"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  designation
+                </label>
+                <input
+                  type="text"
+                  id="designation"
+                  name="designation"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="dateOfBirth"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Date of Birth
+                </label>
+                <input
+                  // type="age"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="hospital_id"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Hospital ID
+                </label>
+                <input
+                  type="text"
+                  id="hospital_id"
+                  name="hospital_id"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
             </div>
-          </div>
           </div>
         </>
       )}
@@ -289,87 +289,87 @@ const CreateAccountForm = ({
         <>
           {/* Render hospital fields */}
           <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
-          <div className="mb-4">
             <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Hospital Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Hospital Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Hospital Email
-              </label>
-              <input
-                type="text"
-                id="email"
-                name="email"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Hospital Email
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="address"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Address
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phone Number
-              </label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
+              <div className="mb-4">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              {/* Add labels and input fields for hospital */}
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            {/* Add labels and input fields for hospital */}
-          </div>
           </div>
         </>
       )}
