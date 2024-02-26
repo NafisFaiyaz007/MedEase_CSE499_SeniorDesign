@@ -1,6 +1,6 @@
 'use client'
 // pages/Signup.js
-import React from "react";
+import {React, useState} from "react";
 import Image from "next/image";
 import axios from 'axios';
 import { useRouter } from "next/navigation";
@@ -8,8 +8,11 @@ import { useRouter } from "next/navigation";
 
 const Signup = () => {
   const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async (data) => {
-    console.log(data);
+    console.log(data.password);
+    if(data.password == data.confirmPassword){
     try {
       const response = await axios.post('http://localhost:8000/api/users/registerPatient', {
         ...data,
@@ -29,6 +32,9 @@ const Signup = () => {
         // Something happened in setting up the request that triggered an Error
         console.error('Error setting up the request', error.message);
       }}
+    }
+    else 
+    setErrorMessage("Passwords don't match");
   };
   return (
     <div className="min-h-screen relative">
@@ -73,6 +79,7 @@ const Signup = () => {
                   handleSubmit(data);
                 }}>
               <div className="mb-6">
+                {errorMessage && <div className="error-message" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 font-medium" role="alert"><span>{errorMessage}</span></div>}
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-600 mb-1"
@@ -85,6 +92,7 @@ const Signup = () => {
                   name="name"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your name"
+                  required
                 />
               </div>
               <div className="mb-6">
@@ -100,6 +108,7 @@ const Signup = () => {
                   name="email"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your email"
+                  required
                 />
               </div>
               <div className="mb-6">
@@ -115,21 +124,23 @@ const Signup = () => {
                   name="phone"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your phone number"
+                  required
                 />
               </div>
               <div className="mb-6">
                 <label
-                  htmlFor="age"
+                  htmlFor="dateOfBirth"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  Age
+                  Date Of Birth
                 </label>
                 <input
-                  type="number"
-                  id="age"
-                  name="age"
+                  type="date"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
                   className="mt-1 p-4 w-full border rounded-lg"
-                  placeholder="Enter your age"
+                  placeholder="Enter your date of birth"
+                  required
                 />
               </div>
               <div className="mb-6">
@@ -143,6 +154,7 @@ const Signup = () => {
                   id="gender"
                   name="gender"
                   className="mt-1 p-4 w-full border rounded-lg"
+                  required
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
@@ -162,6 +174,7 @@ const Signup = () => {
                   name="address"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your address"
+                  required
                 />
               </div>
               {/* <div className="mb-6">
@@ -194,6 +207,23 @@ const Signup = () => {
                   name="password"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="mt-1 p-4 w-full border rounded-lg"
+                  placeholder="Confirm your password"
+                  required
                 />
               </div>
               <button
