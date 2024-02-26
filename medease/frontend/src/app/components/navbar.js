@@ -4,6 +4,10 @@ import Image from "next/image";
 
 
 const Navbar = ({ adminName, handleLogout }) => {
+
+  const handleNavbar = () => {
+    //get info of logged in user and show name from session.
+  }
   return (
     <nav className="bg-slate-200 backdrop-blur-lg opacity-75 px-6 py-0 shadow-md mb-4">
       <div className="flex justify-between items-center">

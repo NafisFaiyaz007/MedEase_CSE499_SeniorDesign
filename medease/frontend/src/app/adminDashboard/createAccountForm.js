@@ -19,12 +19,19 @@ const CreateAccountForm = ({
   const handleCreateAccountSubmit = async (formData) => {
     // Implement logic to handle form submission (e.g., send data to server)
     try {
-      let uType = 5;
-      if (selectedAccountType.toLowerCase() === "hospital") uType = 2;
-      else if (selectedAccountType.toLowerCase() === "doctor") uType = 3;
-      console.log(formData);
+      let uType;
+      let url = ""
+      if (selectedAccountType.toLowerCase() === "hospital") {
+      uType = 2;
+      url = "http://localhost:8000/api/users/registerHospital";
+      }
+      else if (selectedAccountType.toLowerCase() === "doctor") {
+        uType = 3;
+        url = "http://localhost:8000/api/users/registerDoctor";
+      }
+      // console.log(formData);
       const response = await axios.post(
-        "http://localhost:8000/api/users/register",
+        url,
         {
           ...formData,
           userType: uType,
@@ -118,6 +125,36 @@ const CreateAccountForm = ({
             </div>
             <div className="mb-4">
               <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                required
+                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              />
+              <div className="mb-4">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number
+              </label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                required
+                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="degree"
                 className="block text-sm font-medium text-gray-700"
               >
@@ -183,15 +220,15 @@ const CreateAccountForm = ({
             </div>
             <div className="mb-4">
               <label
-                htmlFor="age"
+                htmlFor="dateOfBirth"
                 className="block text-sm font-medium text-gray-700"
               >
-                Age
+                Date of Birth
               </label>
               <input
-                type="age"
-                id="age"
-                name="age"
+                // type="age"
+                id="dateOfBirth"
+                name="dateOfBirth"
                 required
                 className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
               />
@@ -213,12 +250,12 @@ const CreateAccountForm = ({
               />
             </div>
 
-            {/* <div className="mb-4">
+            <div className="mb-4">
                   <label
                     htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Location
+                    Address
                   </label>
                   <input
                     type="text"
@@ -227,7 +264,22 @@ const CreateAccountForm = ({
                     required
                     className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   />
-                </div> */}
+                </div>
+                <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
           </div>
           </div>
         </>
@@ -240,15 +292,15 @@ const CreateAccountForm = ({
           <div className="mb-4">
             <div className="mb-4">
               <label
-                htmlFor="hospital_id"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Hospital_id
+                Hospital Name
               </label>
               <input
                 type="text"
-                id="hospital_id"
-                name="hospital_id"
+                id="name"
+                name="name"
                 required
                 className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
               />
@@ -256,15 +308,15 @@ const CreateAccountForm = ({
 
             <div className="mb-4">
               <label
-                htmlFor="user_id"
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                User_id
+                Hospital Email
               </label>
               <input
                 type="text"
-                id="user_id"
-                name="user_id"
+                id="email"
+                name="email"
                 required
                 className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
               />
@@ -275,7 +327,7 @@ const CreateAccountForm = ({
                 htmlFor="address"
                 className="block text-sm font-medium text-gray-700"
               >
-                address
+                Address
               </label>
               <input
                 type="text"
@@ -288,15 +340,30 @@ const CreateAccountForm = ({
 
             <div className="mb-4">
               <label
-                htmlFor="phone_no"
+                htmlFor="phone"
                 className="block text-sm font-medium text-gray-700"
               >
                 Phone Number
               </label>
               <input
                 type="text"
-                id="phone_no"
-                name="phone_no"
+                id="phone"
+                name="phone"
+                required
+                className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
                 required
                 className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
               />
