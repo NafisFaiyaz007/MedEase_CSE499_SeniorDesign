@@ -3,9 +3,18 @@ const dbConnection = require('./db');
 // const bodyParser = require('body-parser');
 const app = express();
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const sessionStore = new MySQLStore({}, dbConnection);
+
 var cors = require('cors')
 const port = 8000;
 
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+}));
 app.use(cors())
 app.get('/', (req, res) => {
   res.send('Welcome to my MedEase!');
@@ -15,12 +24,13 @@ app.get('/', (req, res) => {
 const userRoutes = require('./routes');
 app.use(express.json());
 app.use('/api/users', userRoutes);
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set to true in production
-}));
+// app.use(session({
+//     secret: 'your-secret-key',
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: false } // Set to true in production
+// }));
+
 
 
 // app.listen(port, () => {

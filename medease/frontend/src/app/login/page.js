@@ -25,6 +25,8 @@ const Login = () => {
 
       // Handle successful login (e.g., store token, redirect, etc.)
       console.log('Login successful:', response.data);
+      localStorage.setItem('token', response.data.token);
+
       // Redirect based on user type
       const userType = response.data.userType; // Assuming the server sends the user type in the response
       if (userType === 1) {

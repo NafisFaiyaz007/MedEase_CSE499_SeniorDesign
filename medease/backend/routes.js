@@ -15,6 +15,7 @@ router.post('/registerPatient', userController.registerPatient);
 
 // User login
 router.post('/login', userController.login);
+router.get('/checkSession', userController.checkSession);
 
 // Logout route
 router.post('/logout', userController.logout);

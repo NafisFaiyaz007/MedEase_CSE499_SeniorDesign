@@ -1,13 +1,50 @@
 // components/Navbar.js
-import React from "react";
+import {React, useEffect, useState} from "react";
 import Image from "next/image";
+import axios from 'axios';
+import { useRouter } from "next/navigation";
+
+//import jwt_decode from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode' // import dependency
 
 
-const Navbar = ({ adminName, handleLogout }) => {
 
-  const handleNavbar = () => {
-    //get info of logged in user and show name from session.
-  }
+
+const Navbar = () => {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Check if the JWT exists in local storage or wherever you store it
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Decode the JWT to get user information
+      const decoded = jwtDecode(token);
+
+      // Set user information in state
+      setUser(decoded);
+    }
+  }, []);
+  useEffect(() => {
+    // This effect runs whenever the user state changes
+    if (user!= null)console.log(user.name);
+  }, [user]); // Add user as a dependency
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/users/logout');
+      
+      // Handle the response (optional)
+      console.log(response.data);
+      localStorage.removeItem('jwt');
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed', error);
+      // Handle error if needed
+    }
+  
+  };
   return (
     <nav className="bg-slate-200 backdrop-blur-lg opacity-75 px-6 py-0 shadow-md mb-4">
       <div className="flex justify-between items-center">
@@ -26,7 +63,7 @@ const Navbar = ({ adminName, handleLogout }) => {
         </div>
         {/* Logged-in User Info */}
         <div className="flex items-center">
-          <p className="text-black m-4">Logged in as {adminName}</p>
+          <p className="text-black m-4">Logged in as  {(user != null) && user.name}</p>
           {/* Logout Button */}
           <button
             onClick={handleLogout}
