@@ -103,7 +103,7 @@ const CreateAccountForm = ({
         <>
           {/* Render doctor fields */}
           <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
-            <div className="mb-4">
+            <div className="mb-4 text-black">
               {/* Add labels and input fields for doctor */}
               <div className="mb-4">
                 <label
@@ -291,7 +291,7 @@ const CreateAccountForm = ({
         <>
           {/* Render hospital fields */}
           <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
-            <div className="mb-4">
+            <div className="mb-4 text-black">
               <div className="mb-4">
                 <label
                   htmlFor="name"
