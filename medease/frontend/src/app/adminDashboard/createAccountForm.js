@@ -9,9 +9,11 @@ const CreateAccountForm = ({
   //const [selectedAccountType, setSelectedAccountType] = useState("");
   //const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
 
-  const handleCloseModal = () => {
-    setShowCreateAccountModal(false);
-  };
+ const handleCloseModal = () => {
+   console.log("Closing modal");
+   setShowCreateAccountModal(false);
+ };
+
   const handleOpenModal = () => {
     setShowCreateAccountModal(true);
   };
@@ -120,7 +122,7 @@ const CreateAccountForm = ({
                   id="name"
                   name="name"
                   required
-                  className="mt-1 p-2 w-full text-black border rounded-md focus:outline-none focus:border-blue-500"
+                  className="mt-1 p-2 w-full input-field text-black border rounded-md focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div className="mb-4">

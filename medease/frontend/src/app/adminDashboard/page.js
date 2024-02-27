@@ -124,19 +124,26 @@ const AdminDashboard = () => {
             ))}
           </div>
         )}
-      {/* Create Account Modal */}
-      {showCreateAccountModal && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-          <div className="absolute w-full h-full bg-gray-900 opacity-50"></div>
-          <div className="bg-gray-400 p-8 rounded-md shadow-md z-10">
-            <CreateAccountForm
-              selectedAccountType={selectedAccountType}
-              showCreateAccountModal={showCreateAccountModal}
-              setShowCreateAccountModal={setShowCreateAccountModal}
-            />
+        {/* Create Account Modal */}
+        {showCreateAccountModal && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+            <div className="absolute w-full h-full bg-gray-900 opacity-50"></div>
+            <div className="bg-gray-300 p-4 md:p-8 rounded-md shadow-md z-10 w-full max-w-md md:max-w-xl lg:max-w-2xl max-h-full overflow-y-auto">
+              {/* Add a close button if needed */}
+              {/* <button
+        onClick={() => setShowCreateAccountModal(false)}
+        className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+      >
+        &#10005;
+    </button> */}
+              <CreateAccountForm
+                selectedAccountType={selectedAccountType}
+                showCreateAccountModal={showCreateAccountModal}
+                setShowCreateAccountModal={setShowCreateAccountModal}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
