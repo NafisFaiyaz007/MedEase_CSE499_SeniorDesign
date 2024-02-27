@@ -26,10 +26,6 @@ const Navbar = () => {
       setUser(decoded);
     }
   }, []);
-  useEffect(() => {
-    // This effect runs whenever the user state changes
-    if (user!= null)console.log(user.name);
-  }, [user]); // Add user as a dependency
 
   const handleLogout = async () => {
     try {
