@@ -77,7 +77,7 @@ const Login = () => {
             <h2 className="text-3xl font-semibold text-blue-500 mb-4">Login</h2>
             <form className="w-full" onSubmit={handleLogin}>
               <div className="mb-6">
-                {errorMessage && <div className="error-message" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 font-medium" role="alert"><span>{errorMessage}</span>
+                {errorMessage && <div className="error-message p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 font-medium" role="alert"><span>{errorMessage}</span>
                 </div>}
                 <label
                   htmlFor="email"
