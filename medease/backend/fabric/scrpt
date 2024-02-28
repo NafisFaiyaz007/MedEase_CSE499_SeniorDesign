@@ -1,0 +1,2 @@
+./network.sh up createChannel -c mychannel -ca -s couchdb
+./network.sh deployCC -ccn basic -ccp mychaincode -ccl javascript
