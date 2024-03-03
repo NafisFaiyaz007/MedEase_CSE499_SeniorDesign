@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('./controllers/userController');
-const fileController = require('./controllers/fileController');
-const registerAdmin = require('./fabric/registerAdmin');
-const registerUser = require('./fabric/registerUser');
-const patientFunction = require('./fabric/query');
-
+const fileController = require('./controllers/fileController')
 const multer = require('multer');
 const upload = multer(); // first endpoint
 
@@ -29,14 +25,5 @@ router.post('/upload', upload.single('file'), fileController.uploadFile);
 router.get('/get', fileController.getFile);
 
 // Your other routes for user deletion, edit, and logout will go here
-//Fabric routes
-router.post('/registerAdmin', registerAdmin.registerAdmin);
-router.post('/registerUser', registerUser.registerUserApi);
-router.post('/patient/uploadFile', upload.single('file'),patientFunction.uploadFile);
-router.get('/patient/readFile', patientFunction.getSingleFile);
-router.get('/patient/getFiles', patientFunction.getAllFiles);
-router.post('/patient/grant', patientFunction.grantPermission);
-router.post('/patient/revoke', patientFunction.revokePermission);
-router.get('/allFiles', patientFunction.getAllDocuments);
-router.post('/patient/init', patientFunction.init);
+
 module.exports = router;
