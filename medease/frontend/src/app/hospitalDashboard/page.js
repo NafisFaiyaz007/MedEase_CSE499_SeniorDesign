@@ -168,6 +168,7 @@ const HospitalDashboard = () => {
               handleDoctorFormChange={hospitalFunction.handleDoctorFormChange}
               handleCreateDoctor={hospitalFunction.handleCreateDoctor}
             />
+            
           )}
 
           {/* Update Beds Counter */}
