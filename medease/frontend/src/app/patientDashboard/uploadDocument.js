@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import FileViewerModal from'./fileViewerModal'; 
+import Modal from "react-modal";
+
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -96,9 +98,9 @@ const UploadDocuments = () => {
       )}
       {isFileViewerOpen && selectedFile && (
         <FileViewerModal
-          file={selectedFile}
-          // isOpen={isFileViewerOpen}
+          isOpen={isFileViewerOpen}
           onClose={() => handleCloseFileViewer}
+          file={selectedFile}
         />
       )}
     </div>
