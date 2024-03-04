@@ -1,13 +1,21 @@
 // DeleteDoctor.js
-import React from "react";
+import React, {useState, useEffect} from "react";
 import * as hospitalFunction from "./hospitalFunctions";
 
-const DeleteDoctor = ({
-  doctorList,
-  selectedDoctor,
-  handleDoctorSelection,
-  handleDeleteDoctor,
-}) => {
+const DeleteDoctor = ({ handleDoctorSelection, handleDeleteDoctor }) => {
+  const [doctorList, setDoctorList] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  useEffect(() => {
+    // Fetch doctor list when the component mounts
+    const fetchData = async () => {
+      const doctors = await hospitalFunction.fetchDoctorList();
+      setDoctorList(doctors);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-white mb-4">Delete Doctor</h2>

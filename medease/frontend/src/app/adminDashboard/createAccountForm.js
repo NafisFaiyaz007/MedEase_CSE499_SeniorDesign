@@ -90,7 +90,7 @@ const CreateAccountForm = ({
           <option value="hospital">Hospital</option>
         </select>
       </div> */}
-      <h2 className="text-2xl text-black font-semibold mb-4">
+      <h2 className="text-2xl text-gray-700 font-semibold mb-4">
         Create{" "}
         {selectedAccountType === "hospital"
           ? "Hospital"
@@ -103,7 +103,7 @@ const CreateAccountForm = ({
         <>
           {/* Render doctor fields */}
           <div className={`modal ${showCreateAccountModal ? 'block' : 'hidden'}`}>
-            <div className="mb-4 text-black grid-cols-2 grid gap-2">
+            <div className="mb-4 text-black grid-cols-2  grid gap-2">
               {/* Add labels and input fields for doctor */}
               <div className="mb-4">
                 <label

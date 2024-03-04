@@ -18,6 +18,17 @@ export const doctorList = [
   { id: 2, name: "Dr. Johnson" },
   // Add more doctors as needed
 ];
+// hospitalFunctions.js
+export const fetchDoctorList = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/doctors"); // Adjust the endpoint based on your server
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching doctor list:', error);
+    return [];
+  }
+};
 
 export const handleDoctorSelection = (doctor) => {
   // Implement logic to handle doctor selection
