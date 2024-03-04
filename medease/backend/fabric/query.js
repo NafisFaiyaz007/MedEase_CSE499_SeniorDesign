@@ -50,12 +50,12 @@ async function createNode() {
   
 
 const uploadFile = async (req, res) => {
-    const ownerID = "patient3";
+    const ownerID = req.body.UUID;
     const fileName = req.file.originalname;
     // const type = req.body.fileType;
     // const size = req.body.fileSize;
     const accessList = req.body.doctorList;
-    console.log(req.body)
+
 
     const gateway = new Gateway();
     try {
@@ -76,7 +76,6 @@ const uploadFile = async (req, res) => {
             const data = req.file.buffer;
             const cid = await fs.addBytes(data);
             let fileHash = cid;
-            console.log(accessList)
             console.log('\n--> Submit Transaction: CreateRecord, creates new asset with ID, name, hash, type, size, ownerID, and accessList[] arguments');
             result = await contract.submitTransaction('CreateRecord', fileName, fileHash, ownerID, new Date().toISOString(), accessList);
             console.log('*** Result: committed');
@@ -117,8 +116,10 @@ const getSingleFile = async (req, res) => {
             result = await contract.evaluateTransaction('ReadDocument', id);
             console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             //res.send(result);
-            const filename = req.body.filename;
-            const cid = result.fileHash;
+            //const filename = req.body.filename;
+            const cid = req.body.fileHash;
+            //result.fileHash;
+            console.log("filehash == "+ result)
         
             if (!cid) {
               res.status(404).send('File not found');
@@ -133,7 +134,7 @@ const getSingleFile = async (req, res) => {
               text += decoder.decode(chunks, { stream: true });
             }
         
-            res.status(200).send(result + "\n" + text);
+            res.status(200).send(text);
         }
         catch {
             //res.status(500).json({ error: 'File does not exist' });
