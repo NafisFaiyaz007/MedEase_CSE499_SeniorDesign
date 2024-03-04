@@ -19,12 +19,12 @@ const CreateDoctorForm = () => {
     <div className="space-y-10 w-full max-w-screen-md mx-auto">
       <h2 className="text-xl font-semibold text-white mb-4">Create Doctor</h2>
       <div className="bg-gray-200 text-black p-6 rounded-md">
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 font-bold">
           {/* Column 1 */}
           <div className="mb-4">
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Name
             </label>
@@ -39,7 +39,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Email
             </label>
@@ -54,7 +54,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Phone Number
             </label>
@@ -69,7 +69,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="degree"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Degree
             </label>
@@ -84,7 +84,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="specialization"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               specialization
             </label>
@@ -99,7 +99,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="dateOfBirth"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Date of Birth
             </label>
@@ -118,7 +118,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="hospital"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Hospital
             </label>
@@ -133,7 +133,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="designation"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Designation
             </label>
@@ -151,7 +151,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="hospital_id"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Hospital ID
             </label>
@@ -167,7 +167,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Address
             </label>
@@ -182,7 +182,7 @@ const CreateDoctorForm = () => {
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm  text-gray-700"
             >
               Password
             </label>
@@ -200,7 +200,7 @@ const CreateDoctorForm = () => {
           <div className="col-span-2">
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none transition duration-300"
+              className="px-4 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 focus:outline-none transition duration-300"
             >
               Create Account
             </button>

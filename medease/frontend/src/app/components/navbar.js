@@ -42,7 +42,7 @@ const Navbar = () => {
   
   };
   return (
-    <nav className="bg-slate-200 backdrop-blur-lg opacity-75 px-6 py-0 shadow-md mb-4">
+    <nav className="bg-slate-200  px-6 py-0 shadow-md mb-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           {/* Image Icon */}
@@ -63,7 +63,7 @@ const Navbar = () => {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="text-white bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-900 transition duration-300"
+            className="text-white font-bold bg-cyan-500 px-4 py-2 rounded-md hover:bg-blue-900 transition duration-300"
           >
             Logout
           </button>

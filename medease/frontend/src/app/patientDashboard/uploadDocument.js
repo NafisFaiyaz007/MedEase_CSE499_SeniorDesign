@@ -95,10 +95,11 @@ const UploadDocuments = () => {
         </div>
       )}
       {isFileViewerOpen && selectedFile && (
-        <FileViewerModal 
-        file={selectedFile} 
-        onClose={handleCloseFileViewer}
-         />
+        <FileViewerModal
+          file={selectedFile}
+          // isOpen={isFileViewerOpen}
+          onClose={() => handleCloseFileViewer}
+        />
       )}
     </div>
   );

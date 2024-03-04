@@ -24,7 +24,7 @@ const DeleteDoctor = ({ handleDoctorSelection, handleDeleteDoctor }) => {
         {doctorList.map((doctor) => (
           <div
             key={doctor.id}
-            className={`bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105`}
+            className={`bg-white p-6 rounded-md shadow-md `}
           >
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
              Name: {doctor.name}

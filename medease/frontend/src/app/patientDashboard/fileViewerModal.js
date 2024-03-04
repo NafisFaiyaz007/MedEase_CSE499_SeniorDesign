@@ -40,3 +40,4 @@ const FileViewerModal = ({ isOpen, onClose, file }) => {
     </Modal>
   );
 };
+export default FileViewerModal

@@ -58,7 +58,7 @@ const HospitalDashboard = () => {
 };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-cyan-700">
       <Head>
         <title>Hospital Dashboard</title>
       </Head>
@@ -66,7 +66,7 @@ const HospitalDashboard = () => {
       <Navbar hospitalName={hospitalName} handleLogout={handleLogout} />
 
       {/* Content */}
-      <div className="container mx-auto p-4 flex items-center justify-center">
+      <div className="container mx-auto p-4 flex font-semibold items-center justify-center">
         {/* Left half */}
         <div className="flex flex-col items-start mr-8">
           {/* Hospital Dashboard Text */}
@@ -80,9 +80,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("dashboard")}
               className={`${
                 activeTab === "dashboard"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
               Dashboard
             </button>
@@ -91,9 +91,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("createDoctor")}
               className={`${
                 activeTab === "createDoctor"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
               Create Doctor
             </button>
@@ -102,9 +102,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("deleteDoctor")}
               className={`${
                 activeTab === "deleteDoctor"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
               Delete Doctor
             </button>
@@ -112,9 +112,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("updateBeds")}
               className={`${
                 activeTab === "updateBeds"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
               Update Beds
             </button>
@@ -122,9 +122,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("approveAdmission")}
               className={`${
                 activeTab === "approveAdmission"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
               Approve Admission
             </button>
@@ -140,13 +140,13 @@ const HospitalDashboard = () => {
               {analyticsCards.map((card, index) => (
                 <div
                   key={index}
-                  className="bg-white p-6 rounded-md shadow-md flex items-center justify-between transition duration-300 transform hover:scale-105"
+                  className="bg-white p-6 rounded-md shadow-md flex items-center justify-between "
                 >
                   <div>
                     <p className="text-lg font-semibold text-gray-700">
                       {card.title}
                     </p>
-                    <p className="text-3xl font-bold text-blue-500">
+                    <p className="text-3xl font-bold text-cyan-500">
                       {card.count}
                     </p>
                   </div>
