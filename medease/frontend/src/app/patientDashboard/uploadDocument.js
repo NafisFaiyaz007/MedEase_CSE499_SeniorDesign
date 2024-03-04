@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import FileViewerModal from'./fileViewerModal'; 
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
 
   const handleRemoveFile = async (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -21,11 +24,15 @@ const UploadDocuments = () => {
     console.log("handle download file");
   };
 
-  const handleViewFile = async (file) => {
-    // Open modal or implement file viewer logic here
-    console.log("handle view file", file);
+  const handleViewFile = (file) => {
+    setSelectedFile(file);
+    setIsFileViewerOpen(true);
   };
 
+  const handleCloseFileViewer = () => {
+    setSelectedFile(null);
+    setIsFileViewerOpen(false);
+  };
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-white mb-4 text-center">
@@ -86,6 +93,12 @@ const UploadDocuments = () => {
             ))}
           </ul>
         </div>
+      )}
+      {isFileViewerOpen && selectedFile && (
+        <FileViewerModal 
+        file={selectedFile} 
+        onClose={handleCloseFileViewer}
+         />
       )}
     </div>
   );

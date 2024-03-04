@@ -84,8 +84,8 @@ async function executeQuery(query, params = []) {
 
 // API endpoint to fetch all doctors
 app.get('/api/doctors', async (req, res) => {
-  const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-
+  // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+  const query= "SELECT * FROM doctors INNER JOIN users ON doctors.user_id = users.id";
   try {
     const doctors = await executeQuery(query);
     res.json(doctors);

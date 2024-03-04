@@ -20,19 +20,25 @@ const DeleteDoctor = ({ handleDoctorSelection, handleDeleteDoctor }) => {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-white mb-4">Delete Doctor</h2>
       {/* List of Doctors */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4">
         {doctorList.map((doctor) => (
           <div
             key={doctor.id}
             className={`bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105`}
           >
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
-              {doctor.name}
+             Name: {doctor.name}
             </h3>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+               {doctor.designation}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              ID: {doctor.doctor_id}
+            </h6>
             {/* Delete Button */}
             <button
               onClick={() => hospitalFunction.handleDoctorSelection(doctor)}
-              className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+              className="bg-red-700 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-900 transition duration-300"
             >
               Delete Doctor
             </button>
