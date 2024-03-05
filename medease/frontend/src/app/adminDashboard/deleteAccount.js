@@ -32,6 +32,7 @@ const DeleteAccount = () => {
         // const doctorData = await doctor.json();
         // const patientData = await patient.json();
         setUsers(data);
+        console.log(data)
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -44,7 +45,7 @@ const DeleteAccount = () => {
     <>
       {activeTab === "deleteAccount" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {["hospital", "patient", "doctor"].map((accountType) => (
+          {[2, 3, 4].map((accountType) => (
             <div key={accountType}>
               <h2 className="text-2xl font-semibold mb-4 capitalize">
                 {accountType}s
@@ -58,7 +59,7 @@ const DeleteAccount = () => {
                 </thead>
                 <tbody>
                   {users
-                    .filter((user) => user.type === accountType)
+                    .filter((user) => user.userType === accountType)
                     .map((user) => (
                       <tr key={user.id} className="hover:bg-gray-50">
                         <td className="py-2 px-4 border-b">{user.name}</td>
