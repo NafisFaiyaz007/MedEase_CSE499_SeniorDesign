@@ -46,7 +46,7 @@ export const handleDoctorFormChange = (e) => {
 
 export const handleCreateDoctor = async (doctorForm) => {
   try {
-    doctorForm.userType = 3;
+    //doctorForm.userType = 3;
     // Send a POST request to your backend API to create a new doctor
     const response = await axios.post("http://localhost:8000/api/users/registerDoctor", {...doctorForm});
 

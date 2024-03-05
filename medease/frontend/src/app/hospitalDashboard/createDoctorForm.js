@@ -19,18 +19,7 @@ const CreateDoctorForm = () => {
     <div className="space-y-10 w-full max-w-screen-md mx-auto">
       <h2 className="text-xl font-semibold text-white mb-4">Create Doctor</h2>
       <div className="bg-gray-400 text-black p-6 rounded-md">
-        <form  onSubmit={(e) => {
-        e.preventDefault();
-        // Extract form data and pass it to the submit handler
-        const formData = new FormData(e.target);
-        const data = {};
-        formData.forEach((value, key) => {
-          data[key] = value;
-        });
-        hospitalFunction.handleCreateDoctor(data)
-        // CreateDoctorForm();
-        
-      }} className="grid grid-cols-2 gap-4 font-bold">
+        <form  onSubmit={(e) => handleSubmit(e)} className="grid grid-cols-2 gap-4 font-bold">
           {/* Column 1 */}
           <div className="mb-4">
             <label
