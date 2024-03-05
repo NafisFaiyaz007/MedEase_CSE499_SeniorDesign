@@ -97,19 +97,19 @@ app.get('/api/doctors', async (req, res) => {
 
 // API to fetch users
 // Route to fetch users by type
-app.get('/api/users/:usertype', async (req, res) => {
+app.get('/api/users/', async (req, res) => {
   try {
-    // Extract usertype from request params
-    const { usertype } = req.params;
+    // // Extract usertype from request params
+    // const { usertype } = req.params;
 
-    // Validate usertype (assuming it's a number)
-    if (!usertype || isNaN(usertype)) {
-      return res.status(400).json({ error: 'Invalid usertype' });
-    }
+    // // Validate usertype (assuming it's a number)
+    // if (!usertype || isNaN(usertype)) {
+    //   return res.status(400).json({ error: 'Invalid usertype' });
+    // }
 
     // Query to fetch users based on usertype
-    const query = "SELECT * FROM users WHERE userType = ?";
-    const [rows] = await dbConnection.execute(query, [usertype]);
+    const query = "SELECT * FROM users WHERE userType = 2 OR userType = 3 OR userType = 4";
+    const [rows] = await dbConnection.execute(query);
 
     res.json(rows); // Send the fetched users as JSON response
   } catch (error) {

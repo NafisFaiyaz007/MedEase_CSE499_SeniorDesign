@@ -6,9 +6,9 @@ const DeleteAccount = () => {
   const [users, setUsers] = useState([]);
 
   const accountTypes = [
-    { type: 2, title: "Hospital", icon: "/hospital-icon.png" },
-    { type: 4, title: "Patient", icon: "/patient-icon.png" },
-    { type: 3, title: "Doctor", icon: "/doctor-icon.png" },
+    { type: "hospital", title: "Hospital", icon: "/hospital-icon.png" },
+    { type: "patient", title: "Patient", icon: "/patient-icon.png" },
+    { type: "doctor", title: "Doctor", icon: "/doctor-icon.png" },
   ];
 
   const handleDeleteUser = (userId) => {
@@ -25,18 +25,13 @@ const DeleteAccount = () => {
     // Fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const hospital = await fetch("http://localhost:8000/api/users/2");
-        const doctor = await fetch("http://localhost:8000/api/users/3");
-        const patient = await fetch("http://localhost:8000/api/users/4"); // Replace with your actual endpoint
-        const hospitalData = await hospital.json();
-        const doctorData = await doctor.json();
-        const patientData = await patient.json();
-        setUsers((prevUsers) => [
-          ...prevUsers,
-          hospitalData,
-          doctorData,
-          patientData,
-        ]);
+        const response = await fetch("http://localhost:8000/api/users/");
+        // const doctor = await fetch("http://localhost:8000/api/users/3");
+        // const patient = await fetch("http://localhost:8000/api/users/4"); // Replace with your actual endpoint
+        const data = await response.json();
+        // const doctorData = await doctor.json();
+        // const patientData = await patient.json();
+        setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
