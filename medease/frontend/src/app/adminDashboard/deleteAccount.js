@@ -29,8 +29,8 @@ const DeleteAccount = () => {
         const doctor = await fetch("http://localhost:8000/api/users/3");
         const patient = await fetch("http://localhost:8000/api/users/4"); // Replace with your actual endpoint
         const hospitalData = await hospital.json();
-        const doctorData = await hospital.json();
-        const patientData = await hospital.json();
+        const doctorData = await doctor.json();
+        const patientData = await patient.json();
         setUsers((prevUsers) => [
           ...prevUsers,
           hospitalData,
