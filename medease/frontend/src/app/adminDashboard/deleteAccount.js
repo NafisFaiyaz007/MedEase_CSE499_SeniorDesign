@@ -6,9 +6,9 @@ const DeleteAccount = () => {
   const [users, setUsers] = useState([]);
 
   const accountTypes = [
-    { type: "hospital", title: "Hospital", icon: "/hospital-icon.png" },
-    { type: "patient", title: "Patient", icon: "/patient-icon.png" },
-    { type: "doctor", title: "Doctor", icon: "/doctor-icon.png" },
+    { type: 2, title: "Hospital", icon: "/hospital-icon.png" },
+    { type: 4, title: "Patient", icon: "/patient-icon.png" },
+    { type: 3, title: "Doctor", icon: "/doctor-icon.png" },
   ];
 
   const handleDeleteUser = (userId) => {
@@ -45,10 +45,10 @@ const DeleteAccount = () => {
     <>
       {activeTab === "deleteAccount" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[2, 3, 4].map((accountType) => (
-            <div key={accountType}>
+          {accountTypes.map((accountType) => (
+            <div key={accountType.title}>
               <h2 className="text-2xl font-semibold mb-4 capitalize">
-                {accountType}s
+                {accountType.title}s
               </h2>
               <table className="w-full text-gray-800 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden">
                 <thead>
@@ -59,7 +59,7 @@ const DeleteAccount = () => {
                 </thead>
                 <tbody>
                   {users
-                    .filter((user) => user.userType === accountType)
+                    .filter((user) => user.userType === accountType.type)
                     .map((user) => (
                       <tr key={user.id} className="hover:bg-gray-50">
                         <td className="py-2 px-4 border-b">{user.name}</td>
