@@ -25,8 +25,7 @@ const uploadFile = async (req, res) => {
 const getFile = async (req, res) => {
     try {
       const filename = req.body.filename;
-      // const cid = hashMap.get(filename);
-      const cid = req.body.fileHash;
+      const cid = hashMap.get(filename);
   
       if (!cid) {
         res.status(404).send('File not found');

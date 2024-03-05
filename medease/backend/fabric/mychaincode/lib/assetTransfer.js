@@ -87,7 +87,6 @@ class MedicalRecords extends Contract {
             ownerID: ownerID,
             uploaded: date,
             accessList: doctorList.split(','),
-            uploadedBy: ownerID,
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
@@ -215,41 +214,8 @@ class MedicalRecords extends Contract {
         }
         return JSON.stringify(allResults);
     }
-
-    async hasPermission(ctx, id, doctorID){
-        let document = await this.ReadDocument(ctx, id);
-        document = JSON.parse(document);
-        if (document.accessList.includes(doctorID)) {
-            return true;
-        }
-    return false;
-    }
-
-       // CreateAsset issues a new asset to the world state with given details.
-       async DoctorCreateRecord(ctx, fileName, fileHash, ownerID, date, doctorList, doctorID) {
-        // async CreateRecord(ctx, fileName, fileHash, fileType, fileSize, ownerID, date, doctorList) {
-        let id = ownerID + "_" + crypto.createHash('sha256').update(`${fileName}-${fileHash}`).digest('hex');
-        const exists = await this.AssetExists(ctx, id);
-        if (exists) {
-            throw new Error(`The asset ${id} already exists`);
-        }
-        
-        const asset = {
-            ID: id,
-            fileName: fileName,
-            fileHash: fileHash,
-            ownerID: ownerID,
-            uploaded: date,
-            accessList: doctorList.split(','),
-            uploadedBy: doctorID,
-        };
-        // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
-        return JSON.stringify(asset);
-        
-    }
-
 }
+
 
 
 module.exports = MedicalRecords;
