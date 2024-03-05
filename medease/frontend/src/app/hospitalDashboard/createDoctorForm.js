@@ -26,9 +26,9 @@ const CreateDoctorForm = () => {
         const data = {};
         formData.forEach((value, key) => {
           data[key] = value;
-          console.log(data)
         });
-        CreateDoctorForm();
+        hospitalFunction.handleCreateDoctor(data)
+        // CreateDoctorForm();
         
       }} className="grid grid-cols-2 gap-4 font-bold">
           {/* Column 1 */}
