@@ -18,8 +18,19 @@ const CreateDoctorForm = () => {
   return (
     <div className="space-y-10 w-full max-w-screen-md mx-auto">
       <h2 className="text-xl font-semibold text-white mb-4">Create Doctor</h2>
-      <div className="bg-gray-200 text-black p-6 rounded-md">
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 font-bold">
+      <div className="bg-gray-400 text-black p-6 rounded-md">
+        <form  onSubmit={(e) => {
+        e.preventDefault();
+        // Extract form data and pass it to the submit handler
+        const formData = new FormData(e.target);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+          console.log(data)
+        });
+        CreateDoctorForm();
+        
+      }} className="grid grid-cols-2 gap-4 font-bold">
           {/* Column 1 */}
           <div className="mb-4">
             <label
@@ -104,7 +115,7 @@ const CreateDoctorForm = () => {
               Date of Birth
             </label>
             <input
-              // type="age"
+              type="date"
               id="dateOfBirth"
               name="dateOfBirth"
               required
