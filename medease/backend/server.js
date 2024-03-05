@@ -109,7 +109,7 @@ app.get('/api/users/:usertype', async (req, res) => {
 
     // Query to fetch users based on usertype
     const query = "SELECT * FROM users WHERE userType = ?";
-    const [rows] = await executeQuery(query, [usertype]);
+    const [rows] = await dbConnection.execute(query, [usertype]);
 
     res.json(rows); // Send the fetched users as JSON response
   } catch (error) {
