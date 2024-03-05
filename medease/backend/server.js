@@ -107,14 +107,9 @@ app.get('/api/users/:usertype', async (req, res) => {
       return res.status(400).json({ error: 'Invalid usertype' });
     }
 
-    // Create a connection pool
-    const pool = await mysql.createPool(dbConfig);
-
     // Query to fetch users based on usertype
-    const [rows] = await pool.execute('SELECT * FROM users WHERE userType = ?', [usertype]);
-
-    // Close the connection pool
-    await pool.end();
+    const query = "SELECT * FROM users WHERE userType = ?";
+    const [rows] = await executeQuery(query, [usertype]);
 
     res.json(rows); // Send the fetched users as JSON response
   } catch (error) {
@@ -122,7 +117,3 @@ app.get('/api/users/:usertype', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
