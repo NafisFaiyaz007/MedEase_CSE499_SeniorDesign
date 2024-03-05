@@ -25,8 +25,12 @@ const DeleteAccount = () => {
     // Fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/users"); // Replace with your actual endpoint
-        const data = await response.json();
+        const hospital = await fetch("http://localhost:8000/api/users/2");
+        const doctor = await fetch("http://localhost:8000/api/users/3");
+        const patient = await fetch("http://localhost:8000/api/users/4"); // Replace with your actual endpoint
+        const hospitaldata = await hospital.json();
+        const doctorData = await hospital.json();
+        const patientData = await hospital.json();
         setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
