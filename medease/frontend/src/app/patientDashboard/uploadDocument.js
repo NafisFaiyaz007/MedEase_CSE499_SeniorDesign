@@ -65,7 +65,7 @@ const UploadDocuments = () => {
                 className="mb-2 flex items-center justify-between"
               >
                 <span>{file.name}</span>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2" id="view">
                   <button
                     className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
                     onClick={() => handleDownloadFile(file)}
@@ -87,6 +87,7 @@ const UploadDocuments = () => {
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-700"
                     onClick={() => handleViewFile(file)}
+                    id="view"
                   >
                     View
                   </button>

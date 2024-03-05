@@ -20,7 +20,7 @@ const DeleteDoctor = ({ handleDoctorSelection, handleDeleteDoctor }) => {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-white mb-4">Delete Doctor</h2>
       {/* List of Doctors */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
         {doctorList.map((doctor) => (
           <div
             key={doctor.id}

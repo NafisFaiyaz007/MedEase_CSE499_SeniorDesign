@@ -94,3 +94,35 @@ app.get('/api/doctors', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// API to fetch users
+// Route to fetch users by type
+app.get('/api/users/:usertype', async (req, res) => {
+  try {
+    // Extract usertype from request params
+    const { usertype } = req.params;
+
+    // Validate usertype (assuming it's a number)
+    if (!usertype || isNaN(usertype)) {
+      return res.status(400).json({ error: 'Invalid usertype' });
+    }
+
+    // Create a connection pool
+    const pool = await mysql.createPool(dbConfig);
+
+    // Query to fetch users based on usertype
+    const [rows] = await pool.execute('SELECT * FROM users WHERE userType = ?', [usertype]);
+
+    // Close the connection pool
+    await pool.end();
+
+    res.json(rows); // Send the fetched users as JSON response
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });

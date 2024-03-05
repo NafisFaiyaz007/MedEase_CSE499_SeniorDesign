@@ -8,6 +8,7 @@ import Navbar from "../components/navbar";
 import axios from 'axios';
 import AnalyticsCard from "./analyticsCard";
 import CreateAccountForm from "./createAccountForm";
+import DeleteAccount from "./deleteAccount";
 
 
 
@@ -88,7 +89,7 @@ const AdminDashboard = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab("DeleteAccount")}
+            onClick={() => setActiveTab("deleteAccount")}
             className={`${
               activeTab === "deleteAccount"
                 ? "bg-blue-500 text-white"
@@ -133,9 +134,9 @@ const AdminDashboard = () => {
               {/* <button
         onClick={() => setShowCreateAccountModal(false)}
         className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 cursor-pointer"
-      >
+       >
         &#10005;
-    </button> */}
+        </button> */}
               <CreateAccountForm
                 selectedAccountType={selectedAccountType}
                 showCreateAccountModal={showCreateAccountModal}
@@ -143,6 +144,9 @@ const AdminDashboard = () => {
               />
             </div>
           </div>
+        )}
+        {activeTab === "deleteAccount" && (
+         <DeleteAccount/>
         )}
       </div>
     </div>
