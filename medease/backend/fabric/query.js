@@ -70,11 +70,19 @@ const uploadFile = async (req, res) => {
         });
         const network = await gateway.getNetwork(channelName);
         const contract = network.getContract(chaincodeName);
-
+        let cid = "";
         try {
+            try{
             const fs = await createNode();
             const data = req.file.buffer;
-            const cid = await fs.addBytes(data);
+            cid = await fs.addBytes(data);
+            res.status(201).send('Your file has been uploaded');
+            }
+            catch(e){
+                console.log(e);
+                res.status(500).send('An error occurred while uploading the file');
+    
+            }
             let fileHash = cid;
             console.log('\n--> Submit Transaction: CreateRecord, creates new asset with ID, name, hash, type, size, ownerID, and accessList[] arguments');
             result = await contract.submitTransaction('CreateRecord', fileName, fileHash, ownerID, new Date().toISOString(), accessList);
@@ -82,12 +90,12 @@ const uploadFile = async (req, res) => {
             if (`${result}` !== '') {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             }
-            res.status(201).send('Your file has been uploaded');
+            res.status(201).send('Your file has been uploaded to ledger');
         }
         catch (e) {
             console.log("asset already exists");
             console.log(e);
-            res.status(500).send('An error occurred while uploading the file');
+            // res.status(500).send('An error occurred while uploading the file');
         }
     } finally {
         // Disconnect from the gateway when the application is closing
