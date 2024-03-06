@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { FaTrash } from 'react-icons/fa'; // Import a delete icon from a popular icon library
 
 const DeleteAccount = () => {
   const [activeTab, setActiveTab] = useState("deleteAccount");
@@ -40,47 +41,50 @@ const DeleteAccount = () => {
 
     fetchData();
   }, []); // The empty dependency array ensures this effect runs once when the component mounts
+return (
+  <>
+    {activeTab === "deleteAccount" && (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {accountTypes.map((accountType) => (
+          <div
+            key={accountType.title}
+            className="bg-white rounded-md overflow-hidden shadow-md"
+          >
+            <h2 className="text-2xl font-semibold mb-4 capitalize p-4 bg-gray-500 text-white rounded-t-md">
+              {accountType.title}s
+            </h2>
+            <table className="w-full text-gray-800 border border-gray-200">
+              <thead className="bg-gray-300">
+                <tr>
+                  <th className="py-2 px-4 border-b">Name</th>
+                  <th className="py-2 px-4 border-b">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users
+                  .filter((user) => user.userType === accountType.type)
+                  .map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-50">
+                      <td className="py-2 px-4 border-b">{user.name}</td>
+                      <td className="py-2 px-4 border-b">
+                        <button
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded-md focus:outline-none hover:bg-red-700 transition duration-300 flex items-center"
+                        >
+                          <FaTrash className="mr-2" /> Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+    )}
+  </>
+);
 
-  return (
-    <>
-      {activeTab === "deleteAccount" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {accountTypes.map((accountType) => (
-            <div key={accountType.title}>
-              <h2 className="text-2xl font-semibold mb-4 capitalize">
-                {accountType.title}s
-              </h2>
-              <table className="w-full text-gray-800 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden">
-                <thead>
-                  <tr className="text-gray-800 bg-gray-100">
-                    <th className="py-2 px-4 border-b">Name</th>
-                    <th className="py-2 px-4 border-b">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users
-                    .filter((user) => user.userType === accountType.type)
-                    .map((user) => (
-                      <tr key={user.id} className="hover:bg-gray-50">
-                        <td className="py-2 px-4 border-b">{user.name}</td>
-                        <td className="py-2 px-4 border-b">
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="bg-red-500 text-white px-2 py-1 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
-  );
 };
 
 export default DeleteAccount;

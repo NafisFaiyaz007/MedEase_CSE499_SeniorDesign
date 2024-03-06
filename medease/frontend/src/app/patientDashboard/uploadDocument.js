@@ -6,7 +6,8 @@ import Modal from "react-modal";
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRemoveFile = async (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -26,15 +27,22 @@ const UploadDocuments = () => {
     console.log("handle download file");
   };
 
-  const handleViewFile = (file) => {
-    setSelectedFile(file);
-    setIsFileViewerOpen(true);
+  const handleFileChange = (event) => {
+    const newFile = event.target.files[0];
+    setFile(newFile);
   };
 
-  const handleCloseFileViewer = () => {
-    setSelectedFile(null);
-    setIsFileViewerOpen(false);
-  };
+ const handleOpenModal = (file) => {
+   // Pass file as an argument
+   setSelectedFile(file); // Store the selected file for viewing
+   setIsModalOpen(true);
+ };
+
+ const handleCloseModal = () => {
+   setIsModalOpen(false);
+   setSelectedFile(null); // Clear the selected file when closing
+ };
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-white mb-4 text-center">
@@ -54,7 +62,7 @@ const UploadDocuments = () => {
       </div>
       {/* View Uploaded Files Section */}
       {uploadedFiles.length > 0 && (
-        <div className="bg-white p-4 rounded-md shadow-md">
+        <div className="bg-white p-4 rounded-md shadow-md" id="root">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             Uploaded Files:
           </h3>
@@ -86,23 +94,23 @@ const UploadDocuments = () => {
                   </button>
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-700"
-                    onClick={() => handleViewFile(file)}
-                    id="view"
+                    onClick={() => handleOpenModal(file)}
                   >
                     View
                   </button>
+                  {isModalOpen && (
+                    <FileViewerModal
+                      isOpen={isModalOpen}
+                      onClose={handleCloseModal}
+                      file={selectedFile}
+                      appElement={document.getElementById("root")} // Set the appElement prop
+                    />
+                  )}
                 </div>
               </li>
             ))}
           </ul>
         </div>
-      )}
-      {isFileViewerOpen && selectedFile && (
-        <FileViewerModal
-          isOpen={isFileViewerOpen}
-          onClose={() => handleCloseFileViewer}
-          file={selectedFile}
-        />
       )}
     </div>
   );
