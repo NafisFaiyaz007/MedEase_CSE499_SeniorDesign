@@ -216,39 +216,87 @@ class MedicalRecords extends Contract {
         return JSON.stringify(allResults);
     }
 
-    async hasPermission(ctx, id, doctorID){
+    async hasPermission(ctx, id, viewerID){
         let document = await this.ReadDocument(ctx, id);
         document = JSON.parse(document);
-        if (document.accessList.includes(doctorID)) {
+        if (document.ownerID === doctorID || document.accessList.includes(viewerID)) {
             return true;
         }
     return false;
     }
 
-       // CreateAsset issues a new asset to the world state with given details.
-       async DoctorCreateRecord(ctx, fileName, fileHash, ownerID, date, doctorList, doctorID) {
+    // CreateAsset issues a new asset to the world state with given details.
+    async DoctorCreateRecord(ctx, fileName, fileHash, ownerID, date, doctorID) {
         // async CreateRecord(ctx, fileName, fileHash, fileType, fileSize, ownerID, date, doctorList) {
         let id = ownerID + "_" + crypto.createHash('sha256').update(`${fileName}-${fileHash}`).digest('hex');
         const exists = await this.AssetExists(ctx, id);
         if (exists) {
             throw new Error(`The asset ${id} already exists`);
         }
-        
+
         const asset = {
             ID: id,
             fileName: fileName,
             fileHash: fileHash,
             ownerID: ownerID,
             uploaded: date,
-            accessList: doctorList.split(','),
+            accessList: [doctorID],
             uploadedBy: doctorID,
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
         return JSON.stringify(asset);
-        
+
     }
 
+    // ReadAsset returns the asset stored in the world state with given id.
+    async DoctorReadDocument(ctx, id, viewerID) {
+        const hasPermission = this.hasPermission(ctx, id, viewerID);
+        if (hasPermission){
+            const assetJSON = await ctx.stub.getState(id); // get the asset from chaincode state
+            if (!assetJSON || assetJSON.length === 0) {
+                throw new Error(`The asset ${id} does not exist`);
+            }
+            return assetJSON.toString();
+        }
+        throw new Error("You donot have permission to view the document");
+    }
+    
+    async DoctorViewDoumentList(ctx, ownerID) {
+        const selectedResults = [];
+    
+        // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
+        const iterator = await ctx.stub.getStateByRange(ownerID + "_", '');
+    
+        let result = await iterator.next();
+        while (!result.done) {
+            const key = result.value.key;
+    
+            if (key.startsWith(ownerID + "_")) {
+                try {
+                    const record = JSON.parse(Buffer.from(result.value.value.toString()).toString('utf8'));
+    
+                    // Extract only the required fields (e.g., owner and fileName)
+                    const selectedDetails = {
+                        ownerID: record.ownerID,
+                        fileName: record.fileName,
+                        ID: record.ID,
+                        uploaded: record.uploaded,
+                        uploadedBy: record.uploadedBy
+                    };
+    
+                    selectedResults.push(selectedDetails);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+    
+            result = await iterator.next();
+        }
+    
+        return JSON.stringify(selectedResults);
+    }
+    
 }
 
 
