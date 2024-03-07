@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FileViewerModal from'./fileViewerModal'; 
 import Modal from "react-modal";
+import PdfViewerComponent from "./PdfViewerComponent.js";
 
 
 const UploadDocuments = () => {
@@ -42,6 +43,21 @@ const UploadDocuments = () => {
    setIsModalOpen(false);
    setSelectedFile(null); // Clear the selected file when closing
  };
+
+ const openFileViewer=() => {
+  <PdfViewerComponent
+    document={"file"}
+    />
+ }
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+
+  const handleViewButtonClick = () => {
+    setShowPdfViewer(true);
+  };
+
+  const handleClosePdfViewer = () => {
+    setShowPdfViewer(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -92,20 +108,22 @@ const UploadDocuments = () => {
                   >
                     Send
                   </button>
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-700"
-                    onClick={() => handleOpenModal(file)}
-                  >
-                    View
-                  </button>
-                  {isModalOpen && (
+                  <button onClick={handleViewButtonClick}>View</button>
+
+      {showPdfViewer && (
+        <div>
+          <PdfViewerComponent document={file} />
+          <button onClick={handleClosePdfViewer}>Close Viewer</button>
+        </div>
+      )}
+                  {/* {isModalOpen && (
                     <FileViewerModal
                       isOpen={isModalOpen}
                       onClose={handleCloseModal}
                       file={selectedFile}
                       appElement={document.getElementById("root")} // Set the appElement prop
                     />
-                  )}
+                  )} */}
                 </div>
               </li>
             ))}
