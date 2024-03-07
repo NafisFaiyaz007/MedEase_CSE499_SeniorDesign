@@ -1,15 +1,20 @@
 const connection = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+
+const generateUuid = () => {
+  return crypto.randomUUID();
+};
 
 const registerHospital = async (req, res) => {
   try {
     const { name, email, phone, address, userType, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
     //Insert into patients table
     const query2 = `INSERT INTO hospitals (user_id, phone_number, address) VALUES (?, ?, ?)`;
      
@@ -28,9 +33,9 @@ const registerDoctor = async (req, res) => {
     const { name, email, degree, specialization, designation, dateOfBirth, phone, address, userType, password, hospital_id } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
     //Insert into patients table
     const query2 = `INSERT INTO doctors (user_id, dateOfBirth, phone_number, address, degree, specialization, designation, hospital_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
      
@@ -57,9 +62,9 @@ const registerDoctor = async (req, res) => {
       // const placeholders = validValues.map(() => '?').join(', ');
   
       // const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
-      const query = `INSERT INTO users (name, email, userType, password) VALUES (?, ?, ?, ?)`;
+      const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
       // Save user to the database
-      const [results] = await connection.execute(query, [name, email, userType, hashedPassword]);
+      const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
       //Insert into patients table
       const query2 = `INSERT INTO patients (user_id, dateOfBirth, gender, phone_number, address) VALUES (?, ?, ?, ?, ?)`;
        

@@ -5,6 +5,7 @@ const fileController = require('./controllers/fileController');
 const registerAdmin = require('./fabric/registerAdmin');
 const registerUser = require('./fabric/registerUser');
 const patientFunction = require('./fabric/query');
+const doctorFunction = require('./fabric/doctorFunctions');
 
 const multer = require('multer');
 const upload = multer(); // first endpoint
@@ -34,9 +35,14 @@ router.post('/registerAdmin', registerAdmin.registerAdmin);
 router.post('/registerUser', registerUser.registerUserApi);
 router.post('/patient/uploadFile', upload.single('file'),patientFunction.uploadFile);
 router.get('/patient/readFile', patientFunction.getSingleFile);
+router.delete('/patient/deleteFile', patientFunction.deleteFile);
 router.get('/patient/getFiles', patientFunction.getAllFiles);
 router.post('/patient/grant', patientFunction.grantPermission);
 router.post('/patient/revoke', patientFunction.revokePermission);
 router.get('/allFiles', patientFunction.getAllDocuments);
 router.post('/patient/init', patientFunction.init);
+router.post('/doctor/uploadFile', doctorFunction.doctorUploadFile);
+router.get('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
+router.get('/doctor/readFile', doctorFunction.doctorGetSingleFile);
+
 module.exports = router;
