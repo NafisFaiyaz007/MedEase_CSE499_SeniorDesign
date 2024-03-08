@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PrescriptionModal from "./prescription";
 
 const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -9,6 +10,22 @@ const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
 
   const closeReportsModal = () => {
     setSelectedPatient(null);
+  };
+  const [showModal, setShowModal] = useState(false);
+
+  const handleWritePrescription = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handlePrescriptionSubmit = (prescriptionDetails) => {
+    // Handle the prescription submission logic here
+    console.log("Prescription submitted:", prescriptionDetails);
+    // Close the modal after submission
+    handleCloseModal();
   };
 
   return (
@@ -53,6 +70,20 @@ const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
               >
                 Set Physical Appointment
               </button>
+              <button
+                onClick={handleWritePrescription}
+                className="bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 transition duration-300"
+              >
+                Write Prescription
+              </button>
+
+              {showModal && (
+                <PrescriptionModal
+                  patientDetails={patient}
+                  onClose={handleCloseModal}
+                  onPrescriptionSubmit={handlePrescriptionSubmit}
+                />
+              )}
             </div>
           </li>
         ))}
