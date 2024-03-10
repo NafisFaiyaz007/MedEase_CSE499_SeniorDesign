@@ -94,6 +94,18 @@ app.get('/api/doctors', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+// API endpoint to fetch all hospitals
+app.get('/api/hospitals', async (req, res) => {
+  // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+  const query= "SELECT * FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  try {
+    const hospitals = await executeQuery(query);
+    res.json(hospitals);
+  } catch (error) {
+    console.error("Error fetching hospitals from MySQL:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // API to fetch users
 // Route to fetch users by type
@@ -115,5 +127,50 @@ app.get('/api/users/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// api to set availability of doctors
+app.post("/api/setAvailability", (req, res) => {
+  const { doctorId, availabilityDateTime } = req.body;
+
+  const sql = "UPDATE doctors SET availabilityDateTime = ? WHERE id = ?";
+  db.query(sql, [availabilityDateTime, doctorId], (err, result) => {
+    if (err) {
+      console.error("Error setting availability:", err);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal Server Error" });
+    } else {
+      res.json({ success: true, message: "Availability set successfully" });
+    }
+  });
+});
+
+
+// API endpoint to update beds in the hospital
+app.put("/api/updateBeds", (req, res) => {
+  try {
+    const { bedsCounter } = req.body;
+
+    // Validate if the bedsCounter is a valid number
+    if (isNaN(bedsCounter)) {
+      return res.status(400).json({ error: "Invalid bedsCounter value" });
+    }
+
+    // Update the bedsCounter in the database
+    const query = "UPDATE hospitals SET beds = ? WHERE hospital_id = 1"; // Adjust the WHERE condition based on your actual data
+    dbConnection.query(query, [bedsCounter], (err, result) => {
+      if (err) {
+        console.error("Error updating beds counter in the database:", err);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+
+      return res.json({ message: "Beds counter updated successfully" });
+    });
+  } catch (error) {
+    console.error("Error updating beds counter:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });

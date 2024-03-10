@@ -43,14 +43,14 @@ return (
       </button>
 
       <button
-        onClick={() => setActiveTab("bookHospitalBed")}
+        onClick={() => setActiveTab("takeAdmission")}
         className={`${
-          activeTab === "bookHospitalBed"
+          activeTab === "takeAdmission"
             ? "bg-purple-500 text-white"
             : "bg-gray-200 text-gray-600"
         } px-6 py-3 rounded-md focus:outline-none hover:bg-purple-800 hover:text-white transition duration-300`}
       >
-        Book Hospital Bed
+        Take Admission
       </button>
 
       <button

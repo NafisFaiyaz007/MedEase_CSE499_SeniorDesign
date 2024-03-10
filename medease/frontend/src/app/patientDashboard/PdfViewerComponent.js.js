@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import PSPDFKit from "pspdfkit";
+import PSPDFKitLocal from "pspdfkit";
 
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);

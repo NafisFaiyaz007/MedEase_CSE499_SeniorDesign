@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import FileViewerModal from'./fileViewerModal'; 
-import Modal from "react-modal";
+// import FileViewerModal from'./fileViewerModal'; 
+// import Modal from "react-modal";
 import PdfViewerComponent from "./PdfViewerComponent.js";
 
 

@@ -6,7 +6,7 @@ import ViewProfile from "./viewProfile";
 import UploadDocuments from "./uploadDocument";
 import PatientDashboardHeader from "./patientDashboardHeader"
 import BrowseDoctors from "./browseDoctor";
-import BookHospitalBed from "./bookHospitalBed";
+import TakeAdmission from "./takeAdmission";
 import EditAccountForm from "./editAccount";
 
 const PatientDashboard = () => {
@@ -54,12 +54,12 @@ const PatientDashboard = () => {
               <BrowseDoctors/>
             </div>
           )}
-          {activeTab === "bookHospitalBed" && (
+          {activeTab === "takeAdmission" && (
             <div className="space-y-6">
               <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                Book Hospital Bed
+               Take Admission
               </h2>
-              <BookHospitalBed/>
+              <TakeAdmission/>
             </div>
           )}
           {activeTab === "editAccount" && (

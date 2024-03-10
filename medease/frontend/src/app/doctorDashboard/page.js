@@ -14,7 +14,24 @@ import DoctorDashboardHeader from "./doctorButtons";
 
 
 const DoctorDashboard = () => {
-  const [activeTab, setActiveTab] = useState("editAccount");
+ const [activeTab, setActiveTab] = useState("editAccount");
+ const [selectedDate, setSelectedDate] = React.useState(new Date());
+ const [selectedTime, setSelectedTime] = React.useState("");
+
+ // Functions for handling date and time changes
+ const handleDateChange = (date) => {
+   setSelectedDate(date);
+ };
+
+ const handleTimeChange = (time) => {
+   setSelectedTime(time);
+ };
+
+ // Function for handling setting availability
+ const handleSetAvailabilityDoctor = () => {
+   // Implement your logic for setting availability here
+   console.log("Setting availability:", selectedDate, selectedTime);
+ };
 
   const [doctorInfo, setDoctorInfo] = useState({
     doctorName: "Dr. John Doe",
@@ -31,8 +48,8 @@ const DoctorDashboard = () => {
     console.log("Logout clicked");
   };
 
-const [selectedDate, setSelectedDate] = useState(null);
-const [selectedTime, setSelectedTime] = useState(null);
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
       <Head>
@@ -66,11 +83,9 @@ const [selectedTime, setSelectedTime] = useState(null);
             <SetAvailabilityForm
               selectedDate={selectedDate}
               selectedTime={selectedTime}
-              handleDateChange={DoctorFunctions.handleDateChange}
-              handleTimeChange={DoctorFunctions.handleTimeChange}
-              handleSetAvailabilityDoctor={
-                DoctorFunctions.handleSetAvailabilityDoctor
-              }
+              handleDateChange={handleDateChange}
+              handleTimeChange={handleTimeChange}
+              handleSetAvailabilityDoctor={handleSetAvailabilityDoctor}
             />
           )}
 

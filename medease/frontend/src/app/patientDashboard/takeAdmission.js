@@ -1,25 +1,19 @@
 // BookHospitalBed.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const BookHospitalBed = () => {
-  // Your BookHospitalBed component code here
-  // Dummy data for hospital beds, replace with actual data
-  const hospitalBeds = [
-    {
-      name: "Hospital A",
-      availableBeds: 20,
-      description: "A description of Hospital A.",
-    },
-    {
-      name: "Hospital B",
-      availableBeds: 15,
-      description: "A description of Hospital B.",
-    },
-    // Add more hospitals as needed
-  ];
-  const handleBookHospitalBed = () => {
+const TakeAdmission = () => {
+  const [hospitalBeds, setHospitalBeds] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/hospitals")
+      .then((response) => response.json())
+      .then((data) => setHospitalBeds(data))
+      .catch((error) => console.error("Error fetching hospitals:", error));
+  }, []);
+
+  const takeAdmission = (hospital) => {
     // Implement logic to book a hospital bed
-    console.log("Booking a hospital bed");
+    console.log("Booking a hospital bed", hospital);
     // You may want to navigate to a new page or update the state accordingly
   };
 
@@ -35,15 +29,15 @@ const BookHospitalBed = () => {
               {hospital.name}
             </h3>
             <p className="text-sm text-gray-500 mb-2">
-              Available Beds: {hospital.availableBeds}
+              Available Beds: {hospital.beds}
             </p>
-            <p className="text-gray-800">{hospital.description}</p>
+            
           </div>
           <button
             className="bg-purple-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-purple-700 transition duration-300 self-end"
-            onClick={() => handleBookBed(hospital)}
+            onClick={() => takeAdmission(hospital)}
           >
-            Book Bed
+           Take Admission
           </button>
         </div>
       ))}
@@ -51,4 +45,4 @@ const BookHospitalBed = () => {
   );
 };
 
-export default BookHospitalBed;
+export default TakeAdmission;
