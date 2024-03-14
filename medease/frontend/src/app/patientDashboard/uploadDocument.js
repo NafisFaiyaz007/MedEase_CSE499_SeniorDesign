@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import FileViewerModal from'./fileViewerModal'; 
 // import Modal from "react-modal";
-import PdfViewerComponent from "./PdfViewerComponent.js";
+
 
 
 const UploadDocuments = () => {
@@ -108,14 +108,9 @@ const UploadDocuments = () => {
                   >
                     Send
                   </button>
-                  <button onClick={handleViewButtonClick}>View</button>
+                  <button onClick="">View</button>
 
-      {showPdfViewer && (
-        <div>
-          <PdfViewerComponent document={file} />
-          <button onClick={handleClosePdfViewer}>Close Viewer</button>
-        </div>
-      )}
+     
                   {/* {isModalOpen && (
                     <FileViewerModal
                       isOpen={isModalOpen}
