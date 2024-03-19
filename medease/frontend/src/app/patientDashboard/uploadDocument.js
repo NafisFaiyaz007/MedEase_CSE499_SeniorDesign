@@ -5,10 +5,10 @@ import React, { useState } from "react";
 // import PDFViewer from "./PDFViewer";
 import PdfViewer from "./instagram_pdf";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   "pdfjs-dist/build/pdf.worker.min.js",
+//   import.meta.url
+// ).toString();
 
 
 const UploadDocuments = () => {
@@ -122,7 +122,7 @@ const UploadDocuments = () => {
             ))}
           </ul>
 
-          <PdfViewer pdf={file}/>
+          {selectedFile && <PdfViewer pdf={selectedFile}/>}
         </div>
       )}
     </div>
