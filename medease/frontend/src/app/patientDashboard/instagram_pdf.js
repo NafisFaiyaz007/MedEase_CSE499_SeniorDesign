@@ -10,6 +10,7 @@ const PdfViewer= ({pdf}) => {
 
     const[numPages, setNumPages]=useState(null);
 const [pageNumber,setPageNumber]=useState(1);
+const divRef =useRef()
 
 const onDocumentLoadSuccess = ({numPages}) => {
     setNumPages(numPages);
@@ -46,4 +47,4 @@ return (
     </div>
 );
 }
-export default PdfViewer
+export default PdfViewer;

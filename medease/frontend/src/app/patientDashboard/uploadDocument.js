@@ -1,21 +1,22 @@
 import React, { useState } from "react";
-// import FileViewerModal from'./fileViewerModal'; 
-// import Modal from "react-modal";
-// import {pdfjs} from 'react-pdf';
-// import PDFViewer from "./PDFViewer";
+
+import pdfcomp from "./pdfcomp";
+
+import { pdfjs } from 'react-pdf';
+import PdfComp from "./pdfcomp";
 import PdfViewer from "./instagram_pdf";
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   "pdfjs-dist/build/pdf.worker.min.js",
-//   import.meta.url
-// ).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
   
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRemoveFile = async (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -40,32 +41,13 @@ const UploadDocuments = () => {
     setFile(newFile);
   };
 
- const handleOpenModal = (file) => {
-   // Pass file as an argument
-   setSelectedFile(file); // Store the selected file for viewing
-   setIsModalOpen(true);
- };
 
- const handleCloseModal = () => {
-   setIsModalOpen(false);
-   setSelectedFile(null); // Clear the selected file when closing
- };
 
- const openFileViewer=() => {
-  <PdfViewerComponent
-    document={"file"}
-    />
- }
-  const [showPdfViewer, setShowPdfViewer] = useState(null);
-
-  const handleViewButtonClick = () => {
-    setShowPdfViewer(true);
-  };
-
-  const handleClosePdfViewer = () => {
-    setShowPdfViewer(false);
-  };
   
+  const [pdfFile,setPdfFile] =useState(null);
+  const showPdf=(pdf) => {
+    setPdfFile(`http://localhost:5000/files/${pdf}`)
+  }
 
   return (
     <div className="space-y-6">
@@ -116,13 +98,13 @@ const UploadDocuments = () => {
                   >
                     Send
                   </button>
-                  <button onClick="">View</button>
+                  <button onClick={() => showPdf(file.pdf)}>View</button>
+                  {/* <PdfComp pdfFile={file} /> */}
                 </div>
+                <PdfViewer pdf={file} />
               </li>
             ))}
           </ul>
-
-          {selectedFile && <PdfViewer pdf={selectedFile}/>}
         </div>
       )}
     </div>
