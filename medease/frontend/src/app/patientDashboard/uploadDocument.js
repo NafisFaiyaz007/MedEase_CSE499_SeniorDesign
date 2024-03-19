@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 // import FileViewerModal from'./fileViewerModal'; 
 // import Modal from "react-modal";
+// import {pdfjs} from 'react-pdf';
+// import PDFViewer from "./PDFViewer";
+import PdfViewer from "./instagram_pdf";
 
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 
 const UploadDocuments = () => {
@@ -49,7 +56,7 @@ const UploadDocuments = () => {
     document={"file"}
     />
  }
-  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [showPdfViewer, setShowPdfViewer] = useState(null);
 
   const handleViewButtonClick = () => {
     setShowPdfViewer(true);
@@ -58,6 +65,7 @@ const UploadDocuments = () => {
   const handleClosePdfViewer = () => {
     setShowPdfViewer(false);
   };
+  
 
   return (
     <div className="space-y-6">
@@ -109,20 +117,12 @@ const UploadDocuments = () => {
                     Send
                   </button>
                   <button onClick="">View</button>
-
-     
-                  {/* {isModalOpen && (
-                    <FileViewerModal
-                      isOpen={isModalOpen}
-                      onClose={handleCloseModal}
-                      file={selectedFile}
-                      appElement={document.getElementById("root")} // Set the appElement prop
-                    />
-                  )} */}
                 </div>
               </li>
             ))}
           </ul>
+
+          <PdfViewer pdf={file}/>
         </div>
       )}
     </div>
