@@ -71,25 +71,7 @@ const CreateAccountForm = ({
         setShowCreateAccountModal(false);
       }}
     >
-      {/* <div className="mb-4">
-        <label
-          htmlFor="accountType"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Account Type
-        </label>
-        <select
-          id="accountType"
-          name="accountType"
-          className="mt-1 p-2 w-full text-black border rounded-md focus:outline-none focus:border-blue-500"
-          onChange={(e) => setSelectedAccountType(e.target.value)}
-          value={selectedAccountType}
-          onClick={handleOpenModal}
-        >
-          <option value="doctor">Doctor</option>
-          <option value="hospital">Hospital</option>
-        </select>
-      </div> */}
+      
       <h2 className="text-2xl text-gray-700 font-semibold mb-4">
         Create{" "}
         {selectedAccountType === "hospital"

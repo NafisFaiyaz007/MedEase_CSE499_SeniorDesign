@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-
-import pdfcomp from "./pdfcomp";
-
 import { pdfjs } from 'react-pdf';
 import PdfComp from "./pdfcomp";
 import PdfViewer from "./instagram_pdf";
@@ -14,6 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pdfFile, setPdfFile] = useState(null);
+     const [selectedPdfFile, setSelectedPdfFile] = useState(null);
+    
   // const [selectedFile, setSelectedFile] = useState(null);
   
   // const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,12 +42,21 @@ const UploadDocuments = () => {
     setFile(newFile);
   };
 
+//  const handleViewPdf = (pdf) => {
+//    setSelectedPdfFile(pdf);
+//    setIsModalOpen(true);
+//  };
 
+ const handleCloseModal = () => {
+   setSelectedPdfFile(null);
+   setIsModalOpen(false);
+ };
 
   
-  const [pdfFile,setPdfFile] =useState(null);
   const showPdf=(pdf) => {
     setPdfFile(`http://localhost:5000/files/${pdf}`)
+    setSelectedPdfFile(pdf);
+    setIsModalOpen(true);
   }
 
   return (
@@ -98,13 +108,30 @@ const UploadDocuments = () => {
                   >
                     Send
                   </button>
-                  <button onClick={() => showPdf(file.pdf)}>View</button>
-                  {/* <PdfComp pdfFile={file} /> */}
+                  <button
+                    className="bg-blue-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                    onClick={() => showPdf(file.pdf)}
+                  >
+                    View
+                  </button>
                 </div>
-                {pdfFile && <PdfViewer pdf={file} />}
+                {/* {pdfFile && <PdfComp pdfFile={file} />} */}
+
+                {/* {pdfFile && <PdfViewer pdfFile={file} />} */}
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {/* Modal for PDF viewer */}
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={handleCloseModal}>
+              &times;
+            </span>
+            {pdfFile && <PdfComp pdfFile={pdfFile} />}
+          </div>
         </div>
       )}
     </div>
