@@ -101,7 +101,7 @@ const UploadDocuments = () => {
                   <button onClick={() => showPdf(file.pdf)}>View</button>
                   {/* <PdfComp pdfFile={file} /> */}
                 </div>
-                <PdfViewer pdf={file} />
+                {pdfFile && <PdfViewer pdf={file} />}
               </li>
             ))}
           </ul>
