@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { pdfjs } from 'react-pdf';
 import PdfComp from "./pdfcomp";
-import PdfViewer from "./instagram_pdf";
+
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -15,8 +15,19 @@ const UploadDocuments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
     const [pdfFile, setPdfFile] = useState(null);
      const [selectedPdfFile, setSelectedPdfFile] = useState(null);
-   
-    
+    const modalRef = useRef();  
+
+       useEffect(() => {
+         const handleClickOutside = (event) => {
+           if (modalRef.current && !modalRef.current.contains(event.target)) {
+             setIsModalOpen(false);
+           }
+         };
+         document.addEventListener("mousedown", handleClickOutside);
+         return () => {
+           document.removeEventListener("mousedown", handleClickOutside);
+         };
+       }, []);
   // const [selectedFile, setSelectedFile] = useState(null);
   
   // const [isModalOpen, setIsModalOpen] = useState(false);
@@ -122,16 +133,19 @@ const UploadDocuments = () => {
 
       {isModalOpen && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
-            <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full p-6 relative">
+          <div
+            className="flex items-center justify-center min-h-screen"
+            ref={modalRef}
+          >
+            <div className="fixed inset-0 bg-gray-500 justify=center opacity-75"></div>
+            <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full relative">
               <button
-                className="absolute top-0 right-0 m-4 text-gray-700 cursor-pointer"
+                className="absolute top-0 right-0 mt-4 mr-4 text-red-700 cursor-pointer"
                 onClick={handleCloseModal}
               >
-                &times;
+                &times; CLOSE
               </button>
-              <div className="h-full">
+              <div className="p-6">
                 {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
               </div>
             </div>
