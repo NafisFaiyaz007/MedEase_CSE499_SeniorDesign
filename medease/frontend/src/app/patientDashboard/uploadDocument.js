@@ -3,6 +3,7 @@ import { pdfjs } from 'react-pdf';
 import PdfComp from "./pdfcomp";
 import PdfViewer from "./instagram_pdf";
 
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -14,6 +15,7 @@ const UploadDocuments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
     const [pdfFile, setPdfFile] = useState(null);
      const [selectedPdfFile, setSelectedPdfFile] = useState(null);
+   
     
   // const [selectedFile, setSelectedFile] = useState(null);
   
@@ -37,15 +39,7 @@ const UploadDocuments = () => {
     console.log("handle download file");
   };
 
-  const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
-    setFile(newFile);
-  };
 
-//  const handleViewPdf = (pdf) => {
-//    setSelectedPdfFile(pdf);
-//    setIsModalOpen(true);
-//  };
 
  const handleCloseModal = () => {
    setSelectedPdfFile(null);
@@ -58,6 +52,7 @@ const UploadDocuments = () => {
     setSelectedPdfFile(pdf);
     setIsModalOpen(true);
   }
+  
 
   return (
     <div className="space-y-6">
@@ -110,7 +105,7 @@ const UploadDocuments = () => {
                   </button>
                   <button
                     className="bg-blue-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
-                    onClick={() => showPdf(file.pdf)}
+                    onClick={() => showPdf(file)}
                   >
                     View
                   </button>
@@ -124,13 +119,22 @@ const UploadDocuments = () => {
         </div>
       )}
       {/* Modal for PDF viewer */}
+
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>
-              &times;
-            </span>
-            {pdfFile && <PdfComp pdfFile={pdfFile} />}
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
+            <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full p-6 relative">
+              <button
+                className="absolute top-0 right-0 m-4 text-gray-700 cursor-pointer"
+                onClick={handleCloseModal}
+              >
+                &times;
+              </button>
+              <div className="h-full">
+                {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
+              </div>
+            </div>
           </div>
         </div>
       )}
