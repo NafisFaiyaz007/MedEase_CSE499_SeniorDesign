@@ -8,23 +8,14 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from 'jwt-decode' // import dependency
 
 
-
-
 const Navbar = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if the JWT exists in local storage or wherever you store it
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      // Decode the JWT to get user information
-      const decoded = jwtDecode(token);
-
-      // Set user information in state
-      setUser(decoded);
-    }
+    axios.get('http://localhost:8000/api/users/info', {withCredentials: true})
+    .then(response => setUser(response.data))
+    .catch(error => console.error('Error fetching user:', error));
   }, []);
 
   const handleLogout = async () => {

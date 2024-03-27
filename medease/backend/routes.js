@@ -9,7 +9,6 @@ const doctorFunction = require('./fabric/doctorFunctions');
 // const hl = require('./controllers/ipfs');
 
 const multer = require('multer');
-const cookieParser = require('cookie-parser');
 const upload = multer(); // first endpoint
 
 router.get('/message', (req, res) => {
@@ -49,6 +48,7 @@ router.post('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
 router.post('/doctor/readFile', doctorFunction.doctorGetSingleFile);
 // Logout route
 router.post('/logout', userController.logout);
+router.get('/info', userController.userInfo);
 
 router.post('/checkup', upload.single('file'), (req, res) => {
     const data = req.file.buffer;

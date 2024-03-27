@@ -81,7 +81,9 @@ const registerDoctor = async (req, res) => {
   const login = async (req, res) => {
     try {
       const { email, password } = req.body;
-  
+      if(!email || !password){
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
       // Check if the user exists
       const [user] = await connection.query(
         'SELECT * FROM users WHERE Email = ?',
@@ -104,6 +106,7 @@ const registerDoctor = async (req, res) => {
         userId: user[0].id,
         UUID: user[0].UUID,
       }
+      console.log(req.session)
       // console.log(req.session);
       // Generate JWT token
       // const accessToken = jwt.sign({ "userId": user[0].id, "name": user[0].name }, process.env.JWT_SECRET_KEY, {
