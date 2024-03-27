@@ -6,8 +6,10 @@ const registerAdmin = require('./fabric/registerAdmin');
 const registerUser = require('./fabric/registerUser');
 const patientFunction = require('./fabric/query');
 const doctorFunction = require('./fabric/doctorFunctions');
+// const hl = require('./controllers/ipfs');
 
 const multer = require('multer');
+const cookieParser = require('cookie-parser');
 const upload = multer(); // first endpoint
 
 router.get('/message', (req, res) => {
@@ -22,8 +24,7 @@ router.post('/registerPatient', userController.registerPatient);
 router.post('/login', userController.login);
 router.get('/checkSession', userController.checkSession);
 
-// Logout route
-router.post('/logout', userController.logout);
+
 
 router.post('/upload', upload.single('file'), fileController.uploadFile);
 
@@ -31,18 +32,31 @@ router.get('/get', fileController.getFile);
 
 // Your other routes for user deletion, edit, and logout will go here
 //Fabric routes
+router.use(userController.checkSession)
+//router.use(cookieParser());
 router.post('/registerAdmin', registerAdmin.registerAdmin);
 router.post('/registerUser', registerUser.registerUserApi);
 router.post('/patient/uploadFile', upload.single('file'),patientFunction.uploadFile);
-router.get('/patient/readFile', patientFunction.getSingleFile);
+router.post('/patient/readFile', patientFunction.getSingleFile);
 router.delete('/patient/deleteFile', patientFunction.deleteFile);
-router.get('/patient/getFiles', patientFunction.getAllFiles);
+router.post('/patient/getFiles', patientFunction.getAllFiles);
 router.post('/patient/grant', patientFunction.grantPermission);
 router.post('/patient/revoke', patientFunction.revokePermission);
-router.get('/allFiles', patientFunction.getAllDocuments);
+router.post('/allFiles', patientFunction.getAllDocuments);
 router.post('/patient/init', patientFunction.init);
 router.post('/doctor/uploadFile', doctorFunction.doctorUploadFile);
-router.get('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
-router.get('/doctor/readFile', doctorFunction.doctorGetSingleFile);
+router.post('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
+router.post('/doctor/readFile', doctorFunction.doctorGetSingleFile);
+// Logout route
+router.post('/logout', userController.logout);
 
+router.post('/checkup', upload.single('file'), (req, res) => {
+    const data = req.file.buffer;
+    console.log(data)
+    const bytes = Buffer.from(data, "utf-8");
+    console.log(bytes)
+})
+// router.post('/up', upload.single('file'), hl.up);
+
+  
 module.exports = router;

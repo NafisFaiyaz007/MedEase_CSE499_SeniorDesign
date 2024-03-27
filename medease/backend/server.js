@@ -1,21 +1,30 @@
 const express = require('express');
 const dbConnection = require('./db');
+const cookieParser = require('cookie-parser');
 // const bodyParser = require('body-parser');
 const app = express();
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const sessionStore = new MySQLStore({}, dbConnection);
+const authenticateUser = require("./controllers/userController").checkSession;
 
 var cors = require('cors')
 const port = 8000;
-
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60, // Milliseconds in an hour (1 hour)
+    expires: new Date(Date.now() + 1000 * 60 * 60)
+  }
 }));
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend origin if different
+  credentials: true // Allow cookies for withCredentials requests
+}));
+
 app.get('/', (req, res) => {
   res.send('Welcome to my MedEase!');
 });
@@ -82,8 +91,9 @@ async function executeQuery(query, params = []) {
   return results;
 }
 
+app.use(cookieParser());
 // API endpoint to fetch all doctors
-app.get('/api/doctors', async (req, res) => {
+app.get('/api/doctors', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
   const query= "SELECT * FROM doctors INNER JOIN users ON doctors.user_id = users.id";
   try {
@@ -95,7 +105,7 @@ app.get('/api/doctors', async (req, res) => {
   }
 });
 // API endpoint to fetch all hospitals
-app.get('/api/hospitals', async (req, res) => {
+app.get('/api/hospitals', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
   const query= "SELECT * FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
   try {
@@ -109,7 +119,7 @@ app.get('/api/hospitals', async (req, res) => {
 
 // API to fetch users
 // Route to fetch users by type
-app.get('/api/users/', async (req, res) => {
+app.get('/api/users/', authenticateUser, async (req, res) => {
   try {
     // // Extract usertype from request params
     // const { usertype } = req.params;
@@ -132,7 +142,7 @@ app.get('/api/users/', async (req, res) => {
 
 
 // api to set availability of doctors
-app.post("/api/setAvailability", (req, res) => {
+app.post("/api/setAvailability", authenticateUser, (req, res) => {
   const { doctorId, availabilityDateTime } = req.body;
 
   const sql = "UPDATE doctors SET availabilityDateTime = ? WHERE id = ?";
@@ -150,7 +160,7 @@ app.post("/api/setAvailability", (req, res) => {
 
 
 // API endpoint to update beds in the hospital
-app.put("/api/updateBeds", (req, res) => {
+app.put("/api/updateBeds", authenticateUser, (req, res) => {
   try {
     const { bedsCounter } = req.body;
 

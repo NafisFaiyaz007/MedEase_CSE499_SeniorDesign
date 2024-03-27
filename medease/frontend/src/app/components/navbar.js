@@ -29,11 +29,11 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/users/logout');
+      const response = await axios.post('http://localhost:8000/api/users/logout', null, {withCredentials: true});
       
       // Handle the response (optional)
       console.log(response.data);
-      localStorage.removeItem('jwt');
+      // localStorage.removeItem('jwt');
       router.push('/login');
     } catch (error) {
       console.error('Logout failed', error);

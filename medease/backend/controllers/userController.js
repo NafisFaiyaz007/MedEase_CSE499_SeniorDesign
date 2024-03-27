@@ -97,27 +97,34 @@ const registerDoctor = async (req, res) => {
       if (!passwordMatch) {
         return res.status(401).json({ error: 'Invalid email or password' });
       }
-      console.log(req.session);
+      // console.log(req.session);
       req.session.user = {
         name: user[0].name,
-        userType: user[0].userType
+        userType: user[0].userType,
+        
       }
-      console.log(req.session);
+      // console.log(req.session);
       // Generate JWT token
-      const token = jwt.sign({ userId: user[0].id, name: user[0].name }, process.env.JWT_SECRET_KEY, {
-        expiresIn: '1h',
-      });
+      // const accessToken = jwt.sign({ "userId": user[0].id, "name": user[0].name }, process.env.JWT_SECRET_KEY, {
+      //   expiresIn: '1h',
+      // });
+      // const refreshToken = jwt.sign({ "userId": user[0].id, "name": user[0].name }, process.env.REFRESH_KEY, {
+      //   expiresIn: '2h',
+      // });
+      // res.cookie("accessToken", accessToken, {maxAge: 60000, httpOnly: true});
+      // res.cookie("refreshToken", refreshToken, {maxAge: 300000, httpOnly: true, secure: true});
       //req.session.name = req.body.name
-      res.status(200).json({ message: 'Login successful', token, userType: user[0].userType });
+      res.status(200).json({ message: 'Login successful', userType: user[0].userType });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-  const checkSession = (req, res) => {
-    if (req.session.name) {
+  const checkSession = (req, res, next) => {
+    if (req.session.user.name) {
       // Session is valid, send appropriate response
-      res.json({ loggedIn: true, user: req.session.name });
+      // res.json({ loggedIn: true, user: req.session.name });
+      next()
     } else {
       // Session is invalid or not authenticated, send appropriate response
       res.status(401).json({ loggedIn: false });
@@ -132,7 +139,7 @@ const registerDoctor = async (req, res) => {
       res.status(500).json({ success: false, message: 'Logout failed' });
     } else {
       // Clear session cookie on the client-side (optional)
-      res.clearCookie('your_session_cookie_name');
+      // res.clearCookie('accessToken');
       res.json({ success: true, message: 'Logout successful' });
     }
   });
@@ -140,22 +147,57 @@ const registerDoctor = async (req, res) => {
   // Middleware to check and verify the JWT
 const authenticateToken = (req, res, next) => {
   // Get the token from the Authorization header
-  const token = req.headers.authorization;
+  // const token = req.headers.authorization;
+  // const token = req.cookie.accessToken;
+  console.log(req.session)
+  // if (!token) {
+  //   return res.status(401).json({ message: 'Unauthorized - No token provided' });
+  // }
+  // jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+  //   if (err) {
+  //     // Handle expired access token here
+  //     if (err.message === 'jwt expired') {
+  //       try {
+  //         // Get the refresh token from the cookie
+  //         const refreshToken = req.cookies.refreshToken;
 
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized - No token provided' });
-  }
+  //         // If refresh token is missing, unauthorized
+  //         if (!refreshToken) {
+  //           return res.status(401).json({ message: 'Unauthorized - Refresh token required' });
+  //         }
 
-  // Verify and decode the token
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Forbidden - Invalid token' });
-    }
+  //         // Verify and decode the refresh token
+  //         jwt.verify(refreshToken, process.env.REFRESH_KEY, (refreshErr, refreshUser) => {
+  //           if (refreshErr) {
+  //             // If refresh token is invalid, unauthorized
+  //             return res.status(403).json({ message: 'Forbidden - Invalid refresh token' });
+  //           }
 
-    // Attach the user information to the request for further use in route handlers
-    req.user = user;
-    next();
-  });
+  //           // Refresh token is valid, generate a new access token
+  //           const newAccessToken = jwt.sign({ userId: refreshUser.userId, name: refreshUser.name }, process.env.JWT_SECRET_KEY, {
+  //             expiresIn: '1h',
+  //           });
+
+  //           // Set the new access token in a new cookie (optional)
+  //           res.cookie("accessToken", newAccessToken, { maxAge: 60000, httpOnly: true });
+
+  //           // Attach the user information to the request with userId from refresh token
+  //           req.userId = refreshUser.userId;
+  //           next();
+  //         });
+  //       } catch (error) {
+  //         console.error('Error verifying refresh token:', error);
+  //         res.status(500).json({ message: 'Internal Server Error' });
+  //       }
+  //     } else {
+  //       return res.status(403).json({ message: 'Forbidden - Invalid token' });
+  //     }
+  //   } else {
+  //     // Access token is valid, attach user information and continue
+  //     req.userId = user.userId;
+  //     next();
+  //   }
+  // });
 };
   module.exports = {
     registerHospital, registerDoctor, registerPatient, login, checkSession, logout, authenticateToken

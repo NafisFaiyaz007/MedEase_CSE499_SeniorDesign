@@ -21,11 +21,17 @@ const Login = () => {
       email,
       password
       
-      });
+      }, {withCredentials: true});
 
       // Handle successful login (e.g., store token, redirect, etc.)
       console.log('Login successful:', response.data);
-      localStorage.setItem('token', response.data.token);
+      //localStorage.setItem('token', response.data.token);
+      // Set cookie
+      // setCookie(null, 'token', 'myToken', {
+      //   maxAge: 86400, // Expires in 1 day (in seconds)
+      //   path: '/',
+      //   httpOnly: true,
+      // });
 
       // Redirect based on user type
       const userType = response.data.userType; // Assuming the server sends the user type in the response
