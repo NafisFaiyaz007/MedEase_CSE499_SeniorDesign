@@ -101,7 +101,8 @@ const registerDoctor = async (req, res) => {
       req.session.user = {
         name: user[0].name,
         userType: user[0].userType,
-        
+        userId: user[0].id,
+        UUID: user[0].UUID,
       }
       // console.log(req.session);
       // Generate JWT token
@@ -121,13 +122,13 @@ const registerDoctor = async (req, res) => {
     }
   }
   const checkSession = (req, res, next) => {
-    if (req.session.user.name) {
+    if (!req.session) {
       // Session is valid, send appropriate response
-      // res.json({ loggedIn: true, user: req.session.name });
-      next()
-    } else {
+      // res.json({ loggedIn: true, user: req.session.name });     
       // Session is invalid or not authenticated, send appropriate response
       res.status(401).json({ loggedIn: false });
+    } else {
+        next()
     }
   }
 
@@ -144,6 +145,9 @@ const registerDoctor = async (req, res) => {
     }
   });
   }
+  const userInfo = (req, res) => {
+    res.json(req.session.user); // Assuming user information is stored in session.user
+}
   // Middleware to check and verify the JWT
 const authenticateToken = (req, res, next) => {
   // Get the token from the Authorization header
@@ -200,5 +204,5 @@ const authenticateToken = (req, res, next) => {
   // });
 };
   module.exports = {
-    registerHospital, registerDoctor, registerPatient, login, checkSession, logout, authenticateToken
+    registerHospital, registerDoctor, registerPatient, login, checkSession, logout, userInfo, authenticateToken
   }

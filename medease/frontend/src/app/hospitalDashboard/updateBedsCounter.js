@@ -15,7 +15,7 @@ const UpdateBedsCounter = ({
         method: "PUT", // or "POST" based on your backend logic
         headers: {
           "Content-Type": "application/json",
-        },
+        }, credentials: "include",
         body: JSON.stringify({ bedsCounter }),
       });
 

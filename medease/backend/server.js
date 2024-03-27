@@ -162,6 +162,7 @@ app.post("/api/setAvailability", authenticateUser, (req, res) => {
 // API endpoint to update beds in the hospital
 app.put("/api/updateBeds", authenticateUser, (req, res) => {
   try {
+    const userId = req.session.user.userId;
     const { bedsCounter } = req.body;
 
     // Validate if the bedsCounter is a valid number
@@ -169,9 +170,11 @@ app.put("/api/updateBeds", authenticateUser, (req, res) => {
       return res.status(400).json({ error: "Invalid bedsCounter value" });
     }
 
+    
     // Update the bedsCounter in the database
-    const query = "UPDATE hospitals SET beds = ? WHERE hospital_id = 1"; // Adjust the WHERE condition based on your actual data
-    dbConnection.query(query, [bedsCounter], (err, result) => {
+    const query = "UPDATE hospitals INNER JOIN users ON hospitals.user_id = users.id SET beds = ? WHERE users.id = ?";
+    //"UPDATE hospitals SET beds = ? WHERE hospital_id = 1"; // Adjust the WHERE condition based on your actual data
+    dbConnection.query(query, [bedsCounter, userId], (err, result) => {
       if (err) {
         console.error("Error updating beds counter in the database:", err);
         return res.status(500).json({ error: "Internal server error" });
