@@ -104,18 +104,7 @@ app.get('/api/doctors', authenticateUser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-// API endpoint to fetch all hospitals
-app.get('/api/hospitals', authenticateUser, async (req, res) => {
-  // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-  const query= "SELECT * FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
-  try {
-    const hospitals = await executeQuery(query);
-    res.json(hospitals);
-  } catch (error) {
-    console.error("Error fetching hospitals from MySQL:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+
 
 // API to fetch users
 // Route to fetch users by type
@@ -185,5 +174,39 @@ app.put("/api/updateBeds", authenticateUser, (req, res) => {
   } catch (error) {
     console.error("Error updating beds counter:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Endpoint to fetch patient data
+app.get('/api/patients', authenticateUser, async (req, res) => {
+  try {
+     console.log("**** user id is " + req.session.user);
+
+     const userId = req.session.user.userId;
+    // Query to fetch patient data from MySQL
+  const query =
+    "SELECT * FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
+
+    const patients = await executeQuery(query,[userId]);
+    res.json(patients);
+  } catch (error) {
+    console.error("Error fetching patients from MySQL:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+
+
+// API endpoint to fetch all hospitals
+app.get('/api/hospitals', authenticateUser, async (req, res) => {
+  // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+  const query= "SELECT * FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  try {
+    const hospitals = await executeQuery(query);
+    res.json(hospitals);
+  } catch (error) {
+    console.error("Error fetching hospitals from MySQL:", error);
+    res.status(500).send("Internal Server Error");
   }
 });

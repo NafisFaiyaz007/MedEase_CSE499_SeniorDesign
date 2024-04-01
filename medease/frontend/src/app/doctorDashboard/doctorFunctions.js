@@ -36,7 +36,7 @@ export const handleSetPhysicalAppointment = () => {
   // Add your logic here
 };
 
- const handleEditAccountChange = (e) => {
+export const handleEditAccountChange = (e) => {
    const { name, value } = e.target;
    setDoctorInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
  };
