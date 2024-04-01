@@ -1,6 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import { pdfjs } from 'react-pdf';
 import PdfComp from "./pdfcomp";
+import SendFileModal from "./sendFileModal";
 
 
 
@@ -10,26 +11,30 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 
+
+
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [pdfFile, setPdfFile] = useState(null);
-     const [selectedPdfFile, setSelectedPdfFile] = useState(null);
-    const modalRef = useRef();  
+  const [pdfFile, setPdfFile] = useState(null);
+  const [selectedPdfFile, setSelectedPdfFile] = useState(null);
+  const modalRef = useRef();
 
-       useEffect(() => {
-         const handleClickOutside = (event) => {
-           if (modalRef.current && !modalRef.current.contains(event.target)) {
-             setIsModalOpen(false);
-           }
-         };
-         document.addEventListener("mousedown", handleClickOutside);
-         return () => {
-           document.removeEventListener("mousedown", handleClickOutside);
-         };
-       }, []);
+  const [doctorsList, setDoctorsList] = useState([]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   // const [selectedFile, setSelectedFile] = useState(null);
-  
+
   // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRemoveFile = async (index) => {
@@ -39,7 +44,7 @@ const UploadDocuments = () => {
   };
 
   const handleSendFile = async (file) => {
-    console.log("handle send file");
+    setIsModalOpen(true);
   };
 
   const handleUploadFile = async (file) => {
@@ -50,20 +55,16 @@ const UploadDocuments = () => {
     console.log("handle download file");
   };
 
+  const handleCloseModal = () => {
+    setSelectedPdfFile(null);
+    setIsModalOpen(false);
+  };
 
-
- const handleCloseModal = () => {
-   setSelectedPdfFile(null);
-   setIsModalOpen(false);
- };
-
-  
-  const showPdf=(pdf) => {
-    setPdfFile(`http://localhost:5000/files/${pdf}`)
+  const showPdf = (pdf) => {
+    setPdfFile(`http://localhost:5000/files/${pdf}`);
     setSelectedPdfFile(pdf);
     setIsModalOpen(true);
-  }
-  
+  };
 
   return (
     <div className="space-y-6">
@@ -128,6 +129,14 @@ const UploadDocuments = () => {
             ))}
           </ul>
         </div>
+      )}
+
+      {/* Modal for Doctor List */}
+      {isModalOpen && (
+        <SendFileModal
+          handleClose={handleCloseModal}
+          doctorsList={doctorsList}
+        />
       )}
       {/* Modal for PDF viewer */}
 

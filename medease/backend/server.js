@@ -180,8 +180,7 @@ app.put("/api/updateBeds", authenticateUser, (req, res) => {
 // Endpoint to fetch patient data
 app.get('/api/patients', authenticateUser, async (req, res) => {
   try {
-     console.log("**** user id is " + req.session.user);
-
+     
      const userId = req.session.user.userId;
     // Query to fetch patient data from MySQL
   const query =
