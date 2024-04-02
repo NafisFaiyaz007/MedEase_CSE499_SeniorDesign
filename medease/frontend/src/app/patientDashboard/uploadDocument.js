@@ -2,8 +2,7 @@ import React, { useState,useEffect,useRef } from "react";
 import { pdfjs } from 'react-pdf';
 import PdfComp from "./pdfcomp";
 import SendFileModal from "./sendFileModal";
-
-
+import axios from "axios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -22,6 +21,15 @@ const UploadDocuments = () => {
 
 
   useEffect(() => {
+    const getFiles = async () => {
+       axios.post('http://localhost:8000/api/users/patient/getFiles', null,{withCredentials: true})
+      .then(response => setUploadedFiles(response.data))
+      // .then(response => console.log(response.data))
+      // console.log(response)
+      .catch(error => console.error('Error fetching user:', error));
+      console.log("hello")
+    }
+    getFiles()
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setIsModalOpen(false);
@@ -31,6 +39,7 @@ const UploadDocuments = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+
   }, []);
   // const [selectedFile, setSelectedFile] = useState(null);
 
@@ -94,7 +103,7 @@ const UploadDocuments = () => {
                 key={index}
                 className="mb-2 flex items-center justify-between"
               >
-                <span>{file.name}</span>
+                <span>{file.fileName}</span>
                 <div className="flex items-center space-x-2" id="view">
                   <button
                     className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"

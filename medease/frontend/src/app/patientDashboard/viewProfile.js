@@ -15,7 +15,7 @@ useEffect(() => {
       });
       if (response.ok) {
         const data = await response.json();
-        // console.log("Fetched patient data:", data); // Log the fetched data
+        console.log("Fetched patient data:", data); // Log the fetched data
         setPatientData(data[0]);
       } else {
         console.error("Failed to fetch patient data. Status:", response.status);

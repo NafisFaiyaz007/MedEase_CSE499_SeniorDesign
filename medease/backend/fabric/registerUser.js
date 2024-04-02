@@ -56,6 +56,7 @@ try {
   console.error(`Failed to register user : ${error}`);
 }
 }
+
 const registerUserApi = async (req, res) => {
   const userID  = req.body.UUID;
   const userName = req.body.name;
@@ -79,5 +80,25 @@ const registerUserApi = async (req, res) => {
   // await registerUser(caClient, wallet, mspOrg1, doctorID, 'org1.department2');
 }
 
+const registerUserFunction = async (userID, userName) => {
+  // Example usage
+  const ccp = buildCCPOrg1();
+  const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
+  const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+  // Register a new patient
+  // const patientID = 'patient2'; // Replace with actual patient ID
+  try{
+  await registerUser(caClient, wallet, mspOrg1, userID, 'org1.department1');
+  return { message: 'User enrolled successfully' };
+  } catch {
+    return { error: 'Failed to enroll user' + userName };
+  }
+
+
+  // Register a new doctor
+  // const doctorID = 'doctor1'; // Replace with actual doctor ID
+  // await registerUser(caClient, wallet, mspOrg1, doctorID, 'org1.department2');
+}
 //main();
-module.exports = {registerUserApi};
+module.exports = {registerUserApi, registerUserFunction};

@@ -2,6 +2,8 @@ const connection = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const registerHospitalFabric = require('../fabric/registerHospital');
+const registerUser = require('../fabric/registerUser');
 
 const generateUuid = () => {
   return crypto.randomUUID();
@@ -14,12 +16,13 @@ const registerHospital = async (req, res) => {
 
     const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
+    const uuid = generateUuid();
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, uuid]);
     //Insert into patients table
     const query2 = `INSERT INTO hospitals (user_id, phone_number, address) VALUES (?, ?, ?)`;
      
     const [results2] = await connection.execute(query2, [results.insertId, phone, address]);
-
+    await registerHospitalFabric.registerHospital(uuid)
     // Handle successful insertion
     res.json({ userId: results.insertId, message: 'User Hospital created successfully' });
   } catch (error) {
@@ -35,12 +38,13 @@ const registerDoctor = async (req, res) => {
 
     const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
+    const uuid = generateUuid();
+    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, uuid]);
     //Insert into patients table
     const query2 = `INSERT INTO doctors (user_id, dateOfBirth, phone_number, address, degree, specialization, designation, hospital_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
      
     const [results2] = await connection.execute(query2, [results.insertId, dateOfBirth, phone, address, degree, specialization, designation, hospital_id]);
-
+    await registerUser.registerUserFunction(uuid, name);
     // Handle successful insertion
     res.json({ userId: results.insertId, message: 'User Doctor created successfully' });
   } catch (error) {
@@ -64,12 +68,13 @@ const registerDoctor = async (req, res) => {
       // const query = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders})`;
       const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
       // Save user to the database
-      const [results] = await connection.execute(query, [name, email, userType, hashedPassword, generateUuid()]);
+      const uuid = generateUuid();
+      const [results] = await connection.execute(query, [name, email, userType, hashedPassword, uuid]);
       //Insert into patients table
       const query2 = `INSERT INTO patients (user_id, dateOfBirth, gender, phone_number, address) VALUES (?, ?, ?, ?, ?)`;
        
       const [results2] = await connection.execute(query2, [results.insertId, dateOfBirth, gender, phone, address]);
-  
+      // await registerUser.registerUserFunction(uuid, name);
       // Handle successful insertion
       res.json({ userId: results.insertId, message: 'User Patient created successfully' });
     } catch (error) {
