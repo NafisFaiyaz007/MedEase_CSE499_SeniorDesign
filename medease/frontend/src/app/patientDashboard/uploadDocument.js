@@ -29,7 +29,7 @@ const UploadDocuments = () => {
       .catch(error => console.error('Error fetching user:', error));
       console.log("hello")
     }
-    getFiles()
+    // getFiles()
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setIsModalOpen(false);
