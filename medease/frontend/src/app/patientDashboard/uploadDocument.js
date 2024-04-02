@@ -20,7 +20,6 @@ const UploadDocuments = () => {
   const [selectedPdfFile, setSelectedPdfFile] = useState(null);
   const modalRef = useRef();
 
-  const [doctorsList, setDoctorsList] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -135,7 +134,7 @@ const UploadDocuments = () => {
       {isModalOpen && (
         <SendFileModal
           handleClose={handleCloseModal}
-          doctorsList={doctorsList}
+          // doctorsList={doctorsList}
         />
       )}
       {/* Modal for PDF viewer */}

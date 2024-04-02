@@ -1,6 +1,7 @@
-import React,{useEffect} from "react";
+import React,{useEffect, useState} from "react";
 
-const SendFileModal = ({ handleClose, doctorsList }) => {
+const SendFileModal = ({ handleClose, updateDoctorsList }) => {
+  const [doctorsList, setDoctorsList] = useState([]);
 
 
       useEffect(() => {
@@ -17,7 +18,8 @@ const SendFileModal = ({ handleClose, doctorsList }) => {
             const data = await response.json();
 
             // Update the state with the fetched doctors
-            setAvailableDoctors(data);
+            setDoctorsList(data);
+            console.log(data)
           } catch (error) {
             console.error("Error fetching doctors:", error);
           }
@@ -35,7 +37,7 @@ const SendFileModal = ({ handleClose, doctorsList }) => {
         <h2>List of Appointed Doctors</h2>
         <ul>
           {doctorsList.map((doctor) => (
-            <li key={doctor.id}>{doctor.name}</li>
+            <li key={doctor.doctor_id}>{doctor.name}</li>
           ))}
         </ul>
       </div>
