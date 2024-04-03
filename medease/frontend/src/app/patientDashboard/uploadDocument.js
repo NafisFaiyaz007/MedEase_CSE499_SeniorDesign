@@ -1,5 +1,5 @@
-import React, { useState,useEffect,useRef } from "react";
-import { pdfjs } from 'react-pdf';
+import React, { useState, useEffect, useRef } from "react";
+import { pdfjs } from "react-pdf";
 import PdfComp from "./pdfcomp";
 import SendFileModal from "./sendFileModal";
 import axios from "axios";
@@ -9,41 +9,37 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-
-
-
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSendFileModalOpen, setIsSendFileModalOpen] = useState(false);
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfFile, setSelectedPdfFile] = useState(null);
   const modalRef = useRef();
 
-
   useEffect(() => {
     const getFiles = async () => {
-       axios.post('http://localhost:8000/api/users/patient/getFiles', null,{withCredentials: true})
-      .then(response => setUploadedFiles(response.data))
-      // .then(response => console.log(response.data))
-      // console.log(response)
-      .catch(error => console.error('Error fetching user:', error));
-      console.log("hello")
-    }
-    // getFiles()
+      axios
+        .post("http://localhost:8000/api/users/patient/getFiles", null, {
+          withCredentials: true,
+        })
+        .then((response) => setUploadedFiles(response.data))
+        .catch((error) => console.error("Error fetching user:", error));
+    };
+
+    getFiles();
+
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setIsModalOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-
   }, []);
-  // const [selectedFile, setSelectedFile] = useState(null);
-
-  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRemoveFile = async (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -52,7 +48,7 @@ const UploadDocuments = () => {
   };
 
   const handleSendFile = async (file) => {
-    setIsModalOpen(true);
+    setIsSendFileModalOpen(true);
   };
 
   const handleUploadFile = async (file) => {
@@ -68,6 +64,10 @@ const UploadDocuments = () => {
     setIsModalOpen(false);
   };
 
+  const SendFileHandleCloseModal = () => {
+    setIsSendFileModalOpen(false); // Fixed typo here
+  };
+
   const showPdf = (pdf) => {
     setPdfFile(`http://localhost:5000/files/${pdf}`);
     setSelectedPdfFile(pdf);
@@ -79,7 +79,6 @@ const UploadDocuments = () => {
       <h2 className="text-xl font-semibold text-white mb-4 text-center">
         Upload/View Documents
       </h2>
-      {/* Upload File Section */}
       <div className="mb-4">
         <label htmlFor="fileInput" className="block text-white mb-2">
           Choose File:
@@ -91,7 +90,6 @@ const UploadDocuments = () => {
           className="border p-2"
         />
       </div>
-      {/* View Uploaded Files Section */}
       {uploadedFiles.length > 0 && (
         <div className="bg-white p-4 rounded-md shadow-md" id="root">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -130,24 +128,14 @@ const UploadDocuments = () => {
                     View
                   </button>
                 </div>
-                {/* {pdfFile && <PdfComp pdfFile={file} />} */}
-
-                {/* {pdfFile && <PdfViewer pdfFile={file} />} */}
               </li>
             ))}
           </ul>
         </div>
       )}
-
-      {/* Modal for Doctor List */}
-      {isModalOpen && (
-        <SendFileModal
-          handleClose={handleCloseModal}
-          // doctorsList={doctorsList}
-        />
+      {isSendFileModalOpen && (
+        <SendFileModal handleClose={SendFileHandleCloseModal} />
       )}
-      {/* Modal for PDF viewer */}
-
       {isModalOpen && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div
