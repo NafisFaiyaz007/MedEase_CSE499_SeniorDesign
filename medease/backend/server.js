@@ -209,3 +209,21 @@ app.get('/api/hospitals', authenticateUser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// Route to delete a user by ID
+app.delete("/api/users/:id", (req, res) => {
+  const userId = req.params.id; // Parse the user ID from request parameters
+  const sql = "DELETE FROM users WHERE id = ?"; // SQL query to delete user by ID
+  dbConnection.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("Error deleting user:", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("User not found");
+    } else {
+      res.status(204).send(); // No content, successful deletion
+    }
+  });
+});
