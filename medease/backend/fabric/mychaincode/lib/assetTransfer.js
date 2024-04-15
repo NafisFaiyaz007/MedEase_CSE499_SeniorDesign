@@ -219,7 +219,7 @@ class MedicalRecords extends Contract {
     async hasPermission(ctx, id, viewerID){
         let document = await this.ReadDocument(ctx, id);
         document = JSON.parse(document);
-        if (document.ownerID === doctorID || document.accessList.includes(viewerID)) {
+        if (document.ownerID === viewerID || document.accessList.includes(viewerID)) {
             return true;
         }
     return false;
@@ -251,7 +251,7 @@ class MedicalRecords extends Contract {
 
     // ReadAsset returns the asset stored in the world state with given id.
     async DoctorReadDocument(ctx, id, viewerID) {
-        const hasPermission = this.hasPermission(ctx, id, viewerID);
+        const hasPermission = await this.hasPermission(ctx, id, viewerID);
         if (hasPermission){
             const assetJSON = await ctx.stub.getState(id); // get the asset from chaincode state
             if (!assetJSON || assetJSON.length === 0) {
@@ -259,7 +259,7 @@ class MedicalRecords extends Contract {
             }
             return assetJSON.toString();
         }
-        throw new Error("You donot have permission to view the document");
+        throw new Error("You do not have permission to view the document");
     }
     
     async DoctorViewDoumentList(ctx, ownerID) {

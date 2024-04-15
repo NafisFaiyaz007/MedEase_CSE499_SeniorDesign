@@ -10,7 +10,7 @@ const BrowseDoctors = () => {
       try {
         const response = await fetch("http://localhost:8000/api/doctors");
         const data = await response.json();
-
+        
         // Update the state with the fetched doctors
         setAvailableDoctors(data);
       } catch (error) {
@@ -22,9 +22,28 @@ const BrowseDoctors = () => {
     fetchDoctors();
   }, []); // The empty dependency array ensures that this effect runs only once when the component mounts
 
-  const handleSetAppointment = (doctor) => {
+  const handleSetAppointment = async (doctor) => {
     // Implement logic to set an appointment
+    try {
+      const response = await fetch("http://localhost:8000/api/users/patient/registerUnderDoctor", {
+        method: "POST", // or "POST" based on your backend logic
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({doctor_id: doctor.doctor_id}),
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      // Update the state with the fetched doctors
+      // setDoctorsList(data);
+      console.log(data)
+    } catch (error) {
+      console.error("Error setting Appointment:", error);
+    }
+  
     console.log("Setting appointment with", doctor.name);
+    
     // You may want to navigate to a new page or update the state accordingly
   };
 

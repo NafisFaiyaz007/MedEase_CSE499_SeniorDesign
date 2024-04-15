@@ -15,16 +15,18 @@ import DoctorDashboardHeader from "./doctorButtons";
 
 const DoctorDashboard = () => {
  const [activeTab, setActiveTab] = useState("editAccount");
- const [selectedDate, setSelectedDate] = React.useState(new Date());
- const [selectedTime, setSelectedTime] = React.useState("");
+//  const [selectedDate, setSelectedDate] = React.useState(new Date());
+//  const [selectedTime, setSelectedTime] = React.useState("");
 
  // Functions for handling date and time changes
  const handleDateChange = (date) => {
    setSelectedDate(date);
+   console.log(selectedDate)
  };
 
  const handleTimeChange = (time) => {
    setSelectedTime(time);
+   console.log(selectedTime)
  };
 
  // Function for handling setting availability
@@ -81,22 +83,22 @@ const DoctorDashboard = () => {
           {/* Set Availability */}
           {activeTab === "setAvailability" && (
             <SetAvailabilityForm
-              selectedDate={selectedDate}
-              selectedTime={selectedTime}
-              handleDateChange={handleDateChange}
-              handleTimeChange={handleTimeChange}
-              handleSetAvailabilityDoctor={handleSetAvailabilityDoctor}
+              // selectedDate={selectedDate}
+              // selectedTime={selectedTime}
+              // handleDateChange={handleDateChange}
+              // handleTimeChange={handleTimeChange}
+              // handleSetAvailabilityDoctor={handleSetAvailabilityDoctor}
             />
           )}
 
           {/* Check Patient List */}
           {activeTab === "checkPatientList" && (
             <DoctorPatientList
-              patientList={[
-                { id: 1, name: "Patient 1", age: 30, gender: "Male" },
-                { id: 2, name: "Patient 2", age: 25, gender: "Female" },
-                // Add more patient data as needed
-              ]}
+              // patientList={[
+              //   { id: 1, name: "Patient 1", age: 30, gender: "Male" },
+              //   { id: 2, name: "Patient 2", age: 25, gender: "Female" },
+              //   // Add more patient data as needed
+              // ]}
               onDelete={DoctorFunctions.handleDeletePatient}
               onExamine={DoctorFunctions.handleExaminePatient}
             />

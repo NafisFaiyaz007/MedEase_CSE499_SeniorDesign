@@ -1,11 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PrescriptionModal from "./prescription";
+import { handleGetReports, handleViewReport } from "./doctorFunctions";
 
-const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
+const DoctorPatientList = ({ onDelete, onExamine }) => {
+  const [patientList, setPatientList] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the doctor database here
+    const getPatientList = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/users/doctor/getPatientList",{ method: "POST", credentials:"include"});
+        const data = await response.json();
+        console.log(data)
+        setPatientList(data)
+        // Update the state with the fetched doctors
+        // setAvailableDoctors(data);
+      } catch (error) {
+        console.error("Error fetching patient:", error);
+      }
+    };
+
+    // Call the fetchDoctors function when the component mounts
+    getPatientList();
+  }, []); // The empty dependency array ensures that this effect runs only once when the component mounts
 
   const openReportsModal = (patient) => {
     setSelectedPatient(patient);
+    handleGetReports(patient, updateReports);
   };
 
   const closeReportsModal = () => {
@@ -28,6 +51,26 @@ const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
     handleCloseModal();
   };
 
+  const updateReports = (data) => {
+    setReports(data)
+  }
+
+  function calculateAge(birthDate) {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDiff = today.getMonth() - birthDateObj.getMonth();
+
+    // If the birth month is greater than the current month or
+    // if they are in the same month but the birth day is greater than the current day,
+    // then decrement the age by 1
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-white mb-4">
@@ -41,7 +84,7 @@ const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
           >
             <div>
               <strong>Name:</strong> {patient.name}, <strong>Age:</strong>{" "}
-              {patient.age}, <strong>Gender:</strong> {patient.gender}
+              {calculateAge(patient.dateOfBirth)}, <strong>Gender:</strong> {patient.gender}
             </div>
             <div className="space-x-4">
               <button
@@ -100,6 +143,32 @@ const DoctorPatientList = ({ patientList, onDelete, onExamine }) => {
             {/* Display patient reports here */}
             {/* You can fetch and display the reports dynamically based on the selectedPatient data */}
             <p>This is where the reports will be displayed.</p>
+            {/* Display patient reports here */}
+      <table className="w-full">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Date Uploaded</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reports.map(report => (
+            <tr key={report.ID}>
+              <td>{report.fileName}</td>
+              <td>{report.dateUploaded}</td>
+              <td>
+                <button
+                  onClick={() => handleViewReport(report.ID)}
+                  className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
+                >
+                  View
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
             <button
               onClick={closeReportsModal}
               className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300 mt-2"

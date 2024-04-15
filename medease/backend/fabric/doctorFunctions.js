@@ -79,8 +79,8 @@ const doctorUploadFile = async (req, res) => {
 
 const doctorGetSingleFile = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.patientUUID;
-    const viewer = req.body.UUID;
+    // const ownerID = req.body.patientUUID;
+    const viewer = req.session.user.UUID;
     const gateway = new Gateway();
     try {
         const ccp = buildCCPOrg1();
@@ -97,37 +97,54 @@ const doctorGetSingleFile = async (req, res) => {
             result = await contract.evaluateTransaction('DoctorReadDocument', id, viewer);
             console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             //const cid = req.body.fileHash;
-            const re = JSON.parse(result.toString())
-            console.log("filehash == " + re.fileHash)
-            console.log("loggeds")
+            const cid = JSON.parse(result.toString()).fileHash;
 
             // if (!cid) {
             //     res.status(404).send('File not found');
             //     return;
             // }
-            const fs = await createNode();
-            const decoder = new TextDecoder();
-            let text = '';
-
-            for await (const chunks of fs.cat(cid)) {
-                text += decoder.decode(chunks, { stream: true });
+            if (!cid) {
+                res.status(404).send('File not found');
+                return;
             }
 
-            res.status(200).send(text);
+            const fs = await createNode();
+            let data = [];
+            const decoder = new TextDecoder();
+            let text = "";
+
+            try {
+                for await (const chunk of fs.cat(cid)) {
+                    // text += decoder.decode(chunk, { stream: true });
+                    data.push(chunk);
+                }
+                const buffer = Buffer.concat(data);
+
+
+                res.status(200).send(buffer);
+            } catch (error) {
+                console.log(`Error retrieving data for CID "${cid}":`, error);
+                res.status(500).send("Error retrieving data");
+            }
         }
-        catch {
-            //res.status(500).json({ error: 'File does not exist' });
-            res.status(500).send('An error occurred while retrieving the file');
+        catch (error){
+            // res.status(500).json({ error: 'File does not exist' });
+            // console.error("Error::: ", error.message)
+            res.status(500).send({ error: error.message });
+            // res.status(500).send('An error occurred while retrieving the file');
 
         }
-    } finally {
+    }
+    finally {
         gateway.disconnect();
     }
 }
 
 const doctorGetAllFiles = async (req, res) => {
     const ownerID = req.body.patientUUID;
-    const viewer = req.body.UUID;
+    const viewer = req.session.user.UUID//req.body.UUID;
+    console.log(req.body)
+    // console.log(viewer)
     const gateway = new Gateway();
     try {
         const ccp = buildCCPOrg1();
@@ -152,5 +169,5 @@ const doctorGetAllFiles = async (req, res) => {
     }
 }
 
-module.exports = { doctorUploadFile, doctorGetAllFiles, doctorGetSingleFile};
+module.exports = { doctorUploadFile, doctorGetAllFiles, doctorGetSingleFile };
 // ./network.sh deployCC -ccn basic -ccp mychaincode -ccl javascript

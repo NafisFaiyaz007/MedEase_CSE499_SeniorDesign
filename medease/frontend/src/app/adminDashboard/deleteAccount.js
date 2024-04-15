@@ -23,7 +23,8 @@ const DeleteAccount = () => {
       );
       if (response.ok) {
         // If the user is deleted successfully, remove it from the state
-        setUsers(users.filter((user) => user.id !== userId));
+        // setUsers(users.filter((user) => user.id !== userId));
+        fetchData();
         console.log(`User with ID ${userId} deleted successfully`);
       } else {
         console.error(`Failed to delete user with ID ${userId}`);
@@ -32,19 +33,19 @@ const DeleteAccount = () => {
       console.error("Error deleting user:", error);
     }
   };
-
+// Fetch data when the component mounts
+const fetchData = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/");
+    const data = await response.json();
+    setUsers(data);
+    console.log(data);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
   useEffect(() => {
-    // Fetch data when the component mounts
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/users/");
-        const data = await response.json();
-        setUsers(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+    
 
     fetchData();
   }, []); // The empty dependency array ensures this effect runs once when the component mounts

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('./controllers/userController');
 const fileController = require('./controllers/fileController');
+const utils = require('./controllers/utils');
 const registerAdmin = require('./fabric/registerAdmin');
 const registerUser = require('./fabric/registerUser');
 const patientFunction = require('./fabric/query');
@@ -43,6 +44,7 @@ router.post('/patient/grant', patientFunction.grantPermission);
 router.post('/patient/revoke', patientFunction.revokePermission);
 router.post('/allFiles', patientFunction.getAllDocuments);
 router.post('/patient/init', patientFunction.init);
+//Doctor Routes
 router.post('/doctor/uploadFile', doctorFunction.doctorUploadFile);
 router.post('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
 router.post('/doctor/readFile', doctorFunction.doctorGetSingleFile);
@@ -56,6 +58,10 @@ router.post('/checkup', upload.single('file'), (req, res) => {
     const bytes = Buffer.from(data, "utf-8");
     console.log(bytes)
 })
+
+router.post('/patient/registerUnderDoctor', utils.registerUnderDoctor);
+router.post('/doctor/getPatientList', utils.getPatientList);
+app.post("/api/setAvailability", authenticateUser, utils.setAvailability)
 // router.post('/up', upload.single('file'), hl.up);
 
   

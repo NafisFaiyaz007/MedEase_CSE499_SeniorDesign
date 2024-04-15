@@ -42,11 +42,19 @@ const init = async (req, res) => {
     }
 }
 async function createNode() {
-    const { createHelia } = await import('helia');
-    const { unixfs } = await import('@helia/unixfs');
-    const helia = await createHelia();
-    const fs = unixfs(helia);
-    return fs;
+    try {
+      const { createHelia } = await import('helia');
+      const { unixfs } = await import('@helia/unixfs');
+      const { FsBlockstore } = await import("blockstore-fs");
+  
+      const blockstore = new FsBlockstore("../files");
+      const heliaPromise = createHelia({ blockstore });
+  
+      return unixfs(await heliaPromise);
+    } catch (error) {
+      console.error("Error creating node:", error);
+      throw error; // Rethrow the error or handle it accordingly
+    }
   }
   
 
@@ -73,13 +81,18 @@ const uploadFile = async (req, res) => {
         const contract = network.getContract(chaincodeName);
         let cid = "";
         try {
-            try{
-            const fs = await createNode();
-            const data = req.file.buffer;
-            cid = await fs.addBytes(data);
-            hashMap.set(req.file.originalname, cid);
+            try {
+                // Create the node
+                const fs = await createNode();
+                const data = req.file.buffer;
+                //console.log(req.file)
+                // Add content to IPFS
+                const bytes = Buffer.from(data, "utf-8");
+                cid = await fs.addFile({path: req.file.originalname, content: bytes})
+                console.log(cid);
 
-            //res.status(201).send('Your file has been uploaded');
+                res.json({ cid: cid.toString() });
+                // res.status(201).send('Your file has been uploaded');
             }
             catch(e){
                 console.log(e);
@@ -110,6 +123,7 @@ const uploadFile = async (req, res) => {
 const getSingleFile = async (req, res) => {
     const id = req.body.fileID;
     const ownerID = req.body.UUID;
+    console.log(req.body)
     const gateway = new Gateway();
     try {
         const ccp = buildCCPOrg1();
@@ -130,7 +144,7 @@ const getSingleFile = async (req, res) => {
             //const filename = req.body.filename;
             const cid = JSON.parse(result.toString()).fileHash;
             //result.fileHash;
-            console.log("filehash == "+ cid)
+            // console.log("filehash == "+ cid)
         
             if (!cid) {
               res.status(404).send('File not found');
@@ -138,15 +152,23 @@ const getSingleFile = async (req, res) => {
             }
         
             const fs = await createNode();
+            let data = [];
             const decoder = new TextDecoder();
-            let text = '';
-        
-            for await (const chunks of fs.cat(cid)) {
-              text += decoder.decode(chunks, { stream: true });
+            let text = "";
+            
+            try {
+              for await (const chunk of fs.cat(cid)) {
+                // text += decoder.decode(chunk, { stream: true });
+                data.push(chunk);
+              }
+              const buffer = Buffer.concat(data);
+
+              res.send(buffer);
+            } catch (error) {
+              console.log(`Error retrieving data for CID "${cid}":`, error);
+              res.status(500).send("Error retrieving data");
             }
-        
-            res.status(200).send(text);
-        }
+          }
         catch {
             //res.status(500).json({ error: 'File does not exist' });
             res.status(500).send('An error occurred while retrieving the file');
@@ -224,7 +246,7 @@ const deleteFile = async (req, res) => {
     }
 }
 const getAllFiles = async (req, res) => {
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID;
     const gateway = new Gateway();
     try {
         const ccp = buildCCPOrg1();

@@ -129,25 +129,6 @@ app.get('/api/users/', authenticateUser, async (req, res) => {
   }
 });
 
-
-// api to set availability of doctors
-app.post("/api/setAvailability", authenticateUser, (req, res) => {
-  const { doctorId, availabilityDateTime } = req.body;
-
-  const sql = "UPDATE doctors SET availabilityDateTime = ? WHERE id = ?";
-  db.query(sql, [availabilityDateTime, doctorId], (err, result) => {
-    if (err) {
-      console.error("Error setting availability:", err);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
-    } else {
-      res.json({ success: true, message: "Availability set successfully" });
-    }
-  });
-});
-
-
 // API endpoint to update beds in the hospital
 app.put("/api/updateBeds", authenticateUser, (req, res) => {
   try {

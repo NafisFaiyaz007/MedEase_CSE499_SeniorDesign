@@ -37,11 +37,11 @@ export const handleSetPhysicalAppointment = () => {
 };
 
 export const handleEditAccountChange = (e) => {
-   const { name, value } = e.target;
-   setDoctorInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
- };
+  const { name, value } = e.target;
+  setDoctorInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
+};
 
- // pages/doctor/doctorFunctions.js
+// pages/doctor/doctorFunctions.js
 
 export const handleDeletePatient = (patientId) => {
   // Implement logic to delete the patient with the given ID
@@ -53,27 +53,63 @@ export const handleExaminePatient = (patientId) => {
   console.log(`Examining patient with ID: ${patientId}`);
 };
 
-export const setPhysicalAppointment= (patientId)=>{
+export const setPhysicalAppointment = (patientId) => {
   // implement the logic to set plysical appointment with a patient
 };
 
- export const handleDateChange = (date) => {
-   setSelectedDate(date);
- };
+export const handleDateChange = (date) => {
+  setSelectedDate(date);
+};
 
- export const handleTimeChange = (time) => {
-   setSelectedTime(time);
- };
+export const handleTimeChange = (time) => {
+  setSelectedTime(time);
+};
 
- export const handleSetAvailabilityDoctor = () => {
-   // Implement logic to set the availability with selectedDate and selectedTime
-   console.log("Setting availability:", selectedDate, selectedTime);
- };
+export const handleSetAvailabilityDoctor = () => {
+  // Implement logic to set the availability with selectedDate and selectedTime
+  console.log("Setting availability:", selectedDate, selectedTime);
+};
 
- export const handleViewReports = (patient) => {
-    setSelectedPatient(patient);
-  };
+//Function for fetching and opening the document
+export const handleViewReport = async (fileID) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/doctor/readFile", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fileID: fileID }),
+      credentials: "include"
+    });
+    const data = await response.json();
+    console.log(data)
+    //setPatientList(data)
+    updateReports(data);
+    // Update the state with the fetched doctors
+    // setAvailableDoctors(data);
+  } catch (error) {
+    console.error("Error fetching patient:", error);
+  }
+};
 
- export const handleCloseModal = () => {
-    setSelectedPatient(null);
-  };
+//Function for getting the list of all documents
+export const handleGetReports = async (patient, updateReports) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/doctor/getFiles", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ patientUUID: patient.UUID }),
+      credentials: "include"
+    });
+    const data = await response.json();
+    console.log(data)
+    //setPatientList(data)
+    updateReports(data);
+    // Update the state with the fetched doctors
+    // setAvailableDoctors(data);
+  } catch (error) {
+    console.error("Error fetching patient:", error);
+  }
+}
+
+export const handleCloseModal = () => {
+  setSelectedPatient(null);
+};

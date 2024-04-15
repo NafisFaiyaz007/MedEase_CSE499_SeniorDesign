@@ -3,36 +3,39 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const SetAvailabilityForm = ({
-  selectedDate,
-  selectedTime,
-  handleDateChange, // Do not redeclare these functions here
-  handleTimeChange,
-  handleSetAvailabilityDoctor,
+  // selectedDate,
+  // selectedTime,
+  // handleDateChange, // Do not redeclare these functions here
+  // handleTimeChange,
+  // handleSetAvailabilityDoctor,
 }) => {
-  const [doctorId, setDoctorId] = useState(""); // Assuming you have a way to get the doctorId
+  // const [doctorId, setDoctorId] = useState(""); // Assuming you have a way to get the doctorId
   const [availabilityDateTime, setAvailabilityDateTime] = useState(null);
+  const [selectedDate, setSelectedDate] = React.useState("")//new Date());
+  const [selectedTime, setSelectedTime] = React.useState("");
 
   const handleSetAvailability = () => {
-    if (!doctorId || !availabilityDateTime) {
+    if (!selectedDate || !selectedTime) {
       console.log("Please select both doctor and availability date/time");
       return;
     }
 
-    fetch("http://localhost:8000/api/setAvailability", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ doctorId, availabilityDateTime }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.message);
-        // Handle response data as needed
-      })
-      .catch((error) => {
-        console.error("Error setting availability:", error);
-      });
+    // fetch("http://localhost:8000/api/setAvailability", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ doctorId, availabilityDateTime }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data.message);
+    //     // Handle response data as needed
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error setting availability:", error);
+    //   });
+    console.log(selectedDate, selectedTime)
   };
 
   return (
@@ -45,11 +48,10 @@ const SetAvailabilityForm = ({
         <label htmlFor="datePicker" className="text-white m-3">
           Select Date:
         </label>
-        <DatePicker
+        <input
           id="datePicker"
-          selected={selectedDate}
-          onChange={handleDateChange} // Use the passed prop function
-          dateFormat="dd/MM/yyyy"
+          type="date"
+          onChange={(e) => setSelectedDate(e.target.value)} // Use the passed prop function
           className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
         />
       </div>
@@ -63,7 +65,7 @@ const SetAvailabilityForm = ({
           type="time"
           id="timePicker"
           value={selectedTime}
-          onChange={(e) => handleTimeChange(e.target.value)} // Use the passed prop function
+          onChange={(e) => setSelectedTime(e.target.value+ ":00")} // Use the passed prop function
           className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
         />
       </div>
