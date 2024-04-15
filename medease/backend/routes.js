@@ -61,7 +61,7 @@ router.post('/checkup', upload.single('file'), (req, res) => {
 
 router.post('/patient/registerUnderDoctor', utils.registerUnderDoctor);
 router.post('/doctor/getPatientList', utils.getPatientList);
-app.post("/api/setAvailability", authenticateUser, utils.setAvailability)
+router.post("/api/setAvailability", authenticateUser, utils.setAvailability)
 // router.post('/up', upload.single('file'), hl.up);
 
   
