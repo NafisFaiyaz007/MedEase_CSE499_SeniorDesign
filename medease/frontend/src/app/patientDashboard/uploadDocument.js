@@ -138,7 +138,7 @@ const UploadDocuments = () => {
         <SendFileModal handleClose={SendFileHandleCloseModal} />
       )}
       {isModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
+        <div className="fixed z-100 inset-0 overflow-y-auto">
           <div
             className="flex items-center justify-center min-h-screen"
             ref={modalRef}

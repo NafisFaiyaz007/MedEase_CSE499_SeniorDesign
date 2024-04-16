@@ -9,25 +9,37 @@ const PdfComp = (props) => {
     setNumPages(numPages);
   };
 
+  const { pdfFile } = props;
+  // Determine if the file is a PDF or an image
+  const isPdf = pdfFile.name.endsWith(".pdf");
+  const isImage =
+      (pdfFile.name.endsWith(".jpg") ||
+      pdfFile.name.endsWith(".jpeg") ||
+      pdfFile.name.endsWith(".png") ||
+      pdfFile.name.endsWith(".gif"));
+  console.log(isImage);
+
   return (
     <div className="pdf-div">
-      <p>
-        Page {pageNumber} of {numPages}
-      </p>
-      <Document file={props.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
-        {Array.apply(null, Array(numPages))
-          .map((x, i) => i + 1)
-          .map((page) => {
-            return (
+      {isPdf && (
+        <div>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+          <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
+            {Array.from(new Array(numPages), (el, index) => (
               <Page
-                key={page}
-                pageNumber={page}
+                key={`page_${index + 1}`}
+                pageNumber={index + 1}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
               />
-            );
-          })}
-      </Document>
+            ))}
+          </Document>
+        </div>
+      )}
+
+      {isImage && <img src={URL.createObjectURL(pdfFile)} alt="Image" />}
     </div>
   );
 };
