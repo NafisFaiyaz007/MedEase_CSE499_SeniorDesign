@@ -20,7 +20,7 @@ const PdfComp = (props) => {
   console.log(isImage);
 
   return (
-    <div className="pdf-div">
+    <div className="pdf-div p-5">
       {isPdf && (
         <div>
           <p>
