@@ -57,6 +57,7 @@ const UploadDocuments = () => {
 
   const handleDownloadFile = async (file) => {
     console.log("handle download file");
+    console.log(file);
   };
 
   const handleCloseModal = () => {
@@ -101,7 +102,7 @@ const UploadDocuments = () => {
                 key={index}
                 className="mb-2 flex items-center justify-between"
               >
-                <span>{file.fileName}</span>
+                <span>{file.fileName || file.name}</span>
                 <div className="flex items-center space-x-2" id="view">
                   <button
                     className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
