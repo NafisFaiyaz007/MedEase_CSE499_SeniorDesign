@@ -1,4 +1,5 @@
 // doctorFunctions.js
+import axios from "axios";
 
 export const handleEditAccount = () => {
   // Implement logic for editing the doctor's account
@@ -73,20 +74,34 @@ export const handleSetAvailabilityDoctor = () => {
 //Function for fetching and opening the document
 export const handleViewReport = async (fileID) => {
   try {
-    const response = await fetch("http://localhost:8000/api/users/doctor/readFile", {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fileID: fileID }),
-      credentials: "include"
-    });
-    const data = await response.json();
-    console.log(data)
+    console.log(fileID)
+    // const response = await fetch("http://localhost:8000/api/users/doctor/readFile", {
+    //   method: "POST",
+    //   headers: { 'Content-Type': 'application/json' },
+      
+    //   body: JSON.stringify({ fileID: fileID }),
+    //   credentials: "include"
+    // });
+    const response = await axios.post(
+      "http://localhost:8000/api/users/doctor/readFile",
+      {fileID: fileID },
+      {
+        responseType: 'blob',
+        withCredentials: true
+      }
+
+    );
+    // if(response.ok){
+    // const data = response;
+    console.log(response.data)
+    return response.data;
+  // }
     //setPatientList(data)
-    updateReports(data);
+    // updateReports(data);
     // Update the state with the fetched doctors
     // setAvailableDoctors(data);
   } catch (error) {
-    console.error("Error fetching patient:", error);
+    console.error("Error viewing file:", error);
   }
 };
 
@@ -113,3 +128,32 @@ export const handleGetReports = async (patient, updateReports) => {
 export const handleCloseModal = () => {
   setSelectedPatient(null);
 };
+
+export function formatDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(date);
+}
+
+export function getDay(dateString) {
+  const date = new Date(dateString);
+  // Extracting components
+  const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+
+  return dayOfWeek;
+}
+
+export function getDate(dateString) {
+  const date = new Date(dateString);
+
+  const dateOnly = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(date);
+
+  return dateOnly;
+}
+
+export function getTime(dateString) {
+  const date = new Date(dateString);
+
+  const timeOnly = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }).format(date);
+
+  return timeOnly;
+}

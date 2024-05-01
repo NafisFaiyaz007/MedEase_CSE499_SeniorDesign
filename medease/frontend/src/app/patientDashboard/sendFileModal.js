@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-const SendFileModal = ({ handleClose, updateDoctorsList }) => {
+const SendFileModal = ({ handleClose, currentFile }) => {
   const [doctorsList, setDoctorsList] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Fetch data from the doctor database here
@@ -29,9 +30,48 @@ const SendFileModal = ({ handleClose, updateDoctorsList }) => {
   }, []);
 
   // Function to handle sending a file to a doctor
-  const sendFileToDoctor = (doctorId) => {
+  const sendFileToDoctor = async (doctorId) => {
     // Implement sending file logic here
-    console.log("Sending file to doctor with ID:", doctorId);
+    console.log("Sending file to doctor with ID:", doctorId + " and file: " + currentFile);
+    try {
+      const response = await fetch("http://localhost:8000/api/users/patient/grant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({doctorUUID: doctorId, fileID: currentFile}),
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      // Update the state with the fetched doctors
+      // setDoctorsList(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error granting permission to doctor:", error);
+    }
+  };
+  // Function to handle revoking a file from a doctor
+  const revokePermission = async (doctorId) => {
+    // Implement sending file logic here
+    console.log("Revoking file from doctor with ID:", doctorId + "and file: " + currentFile);
+    try {
+      const response = await fetch("http://localhost:8000/api/users/patient/revoke", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({doctorUUID: doctorId, fileID: currentFile}),
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      // Update the state with the fetched doctors
+      // setDoctorsList(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error granting permission to doctor:", error);
+    }
   };
 return (
   <div className="modal fixed top-0 text-gray-800 left-0 w-full h-full flex items-center justify-center">
@@ -63,10 +103,16 @@ return (
             >
               <span>{doctor.degree} {doctor.name}- {doctor.designation}</span>
               <button
-                onClick={() => sendFileToDoctor(doctor.doctor_id)}
+                onClick={() => sendFileToDoctor(doctor.UUID)}
                 className="bg-green-700 hover:bg-green-500 text-white font-bold py-1 px-2 rounded"
               >
                 Send File
+              </button>
+              <button
+                onClick={() => revokePermission(doctor.UUID)}
+                className="bg-green-700 hover:bg-green-500 text-white font-bold py-1 px-2 rounded"
+              >
+                Revoke Access
               </button>
             </li>
           ))}

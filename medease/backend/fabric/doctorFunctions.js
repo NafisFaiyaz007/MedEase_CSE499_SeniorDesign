@@ -16,13 +16,28 @@ const org1UserId = 'doctor1';
 function prettyJSONString(inputString) {
     return JSON.stringify(JSON.parse(inputString), null, 2);
 }
+// async function createNode() {
+//     const { createHelia } = await import('helia');
+//     const { unixfs } = await import('@helia/unixfs');
+//     const helia = await createHelia();
+//     const fs = unixfs(helia);
+//     return fs;
+// }
 async function createNode() {
-    const { createHelia } = await import('helia');
-    const { unixfs } = await import('@helia/unixfs');
-    const helia = await createHelia();
-    const fs = unixfs(helia);
-    return fs;
-}
+    try {
+      const { createHelia } = await import('helia');
+      const { unixfs } = await import('@helia/unixfs');
+      const { FsBlockstore } = await import("blockstore-fs");
+  
+      const blockstore = new FsBlockstore("../files");
+      const heliaPromise = createHelia({ blockstore });
+  
+      return unixfs(await heliaPromise);
+    } catch (error) {
+      console.error("Error creating node:", error);
+      throw error; // Rethrow the error or handle it accordingly
+    }
+  }
 
 
 const doctorUploadFile = async (req, res) => {
@@ -81,6 +96,8 @@ const doctorGetSingleFile = async (req, res) => {
     const id = req.body.fileID;
     // const ownerID = req.body.patientUUID;
     const viewer = req.session.user.UUID;
+    console.log("viewer: "+ viewer);
+    console.log("fileID: "+ id);
     const gateway = new Gateway();
     try {
         const ccp = buildCCPOrg1();
@@ -95,9 +112,10 @@ const doctorGetSingleFile = async (req, res) => {
         const contract = network.getContract(chaincodeName);
         try {
             result = await contract.evaluateTransaction('DoctorReadDocument', id, viewer);
-            console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            // console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             //const cid = req.body.fileHash;
             const cid = JSON.parse(result.toString()).fileHash;
+            // console.log(cid)
 
             // if (!cid) {
             //     res.status(404).send('File not found');
@@ -114,23 +132,34 @@ const doctorGetSingleFile = async (req, res) => {
             let text = "";
 
             try {
-                for await (const chunk of fs.cat(cid)) {
-                    // text += decoder.decode(chunk, { stream: true });
-                    data.push(chunk);
-                }
-                const buffer = Buffer.concat(data);
+            //     for await (const chunk of fs.cat(cid)) {
+            //         // text += decoder.decode(chunk, { stream: true });
+            //         data.push(chunk);
+            //     }
+            //     const buffer = Buffer.concat(data);
 
+            //     console.log(buffer)
+            //     res.status(200).send(buffer);
+            // } catch (error) {
+            //     console.log(`Error retrieving data for CID "${cid}":`, error);
+            //     res.status(500).send("Error retrieving data");
+            // }
+            for await (const chunk of fs.cat(cid)) {
+                // text += decoder.decode(chunk, { stream: true });
+                data.push(chunk);
+              }
+              const buffer = Buffer.concat(data);
 
-                res.status(200).send(buffer);
+              res.send(buffer);
             } catch (error) {
-                console.log(`Error retrieving data for CID "${cid}":`, error);
-                res.status(500).send("Error retrieving data");
+              console.log(`Error retrieving data for CID "${cid}":`, error);
+              res.status(500).send("Error retrieving data");
             }
         }
         catch (error){
             // res.status(500).json({ error: 'File does not exist' });
             // console.error("Error::: ", error.message)
-            res.status(500).send({ error: error.message });
+            res.status(500).send({ error: error.message });            
             // res.status(500).send('An error occurred while retrieving the file');
 
         }

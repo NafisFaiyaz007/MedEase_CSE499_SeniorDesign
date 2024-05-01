@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PrescriptionModal from "./prescription";
-import { handleGetReports, handleViewReport } from "./doctorFunctions";
+import { handleGetReports, formatDate } from "./doctorFunctions";
+import PdfComp from "./pdfcomp";
+import { pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 const DoctorPatientList = ({ onDelete, onExamine }) => {
   const [patientList, setPatientList] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [reports, setReports] = useState([]);
+  const [isFileModalOpen, setIsFileModalOpen] = useState(false);
+  const modalRef = useRef();
+  const [selectedPdfFile, setSelectedPdfFile] = useState(null);
+
 
   useEffect(() => {
     // Fetch data from the doctor database here
@@ -13,8 +24,10 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
       try {
         const response = await fetch("http://localhost:8000/api/users/doctor/getPatientList",{ method: "POST", credentials:"include"});
         const data = await response.json();
+        if(response.ok){
         console.log(data)
         setPatientList(data)
+        }
         // Update the state with the fetched doctors
         // setAvailableDoctors(data);
       } catch (error) {
@@ -40,6 +53,11 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
     setShowModal(true);
   };
 
+  const handleCloseFileModal = () => {
+    setSelectedPdfFile(null);
+    setIsFileModalOpen(false);
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -54,6 +72,12 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
   const updateReports = (data) => {
     setReports(data)
   }
+  const showPdf = async (file) => {
+    // const pdf = await handleViewReport(fileID);
+    // setCurrentFileID(`http://localhost:5000/files/${pdf}`);
+    setSelectedPdfFile(file);
+    setIsFileModalOpen(true);
+  };
 
   function calculateAge(birthDate) {
     const today = new Date();
@@ -156,10 +180,10 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
           {reports.map(report => (
             <tr key={report.ID}>
               <td>{report.fileName}</td>
-              <td>{report.dateUploaded}</td>
+              <td>{formatDate(report.uploaded)}</td>
               <td>
                 <button
-                  onClick={() => handleViewReport(report.ID)}
+                  onClick={() => showPdf(report)}//handleViewReport(report.ID)}
                   className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
                 >
                   View
@@ -178,7 +202,29 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
           </div>
         </div>
       )}
+      {isFileModalOpen && (
+        <div className="fixed z-100 inset-0 overflow-y-auto">
+          <div
+            className="flex items-center justify-center min-h-screen"
+            ref={modalRef}
+          >
+            <div className="fixed inset-0 bg-gray-500 justify=center opacity-75"></div>
+            <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full relative">
+              <button
+                className="absolute top-0 right-0 mt-4 mr-4 text-red-700 cursor-pointer"
+                onClick={handleCloseFileModal}
+              >
+                &times; CLOSE
+              </button>
+              <div className="p-6">
+                {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+    
   );
 };
 

@@ -130,15 +130,15 @@ const registerDoctor = async (req, res) => {
     }
   }
   const checkSession = (req, res, next) => {
-    if (!req.session) {
-      // Session is valid, send appropriate response
-      // res.json({ loggedIn: true, user: req.session.name });     
-      // Session is invalid or not authenticated, send appropriate response
-      res.status(401).json({ loggedIn: false });
+    // Check if the session does exist
+    if (req.session) {
+      // Session is valid, perhaps do something or simply continue
+      next();  // Continue to the next middleware or route handler
     } else {
-        next()
+      // Session is invalid or not present, send an unauthorized response
+      res.status(401).json({ loggedIn: false });
     }
-  }
+}
 
   const logout = (req, res) => {
       // Destroy the session

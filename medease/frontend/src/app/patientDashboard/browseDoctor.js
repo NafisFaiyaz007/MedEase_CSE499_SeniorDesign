@@ -1,8 +1,11 @@
 // BrowseDoctors.js
 import React, { useState, useEffect } from "react";
+import Modal from "../components/modal";
 
 const BrowseDoctors = () => {
   const [availableDoctors, setAvailableDoctors] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   useEffect(() => {
     // Fetch data from the doctor database here
@@ -32,19 +35,27 @@ const BrowseDoctors = () => {
         },
         body:JSON.stringify({doctor_id: doctor.doctor_id}),
         credentials: "include",
+      }).then(response => {
+        if (!response.ok) { // Check if response is not ok (e.g., 400 or 500 status)
+          return response.json().then(data => {throw new Error(data.error + doctor.name)});
+        }
+        return response.json();
+      })
+      .then(data => {
+        setModalContent(data.message); // Assuming the server sends back a "message" field
+        setModalIsOpen(true); // Open the modal on successful fetch
+      })
+      .catch(error => {
+        console.error("Error setting availability:", error);
+        setModalContent(error.message); // Set error message in modal
+        setModalIsOpen(true); // Open the modal on error
       });
-      const data = await response.json();
-
-      // Update the state with the fetched doctors
-      // setDoctorsList(data);
-      console.log(data)
-    } catch (error) {
-      console.error("Error setting Appointment:", error);
     }
-  
-    console.log("Setting appointment with", doctor.name);
-    
-    // You may want to navigate to a new page or update the state accordingly
+    catch(error) {
+      console.error("Error setting availability:", error);
+      setModalContent("Could not connect to the server"); // Set error message in modal
+      setModalIsOpen(true); // Open the modal on error
+    }
   };
 
   return (
@@ -71,6 +82,9 @@ const BrowseDoctors = () => {
           </button>
         </div>
       ))}
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   );
 };

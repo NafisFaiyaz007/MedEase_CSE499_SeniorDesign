@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Document, Page } from "react-pdf";
 import axios from "axios";
-
+import Modal from "../components/modal";
 
 const PdfComp = (props) => {
   const [numPages, setNumPages] = useState();
@@ -9,6 +9,9 @@ const PdfComp = (props) => {
   const [isPdf, setIsPdf] = useState(false);
   const [isImage, setIsImage] = useState(false);
   const [data, setData] = useState(null)
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -33,24 +36,20 @@ const PdfComp = (props) => {
   
   async function getData(){
     try {
-      const body = {
-        UUID: 'doctor1',
-        patientUUID: 'patient1',
-        fileID: pdfFile.ID//'patient1_8918a7b97ed45aed0c760ba5d4bbc304fdebe4194eedf22e23c72a105873693b'
-      };
+      console.log(pdfFile)
       const response = await axios.post(
-        "http://localhost:8000/api/users/patient/readFile",
-        body,
+        "http://localhost:8000/api/users/doctor/readFile",
+        {fileID: pdfFile.ID },
         {
           responseType: 'blob',
           withCredentials: true
         }
-
+  
       );
-
-      const data = await response.data;
+      console.log(response.statusText == "OK")
+      const data =  response.data;
       console.log(response.data)
-
+      setIsAllowed(true);
       setData(response.data);
       // URL.createObjectURL(object)
 
@@ -67,13 +66,27 @@ const PdfComp = (props) => {
       // };
       // reader.readAsDataURL(data);
     } catch (error) {
-      console.error('Error fetching file:', error);
+      // console.error('Error fetching file:', error);
+      if (error.response) {
+        // To handle cases where a JSON error message is sent by the server
+        const reader = new FileReader();
+        reader.onload = () => {
+            const errorText = reader.result;
+            console.error('Error fetching file:', JSON.parse(errorText).error);
+            setModalContent(JSON.parse(errorText).error);
+            setModalIsOpen(true);
+        };
+        reader.readAsText(error.response.data);
+    } else {
+        // Handle network errors or other issues where the server doesn't respond
+        console.error('Error fetching file:', error.message);
+    }
     }
   }
 
   return (
     <div className="pdf-div p-5">
-      {isPdf && (
+      {isPdf && isAllowed && (
         <div>
           <p>
             Page {pageNumber} of {numPages}
@@ -91,7 +104,10 @@ const PdfComp = (props) => {
         </div>
       )}
 
-      {isImage && <img src={URL.createObjectURL(data)} alt="Image" />}
+      {isImage && isAllowed && <img src={URL.createObjectURL(data)} alt="Image" />}
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   );
 };

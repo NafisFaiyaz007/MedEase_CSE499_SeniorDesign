@@ -77,3 +77,15 @@ export const handleBedsCounterIncrement = () => {
 export const handleBedsCounterDecrement = () => {
   // Implement logic to decrement beds counter
 };
+
+export const getBedsCount = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/getBedsCount",  {method: "GET", credentials: "include"}); // Adjust the endpoint based on your server
+    const data = await response.json();
+    console.log(data[0].beds)
+    return data[0].beds;
+  } catch (error) {
+    console.error('Error:', error);
+    return error;
+  }
+}

@@ -10,10 +10,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const UploadDocuments = () => {
+  const [fileToUpload, setFileToUpload] = useState([])
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSendFileModalOpen, setIsSendFileModalOpen] = useState(false);
-  const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfFile, setSelectedPdfFile] = useState(null);
   const modalRef = useRef();
 
@@ -48,11 +48,45 @@ const UploadDocuments = () => {
   };
 
   const handleSendFile = async (file) => {
+    setSelectedPdfFile(file);
     setIsSendFileModalOpen(true);
   };
 
+  const handleChooseFile = async (file) => {
+    // setUploadedFiles((prevFiles) => [...prevFiles, file]);
+    setFileToUpload((prevFiles) => [...prevFiles, file]);
+  };
+
   const handleUploadFile = async (file) => {
-    setUploadedFiles((prevFiles) => [...prevFiles, file]);
+    try {
+      // Create a FormData object
+      const formData = new FormData();
+      // Append the file to the FormData object
+      formData.append("file", file);
+      formData.append("fileName", file.name)
+      formData.append("accessList", []);
+      const body = {
+        fileName: file.name//'patient1_8918a7b97ed45aed0c760ba5d4bbc304fdebe4194eedf22e23c72a105873693b'
+      };
+      const response = await axios.post(
+        "http://localhost:8000/api/users/patient/uploadFile",
+        formData,
+        {
+          //responseType: 'blob',
+          headers: {
+            "Content-Type": "multipart/form-data", // Set the correct Content-Type header
+          },
+          withCredentials: true
+        }
+
+      );
+
+      const data = await response.data;
+      console.log(response.data)
+
+    } catch (error) {
+      console.error('Error fetching file:', error);
+    }
   };
 
   const handleDownloadFile = async (file) => {
@@ -66,11 +100,12 @@ const UploadDocuments = () => {
   };
 
   const SendFileHandleCloseModal = () => {
+    setSelectedPdfFile(null);
     setIsSendFileModalOpen(false); // Fixed typo here
   };
 
   const showPdf = (pdf) => {
-    setPdfFile(`http://localhost:5000/files/${pdf}`);
+    // setCurrentFileID(`http://localhost:5000/files/${pdf}`);
     setSelectedPdfFile(pdf);
     setIsModalOpen(true);
   };
@@ -87,10 +122,54 @@ const UploadDocuments = () => {
         <input
           type="file"
           id="fileInput"
-          onChange={(e) => handleUploadFile(e.target.files[0])}
+          onChange={(e) => handleChooseFile(e.target.files[0])}
           className="border p-2"
         />
       </div>
+      {/* Div to view file to be uploaded */}
+      {fileToUpload.length > 0 && (
+      <div className="bg-white p-4 rounded-md shadow-md" id="root">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Upload File:
+          </h3>
+          <ul className="list-disc list-inside text-gray-700">
+            {fileToUpload.map((file, index) => (
+              <li
+                key={index}
+                className="mb-2 flex items-center justify-between"
+              >
+                <span>{file.fileName || file.name}</span>
+                <div className="flex items-center space-x-2" id="view">
+                  <button
+                    className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                    onClick={() => handleUploadFile(file)}
+                  >
+                    Upload
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                    onClick={() => handleRemoveFile(index)}
+                  >
+                    Remove
+                  </button>
+                  <button
+                    className="bg-green-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                    onClick={() => handleSendFile(file)}
+                  >
+                    Manage Access
+                  </button>
+                  <button
+                    className="bg-blue-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                    onClick={() => showPdf(file)}
+                  >
+                    View
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {uploadedFiles.length > 0 && (
         <div className="bg-white p-4 rounded-md shadow-md" id="root">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -120,7 +199,7 @@ const UploadDocuments = () => {
                     className="bg-green-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
                     onClick={() => handleSendFile(file)}
                   >
-                    Send
+                    Manage Access
                   </button>
                   <button
                     className="bg-blue-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
@@ -135,7 +214,7 @@ const UploadDocuments = () => {
         </div>
       )}
       {isSendFileModalOpen && (
-        <SendFileModal handleClose={SendFileHandleCloseModal} />
+        <SendFileModal handleClose={SendFileHandleCloseModal} currentFile={selectedPdfFile.ID} />
       )}
       {isModalOpen && (
         <div className="fixed z-100 inset-0 overflow-y-auto">

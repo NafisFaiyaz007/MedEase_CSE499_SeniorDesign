@@ -59,11 +59,14 @@ async function createNode() {
   
 
 const uploadFile = async (req, res) => {
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID;
+    //console.log( "Filename;; == "+req.file.originalname)
     const fileName = req.file.originalname;
     // const type = req.body.fileType;
     // const size = req.body.fileSize;
-    const accessList = req.body.doctorList;
+    const accessList = req.body.accessList//req.body.doctorList;
+    
+    console.log(req.body.accessList)
 
 
     const gateway = new Gateway();
@@ -91,7 +94,7 @@ const uploadFile = async (req, res) => {
                 cid = await fs.addFile({path: req.file.originalname, content: bytes})
                 console.log(cid);
 
-                res.json({ cid: cid.toString() });
+                // res.json({ cid: cid.toString() });
                 // res.status(201).send('Your file has been uploaded');
             }
             catch(e){
@@ -122,7 +125,7 @@ const uploadFile = async (req, res) => {
 
 const getSingleFile = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.UUID;
+    const ownerID = req.body.patientUUID;
     console.log(req.body)
     const gateway = new Gateway();
     try {
@@ -213,7 +216,7 @@ const getAllDocuments = async (req, res) => {
 }
 const deleteFile = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID;
     
     const gateway = new Gateway();
     try {
@@ -273,7 +276,7 @@ const getAllFiles = async (req, res) => {
 
 const grantPermission = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID;
     const grantTo = req.body.doctorUUID;
     
     const gateway = new Gateway();
@@ -284,32 +287,35 @@ const grantPermission = async (req, res) => {
         await gateway.connect(ccp, {
             wallet,
             identity: ownerID,
-            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+            discovery: { enabled: true, asLocalhost: true }
         });
         const network = await gateway.getNetwork(channelName);
         const contract = network.getContract(chaincodeName);
-
 
         try {
             console.log('\n--> Submit Transaction: grantPermission');
             await contract.submitTransaction('grantPermission', id, grantTo);
             console.log('*** Result: committed');
-            res.send("Access Granted to Doctor");
+            res.json("Access Granted to Doctor");
+        } catch (error) {
+            console.error("Grant failed:", error);
+            if (error.message.includes("already has permission")) {
+                res.status(400).json({ error: 'Doctor already has permission to view the record' });
+            } else {
+                res.status(500).json({ error: 'Grant failed' });
+            }
         }
-        catch (error) {
-            console.log("Grant failed");
-            res.status(500).json({ error: 'Grant Failed' });
-        }
+    } catch (error) {
+        console.error("Error in grantPermission:", error);
+        res.status(500).json({ error: 'Grant failed' });
     } finally {
-        // Disconnect from the gateway when the application is closing
-        // This will close all connections to the network
         gateway.disconnect();
     }
 }
 
 const revokePermission = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID;
     const revokeDoctor = req.body.doctorUUID;
 
     const gateway = new Gateway();
@@ -329,13 +335,21 @@ const revokePermission = async (req, res) => {
             console.log('\n--> Submit Transaction: revokePermission');
             await contract.submitTransaction('revokePermission', id, revokeDoctor);
             console.log('*** Result: committed');
-            res.send("Access removed");
+            res.json("Access removed");
         }
         catch (error) {
-            console.log("Revoke failed");
-            res.status(500).json({ error: 'Revoke Failed' });
+            console.error("Grant failed:", error);
+            if (error.message.includes("The doctor did not have permission to view record")) {
+                res.status(400).json({ error: 'The doctor did not have permission to view record' });
+            } else {
+                res.status(500).json({ error: 'Grant failed' });
+            }
         }
-    } finally {
+    } catch (error) {
+        console.log("Revoke failed");
+        res.status(500).json({ error: 'Revoke Failed' });
+    }
+    finally {
         // Disconnect from the gateway when the application is closing
         // This will close all connections to the network
         gateway.disconnect();
