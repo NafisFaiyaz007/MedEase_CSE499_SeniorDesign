@@ -29,6 +29,16 @@ export const fetchDoctorList = async () => {
     return [];
   }
 };
+export const fetchPatientList = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/patients"); // Adjust the endpoint based on your server
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching patient list:", error);
+    return [];
+  }
+};
 
 export const handleDoctorSelection = (doctor) => {
   // Implement logic to handle doctor selection
@@ -37,7 +47,19 @@ export const handleDoctorSelection = (doctor) => {
 export const handleDeleteDoctor = () => {
   // Implement logic to delete the selected doctor
 };
-
+export const handleDeleteSelectedPatient = async () => {
+   if (selectedPatient) {
+     // Call the provided handleDeletePatient function
+     await handleDeletePatient(selectedPatient);
+     // Update patient list after deletion
+     const updatedPatients = patientList.filter(
+       (patient) => patient.id !== selectedPatient.id
+     );
+     setPatientList(updatedPatients);
+     // Reset selectedPatient after deletion
+     setSelectedPatient(null);
+   }
+ };
 
 
 export const handleDoctorFormChange = (e) => {

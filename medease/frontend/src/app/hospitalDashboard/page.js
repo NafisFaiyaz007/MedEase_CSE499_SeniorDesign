@@ -7,7 +7,8 @@ import Navbar from "../../app/components/navbar";
 import axios from "axios"; // Import axios for making HTTP requests
 import CreateDoctorForm from "./createDoctorForm";
 import UpdateBedsCounter from "./updateBedsCounter";
-import DeleteDoctor from "./deleteDoctor";
+import DoctorList from "./DoctorList";
+import PatientList from "./patientList"
 import ApproveAdmission from "./approveAdmission";
 import * as hospitalFunction from "./hospitalFunctions"
 
@@ -51,12 +52,20 @@ const HospitalDashboard = () => {
     },
   ];
 
- 
+   const handlePatientSelection = (patient) => {
+     console.log("Selected Patient:", patient);
+     // Implement your logic for handling patient selection here
+   };
+
+   const handleDeletePatient = async (patient) => {
+     console.log("Deleting Patient:", patient);
+     // Implement your logic for deleting a patient here
+   };
  const handleLogout = () => {
   // Implement your logout logic here
   console.log("Logout clicked");
 };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-cyan-700">
       <Head>
@@ -99,14 +108,25 @@ const HospitalDashboard = () => {
             </button>
 
             <button
-              onClick={() => setActiveTab("deleteDoctor")}
+              onClick={() => setActiveTab("doctorList")}
               className={`${
-                activeTab === "deleteDoctor"
+                activeTab === "doctorList"
                   ? "bg-cyan-500 text-white"
                   : "bg-gray-200 text-gray-600"
               } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
             >
-              Delete Doctor
+              View Doctors
+            </button>
+            {/* patient List */}
+            <button
+              onClick={() => setActiveTab("patientList")}
+              className={`${
+                activeTab === "patientList"
+                  ? "bg-cyan-500 text-white"
+                  : "bg-gray-200 text-gray-600"
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+            >
+              View Patients
             </button>
             <button
               onClick={() => setActiveTab("updateBeds")}
@@ -168,7 +188,6 @@ const HospitalDashboard = () => {
               handleDoctorFormChange={hospitalFunction.handleDoctorFormChange}
               handleCreateDoctor={hospitalFunction.handleCreateDoctor}
             />
-            
           )}
 
           {/* Update Beds Counter */}
@@ -192,16 +211,24 @@ const HospitalDashboard = () => {
             />
           )}
 
-          {/* Delete Doctor Section */}
-          {activeTab === "deleteDoctor" && (
-            <DeleteDoctor
+          {/* View  Doctor list Section */}
+          {activeTab === "doctorList" && (
+            <DoctorList
               doctorList={hospitalFunction.doctorList}
               selectedDoctor={hospitalFunction.selectedDoctor}
               handleDoctorSelection={hospitalFunction.handleDoctorSelection}
               handleDeleteDoctor={hospitalFunction.handleDeleteDoctor}
             />
           )}
+          {activeTab === "patientList" && (
+            <PatientList
+              handlePatientSelection={handlePatientSelection}
+              handleDeletePatient={handleDeletePatient}
+            />
+          )}
         </div>
+
+        {/* View Patient List section */}
       </div>
     </div>
   );
