@@ -176,7 +176,7 @@ app.get('/api/patients', authenticateUser, async (req, res) => {
 // API endpoint to fetch all hospitals
 app.get('/api/hospitals', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-  const query= "SELECT * FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  const query= "SELECT id, hospital_id, name, address, phone_number, email, beds, UUID FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
   try {
     const hospitals = await executeQuery(query);
     res.json(hospitals);

@@ -11,7 +11,7 @@ const BrowseDoctors = () => {
     // Fetch data from the doctor database here
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/doctors");
+        const response = await fetch("http://localhost:8000/api/doctors", {credentials: "include"});
         const data = await response.json();
         
         // Update the state with the fetched doctors

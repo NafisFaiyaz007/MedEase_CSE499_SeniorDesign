@@ -1,6 +1,6 @@
 // pages/hospital/dashboard.js
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Navbar from "../../app/components/navbar";
@@ -13,19 +13,19 @@ import ApproveAdmission from "./approveAdmission";
 import * as hospitalFunction from "./hospitalFunctions"
 
 // Dummy data, replace with actual data
-const hospitalData = {
-  totalPatients: 120,
-  totalDoctors: 15,
-  totalAppointments: 80,
-  totalBedsAvailable: 30,
-};
+// const hospitalData = {
+//   totalPatients: 120,
+//   totalDoctors: 15,
+//   totalAppointments: 80,
+//   totalBedsAvailable: 30,
+// };
 
 
 
 const HospitalDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   
-  
+  const [hospitalData, setHospitalData] = useState(false);
 
   const hospitalName = "Hospital XYZ"; // Replace with the actual hospital name
 
@@ -40,17 +40,27 @@ const HospitalDashboard = () => {
       count: hospitalData.totalDoctors,
       icon: "/images/doctor.png", // Replace with your actual image path
     },
-    {
-      title: "Total Appointments",
-      count: hospitalData.totalAppointments,
-      icon: "/images/appointment.png", // Replace with your actual image path
-    },
+    // {
+    //   title: "Total Appointments",
+    //   // count: hospitalData.totalAppointments,
+    //   icon: "/images/appointment.png", // Replace with your actual image path
+    // },
     {
       title: "Total Beds Available",
-      count: hospitalData.totalBedsAvailable,
+      count: hospitalData.beds,
       icon: "/images/bed.png", // Replace with your actual image path
     },
   ];
+
+  useEffect(() => {
+    // Fetch doctor list when the component mounts
+    const fetchData = async () => {
+      const data = await hospitalFunction.fetchAnalytics();
+      setHospitalData(data);
+    };
+
+    fetchData();
+  }, []);
 
    const handlePatientSelection = (patient) => {
      console.log("Selected Patient:", patient);
@@ -154,7 +164,7 @@ const HospitalDashboard = () => {
         {/* Right half */}
         <div className="flex-1">
           {/* Content based on active tab */}
-          {activeTab === "dashboard" && (
+          {activeTab === "dashboard" && hospitalData && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
               {/* Analytics Cards */}
               {analyticsCards.map((card, index) => (

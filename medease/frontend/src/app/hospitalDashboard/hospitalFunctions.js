@@ -21,7 +21,7 @@ export const doctorList = [
 // hospitalFunctions.js
 export const fetchDoctorList = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/doctors"); // Adjust the endpoint based on your server
+    const response = await fetch("http://localhost:8000/api/users/hospital/doctors", { credentials: "include" }); // Adjust the endpoint based on your server
     const data = await response.json();
     return data;
   } catch (error) {
@@ -31,7 +31,7 @@ export const fetchDoctorList = async () => {
 };
 export const fetchPatientList = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/patients"); // Adjust the endpoint based on your server
+    const response = await fetch("http://localhost:8000/api/users/hospital/patients", {credentials: "include"}); // Adjust the endpoint based on your server
     const data = await response.json();
     return data;
   } catch (error) {
@@ -111,3 +111,34 @@ export const getBedsCount = async () => {
     return error;
   }
 }
+export const handleTransferPatient = async (selectedPatient, newHospitalID) => {
+  console.log(selectedPatient)
+  if (selectedPatient) {
+    try{
+      const response = await fetch("http://localhost:8000/api/users/hospital/transferPatient",  {method: "POST", headers: { 'Content-Type': 'application/json' }, credentials: "include", body: JSON.stringify({ newHospitalID: newHospitalID, patientID: selectedPatient }),}); // Adjust the endpoint based on your server
+      const data = await response.json();
+      if(response.ok){
+        return data;
+      }
+    } catch(error) {
+      console.error("Error while transferring patient: " + error);
+      console.log("eeroorr")
+      return data;
+    }
+  }
+};
+
+export const fetchAnalytics = async () => {
+    try{
+      const response = await fetch("http://localhost:8000/api/users/hospital/analytics",  {method: "GET", headers: { 'Content-Type': 'application/json' }, credentials: "include",}); // Adjust the endpoint based on your server
+      const data = await response.json();
+      if(response.ok){
+        console.log(data.totalPatients)
+        return data;
+      }
+    } catch(error) {
+      console.error("Error while transferring patient: " + error);
+      console.log("eeroorr")
+      return data;
+    }
+};

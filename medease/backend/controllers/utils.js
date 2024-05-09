@@ -156,4 +156,84 @@ const getBedsCount = async (req, res) => {
         res.status(500).json({ error: "Error getting beds count from the database" });
     }
 }
-module.exports = { getPatientList, registerUnderDoctor, getReports, setAvailability, doctorViewSchedule, getDoctorUUID, doctorGetAvailableSlots, doctorRemoveSlot, getBedsCount};
+
+const hospitalGetPatients = async (req, res) => {
+    const userID = req.session.user.userId;
+    try {
+        const query1 = "SELECT hospital_id FROM hospitals INNER JOIN users ON hospitals.user_id = users.id WHERE users.id = ?";
+        const [hospitalID] = await connection.execute(query1, [userID]);
+        const query2 = "SELECT id, name, phone_number, email, dateOfBirth, gender, address, UUID FROM patients INNER JOIN users ON patients.user_id = users.id WHERE hospital_id =?";
+        const [patients] = await connection.execute(query2, [hospitalID[0].hospital_id]);
+        // console.log(patients)
+        // patients.forEach(patient => {
+        //     console.log(patient.email);
+        // });
+        res.json(patients)
+    } catch (error) {
+        console.error("Error getting patients info from the database:", error);
+        res.status(500).json({ error: "Error getting patient info from the database" });
+    }
+}
+
+const hospitalGetDoctors = async (req, res) => {
+    const userID = req.session.user.userId;
+    try {
+        const query1 = "SELECT hospital_id FROM hospitals INNER JOIN users ON hospitals.user_id = users.id WHERE users.id = ?";
+        const [hospitalID] = await connection.execute(query1, [userID]);
+        const query2 = "SELECT id, name, phone_number, email, dateOfBirth, UUID, doctors.* FROM doctors INNER JOIN users ON doctors.user_id = users.id WHERE hospital_id =?";
+        const [doctors] = await connection.execute(query2, [hospitalID[0].hospital_id]);
+        // console.log(patients)
+        // patients.forEach(patient => {
+        //     console.log(patient.email);
+        // });
+        res.json(doctors)
+    } catch (error) {
+        console.error("Error getting doctors info from the database:", error);
+        res.status(500).json({ error: "Error getting doctor info from the database" });
+    }
+}
+
+const transferPatient = async (req, res) => {
+    const newHospitalID = req.body.newHospitalID;
+    const patientID = req.body.patientID;
+    try{
+        const query = "UPDATE `patients` SET `hospital_id`= ? WHERE `user_id`= ?";
+        const result = await connection.execute(query, [newHospitalID, patientID])
+        if(result[0].affectedRows === 0){
+            return res.status(500).json("Error transferring patient");
+          }
+          return res.json("Patient transferred successfully");
+    } catch {
+        res.status(500).json("Error transferring patient");
+    }
+}
+const hospitalAnalytics = async (req, res) => {
+    const userID = 32//req.session.user.userId;
+    const queryHospital_id = "SELECT hospital_id FROM hospitals INNER JOIN users ON hospitals.user_id = users.id WHERE users.id = ?";
+    const [hospitalID] = await connection.execute(queryHospital_id, [userID]);
+    const queryPatients = "SELECT COUNT(*) as totalPatients FROM patients WHERE hospital_id = ?";
+    const queryDoctors = "SELECT COUNT(*) as totalDoctors FROM doctors WHERE hospital_id = ? ";
+    const queryBeds = "SELECT `beds` FROM `hospitals` WHERE hospital_id = ?"
+
+  let analyticsData = {};
+
+  // Execute the queries in parallel
+  Promise.all([
+    connection.execute(queryPatients, [hospitalID[0].hospital_id]),
+    connection.execute(queryDoctors, [hospitalID[0].hospital_id]),
+    connection.execute(queryBeds, [hospitalID[0].hospital_id]),
+  ])
+    .then((results) => {
+      analyticsData = {
+        totalPatients: results[0][0][0].totalPatients,
+        totalDoctors: results[1][0][0].totalDoctors,
+        beds: results[2][0][0].beds,
+      };
+      res.json(analyticsData);
+    })
+    .catch((err) => {
+      console.error("Error fetching analytics data from MySQL:", err);
+      res.status(500).send("Internal Server Error");
+    });
+}
+module.exports = { getPatientList, registerUnderDoctor, getReports, setAvailability, doctorViewSchedule, getDoctorUUID, doctorGetAvailableSlots, doctorRemoveSlot, getBedsCount, hospitalGetPatients, hospitalGetDoctors, transferPatient, hospitalAnalytics};

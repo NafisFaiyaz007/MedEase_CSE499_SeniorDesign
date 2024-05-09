@@ -3,7 +3,7 @@ import { Document, Page } from "react-pdf";
 import axios from "axios";
 
 
-const PdfComp = (props) => {
+const PdfComp = ({ props, fetchFromBlockchain }) => {
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
   const [isPdf, setIsPdf] = useState(false);
@@ -14,13 +14,13 @@ const PdfComp = (props) => {
     setNumPages(numPages);
   };
 
-  const { pdfFile } = props;
-  
+  const pdfFile = props;
+
   useEffect(() => {
     // Determine if the file is a PDF or an image
-    setIsPdf  (pdfFile.name?.endsWith(".pdf") || pdfFile.fileName?.endsWith(".pdf"));
-    setIsImage 
-        (pdfFile.name?.endsWith(".jpg") ||
+    setIsPdf(pdfFile.name?.endsWith(".pdf") || pdfFile.fileName?.endsWith(".pdf"));
+    setIsImage
+      (pdfFile.name?.endsWith(".jpg") ||
         pdfFile.name?.endsWith(".jpeg") ||
         pdfFile.name?.endsWith(".png") ||
         pdfFile.name?.endsWith(".gif") ||
@@ -28,14 +28,19 @@ const PdfComp = (props) => {
         pdfFile.fileName?.endsWith(".jpeg") ||
         pdfFile.fileName?.endsWith(".png") ||
         pdfFile.fileName?.endsWith(".gif"))
-        getData()
+    if (fetchFromBlockchain == true) {
+      getData()
+    }
+    else {
+      setData(pdfFile)
+    }
   }, []);
-  
-  async function getData(){
+
+  async function getData() {
     try {
       const body = {
-        UUID: 'doctor1',
-        patientUUID: 'patient1',
+        // UUID: 'doctor1',
+        // patientUUID: 'patient1',
         fileID: pdfFile.ID//'patient1_8918a7b97ed45aed0c760ba5d4bbc304fdebe4194eedf22e23c72a105873693b'
       };
       const response = await axios.post(
@@ -54,12 +59,12 @@ const PdfComp = (props) => {
       setData(response.data);
       // URL.createObjectURL(object)
 
-//       const pdfDoc = new jsPDF();
-//       const decodedData = Uint8Array.from(atob(data), c => c.charCodeAt(0));
-//       pdfDoc.addImage(decodedData, 'PNG', 0, 0);
+      //       const pdfDoc = new jsPDF();
+      //       const decodedData = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+      //       pdfDoc.addImage(decodedData, 'PNG', 0, 0);
 
-// // Display or download the decoded PDF (implementation specific)
-// pdfDoc.output('dataurlnewwindow');
+      // // Display or download the decoded PDF (implementation specific)
+      // pdfDoc.output('dataurlnewwindow');
 
       // const reader = new FileReader();
       // reader.onload = () => {
@@ -91,7 +96,7 @@ const PdfComp = (props) => {
         </div>
       )}
 
-      {isImage && <img src={URL.createObjectURL(data)} alt="Image" />}
+      {isImage && <img src={URL.createObjectURL(new Blob([data], { type: 'image/jpeg' }))} alt="Image" />}
     </div>
   );
 };

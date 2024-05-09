@@ -104,42 +104,32 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
         {patientList.map((patient, index) => (
           <li
             key={index}
-            className="bg-gray-700 p-4 rounded-md shadow-md flex justify-between items-center"
+            className="bg-gray-200 p-4 rounded-md shadow-md flex justify-between items-center"
           >
             <div>
               <strong>Name:</strong> {patient.name}, <strong>Age:</strong>{" "}
               {calculateAge(patient.dateOfBirth)}, <strong>Gender:</strong> {patient.gender}
             </div>
             <div className="space-x-4">
-              <button
-                onClick={() => onDelete(patient.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-300"
-              >
-                Delete
-              </button>
+             
               <button
                 onClick={() => onExamine(patient.id)}
-                className="bg-green-700 text-white px-3 py-1 rounded-md hover:bg-green-900 transition duration-300"
+                className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-900 transition duration-300"
               >
                 Examined
               </button>
 
               <button
                 onClick={() => openReportsModal(patient)}
-                className="bg-pink-700 text-white px-3 py-1 rounded-md hover:bg-pink-900 transition duration-300"
+                className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-900 transition duration-300"
               >
                 View Reports
               </button>
 
-              <button
-                onClick={() => onExamine(patient.id)}
-                className="bg-purple-700 text-white px-3 py-1 rounded-md hover:bg-purple-900 transition duration-300"
-              >
-                Set Physical Appointment
-              </button>
+              
               <button
                 onClick={handleWritePrescription}
-                className="bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 transition duration-300"
+                className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-900 transition duration-300"
               >
                 Write Prescription
               </button>
@@ -217,7 +207,7 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
                 &times; CLOSE
               </button>
               <div className="p-6">
-                {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
+                {selectedPdfFile && <PdfComp props={selectedPdfFile} fetchFromBlockchain={true} />}
               </div>
             </div>
           </div>

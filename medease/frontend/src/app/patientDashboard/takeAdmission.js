@@ -5,7 +5,7 @@ const TakeAdmission = () => {
   const [hospitalBeds, setHospitalBeds] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/hospitals")
+    fetch("http://localhost:8000/api/hospitals", {credentials: "include"})
       .then((response) => response.json())
       .then((data) => setHospitalBeds(data))
       .catch((error) => console.error("Error fetching hospitals:", error));

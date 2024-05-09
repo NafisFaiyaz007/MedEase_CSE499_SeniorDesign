@@ -26,10 +26,25 @@ const DoctorList = ({ handleDoctorSelection, handleDeleteDoctor }) => {
               Name: {doctor.name}
             </h3>
             <h6 className="text-lg font-thin text-gray-500 mb-2">
-              {doctor.designation}
+              <b>ID:</b> {doctor.doctor_id}
             </h6>
             <h6 className="text-lg font-thin text-gray-500 mb-2">
-              ID: {doctor.doctor_id}
+              <b>Phone:</b> {doctor.phone_number}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              <b>Email:</b> {doctor.email}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              <b>Address:</b> {doctor.address}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              <b>Degree:</b> {doctor.degree}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              <b>Specialization:</b> {doctor.specialization}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-500 mb-2">
+              <b>Designation:</b> {doctor.designation}
             </h6>
             {/* Delete Button */}
             <button

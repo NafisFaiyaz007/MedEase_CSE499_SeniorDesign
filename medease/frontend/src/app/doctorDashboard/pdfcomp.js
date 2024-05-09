@@ -3,7 +3,7 @@ import { Document, Page } from "react-pdf";
 import axios from "axios";
 import Modal from "../components/modal";
 
-const PdfComp = (props) => {
+const PdfComp = ({props, fetchFromBlockchain}) => {
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
   const [isPdf, setIsPdf] = useState(false);
@@ -17,7 +17,7 @@ const PdfComp = (props) => {
     setNumPages(numPages);
   };
 
-  const { pdfFile } = props;
+  const pdfFile = props;
   
   useEffect(() => {
     // Determine if the file is a PDF or an image
@@ -31,7 +31,15 @@ const PdfComp = (props) => {
         pdfFile.fileName?.endsWith(".jpeg") ||
         pdfFile.fileName?.endsWith(".png") ||
         pdfFile.fileName?.endsWith(".gif"))
-        getData()
+        if (fetchFromBlockchain == true) {
+          console.log("inside: "+ fetchFromBlockchain);
+          getData()
+        }
+        else {
+          console.log("outside: "+ fetchFromBlockchain);
+          setIsAllowed(true)
+          setData(pdfFile)
+        }
   }, []);
   
   async function getData(){
@@ -104,7 +112,7 @@ const PdfComp = (props) => {
         </div>
       )}
 
-      {isImage && isAllowed && <img src={URL.createObjectURL(data)} alt="Image" />}
+      {isImage && isAllowed && <img src={URL.createObjectURL(new Blob([data], { type: 'image/jpeg' }))} alt="Image" />}
       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         {modalContent}
       </Modal>

@@ -42,7 +42,7 @@ async function createNode() {
 
 const doctorUploadFile = async (req, res) => {
     const ownerID = req.body.patientUUID;
-    const uploader = req.body.UUID
+    const uploader = req.session.user.UUID;//req.body.UUID
     const fileName = req.file.originalname;
 
     const gateway = new Gateway();

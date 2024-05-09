@@ -36,7 +36,7 @@ router.use(userController.checkSession)
 //router.use(cookieParser());
 router.post('/registerAdmin', registerAdmin.registerAdmin);
 router.post('/registerUser', registerUser.registerUserApi);
-router.post('/patient/uploadFile', upload.single('file'),patientFunction.uploadFile);
+router.post('/patient/uploadFile', upload.single('file'), patientFunction.uploadFile);
 router.post('/patient/readFile', patientFunction.getSingleFile);
 router.delete('/patient/deleteFile', patientFunction.deleteFile);
 router.post('/patient/getFiles', patientFunction.getAllFiles);
@@ -45,7 +45,7 @@ router.post('/patient/revoke', patientFunction.revokePermission);
 router.post('/allFiles', patientFunction.getAllDocuments);
 router.post('/patient/init', patientFunction.init);
 //Doctor Routes
-router.post('/doctor/uploadFile', doctorFunction.doctorUploadFile);
+router.post('/doctor/uploadFile', upload.single('file'), doctorFunction.doctorUploadFile);
 router.post('/doctor/getFiles', doctorFunction.doctorGetAllFiles);
 router.post('/doctor/readFile', doctorFunction.doctorGetSingleFile);
 // Logout route
@@ -66,6 +66,11 @@ router.post("/doctor/viewSchedule", utils.doctorViewSchedule)
 router.post("/doctor/getAppointmentSlots", utils.doctorGetAvailableSlots)
 router.delete("/doctor/removeAppointmentSlot", utils.doctorRemoveSlot)
 router.get("/getBedsCount", utils.getBedsCount)
+
+router.get("/hospital/patients", utils.hospitalGetPatients);
+router.get("/hospital/doctors", utils.hospitalGetDoctors);
+router.post("/hospital/transferPatient", utils.transferPatient);
+router.get("/hospital/analytics", utils.hospitalAnalytics);
 // router.post('/up', upload.single('file'), hl.up);
 
   

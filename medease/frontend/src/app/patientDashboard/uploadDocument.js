@@ -3,6 +3,7 @@ import { pdfjs } from "react-pdf";
 import PdfComp from "./pdfcomp";
 import SendFileModal from "./sendFileModal";
 import axios from "axios";
+import Modal from "../components/modal";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -15,18 +16,15 @@ const UploadDocuments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSendFileModalOpen, setIsSendFileModalOpen] = useState(false);
   const [selectedPdfFile, setSelectedPdfFile] = useState(null);
+  const [exists, setExists] = useState(false);
   const modalRef = useRef();
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   useEffect(() => {
-    const getFiles = async () => {
-      axios
-        .post("http://localhost:8000/api/users/patient/getFiles", null, {
-          withCredentials: true,
-        })
-        .then((response) => setUploadedFiles(response.data))
-        .catch((error) => console.error("Error fetching user:", error));
-    };
-
     getFiles();
 
     const handleClickOutside = (event) => {
@@ -40,6 +38,15 @@ const UploadDocuments = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const getFiles = async () => {
+    axios
+      .post("http://localhost:8000/api/users/patient/getFiles", null, {
+        withCredentials: true,
+      })
+      .then((response) => setUploadedFiles(response.data))
+      .catch((error) => console.error("Error fetching user:", error));
+  };
 
   const handleRemoveFile = async (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -78,11 +85,16 @@ const UploadDocuments = () => {
           },
           withCredentials: true
         }
-
       );
 
-      const data = await response.data;
-      console.log(response.data)
+      // const data = await response.data;
+      console.log(response.data.message)
+      const data = response.data.message;
+      console.log(data)
+      setFileToUpload([])
+      setModalContent(data);
+      setIsModalOpen(true);
+      getFiles();
 
     } catch (error) {
       console.error('Error fetching file:', error);
@@ -106,9 +118,13 @@ const UploadDocuments = () => {
 
   const showPdf = (pdf) => {
     // setCurrentFileID(`http://localhost:5000/files/${pdf}`);
+    console.log(pdf);
     setSelectedPdfFile(pdf);
     setIsModalOpen(true);
   };
+  const filteredFiles = uploadedFiles.filter(file =>
+    file.fileName.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <div className="space-y-6">
@@ -126,6 +142,7 @@ const UploadDocuments = () => {
           className="border p-2"
         />
       </div>
+      
       {/* Div to view file to be uploaded */}
       {fileToUpload.length > 0 && (
       <div className="bg-white p-4 rounded-md shadow-md" id="root">
@@ -133,6 +150,7 @@ const UploadDocuments = () => {
             Upload File:
           </h3>
           <ul className="list-disc list-inside text-gray-700">
+
             {fileToUpload.map((file, index) => (
               <li
                 key={index}
@@ -170,8 +188,15 @@ const UploadDocuments = () => {
           </ul>
         </div>
       )}
-      {uploadedFiles.length > 0 && (
+      {filteredFiles.length > 0 && (
         <div className="bg-white p-4 rounded-md shadow-md" id="root">
+                            <input
+                type="text"
+                placeholder={`Search`}
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="search-bar"
+            />
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             Uploaded Files:
           </h3>
@@ -203,7 +228,9 @@ const UploadDocuments = () => {
                   </button>
                   <button
                     className="bg-blue-700 text-white px-2 py-1 rounded-md hover:bg-green-700"
-                    onClick={() => showPdf(file)}
+                    onClick={() => {
+                      setExists(true);
+                      showPdf(file)}}
                   >
                     View
                   </button>
@@ -224,19 +251,23 @@ const UploadDocuments = () => {
           >
             <div className="fixed inset-0 bg-gray-500 justify=center opacity-75"></div>
             <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full relative">
-              <button
+            {selectedPdfFile && (<h1 className="px-5"><b>{selectedPdfFile.fileName || selectedPdfFile.name}</b></h1>)}
+            <button
                 className="absolute top-0 right-0 mt-4 mr-4 text-red-700 cursor-pointer"
                 onClick={handleCloseModal}
               >
                 &times; CLOSE
               </button>
               <div className="p-6">
-                {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
+                {selectedPdfFile && <PdfComp props={selectedPdfFile} fetchFromBlockchain= {exists}/>}
               </div>
             </div>
           </div>
         </div>
       )}
+       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   );
 };

@@ -131,7 +131,7 @@ const registerDoctor = async (req, res) => {
   }
   const checkSession = (req, res, next) => {
     // Check if the session does exist
-    if (req.session) {
+    if (req.session.user) {
       // Session is valid, perhaps do something or simply continue
       next();  // Continue to the next middleware or route handler
     } else {

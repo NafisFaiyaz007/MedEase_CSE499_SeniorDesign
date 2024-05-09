@@ -99,7 +99,7 @@ const uploadFile = async (req, res) => {
             }
             catch(e){
                 console.log(e);
-                res.status(500).send('An error occurred while uploading the file');
+                res.status(500).json({ message: 'An error occurred while uploading the file' });
                 return;
             }
             let fileHash = cid;
@@ -109,7 +109,7 @@ const uploadFile = async (req, res) => {
             if (`${result}` !== '') {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             }
-            res.status(201).send('Your file has been uploaded to ledger');
+            res.status(201).json({ message: 'Your file has been uploaded to ledger' });
         }
         catch (e) {
             console.log("asset already exists");
@@ -125,7 +125,7 @@ const uploadFile = async (req, res) => {
 
 const getSingleFile = async (req, res) => {
     const id = req.body.fileID;
-    const ownerID = req.body.patientUUID;
+    const ownerID = req.session.user.UUID//req.body.patientUUID;
     console.log(req.body)
     const gateway = new Gateway();
     try {
@@ -165,7 +165,7 @@ const getSingleFile = async (req, res) => {
                 data.push(chunk);
               }
               const buffer = Buffer.concat(data);
-
+              console.log(buffer)
               res.send(buffer);
             } catch (error) {
               console.log(`Error retrieving data for CID "${cid}":`, error);
@@ -186,7 +186,7 @@ const getAllDocuments = async (req, res) => {
     const id = req.body.fileID;
     const fileName = req.body.fileName;
     const fileHash = req.body.fileHash;
-    const ownerID = req.body.UUID;
+    const ownerID = req.session.user.UUID//req.body.UUID;
     // const type = req.body.type;
     // const size = req.body.size;
     const accessList = req.body.doctorList;
