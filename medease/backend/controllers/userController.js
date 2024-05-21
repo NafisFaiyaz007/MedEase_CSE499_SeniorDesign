@@ -10,28 +10,28 @@ const generateUuid = () => {
 };
 
 const registerHospital = async (req, res) => {
-  let connection;
+  let conn;
   try {
-    connection = await connection.getConnection();
-    await connection.beginTransaction();
+    conn = await connection.getConnection();
+    await conn.beginTransaction();
     const { name, email, phone, address, userType, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
     const uuid = generateUuid();
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, uuid]);
+    const [results] = await conn.execute(query, [name, email, userType, hashedPassword, uuid]);
     //Insert into patients table
     const query2 = `INSERT INTO hospitals (user_id, phone_number, address) VALUES (?, ?, ?)`;
 
-    const [results2] = await connection.execute(query2, [results.insertId, phone, address]);
+    const [results2] = await conn.execute(query2, [results.insertId, phone, address]);
     await registerHospitalFabric.registerHospital(uuid)
     // Handle successful insertion
     // res.json({ userId: results.insertId, message: 'User Hospital created successfully' });
-    await connection.commit();
+    await conn.commit();
     res.json({ message: `Hospital account for ${name} created successfully` });
   } catch (error) {
-    await connection.rollback()
+    await conn.rollback()
     res.status(500).json({ error: 'Error creating hospital account' });
   }
 };
