@@ -154,7 +154,7 @@ export const handleTransferPatient = async (selectedPatient, newHospitalID) => {
     } catch (error) {
       console.error("Error while transferring patient: " + error);
       console.log("eeroorr")
-      return data;
+      return [];
     }
   }
 };
@@ -170,6 +170,6 @@ export const fetchAnalytics = async () => {
   } catch (error) {
     console.error("Error while transferring patient: " + error);
     console.log("eeroorr")
-    return data;
+    return [];
   }
 };
