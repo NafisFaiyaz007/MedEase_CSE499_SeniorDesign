@@ -11,8 +11,8 @@ const generateUuid = () => {
 
 const registerHospital = async (req, res) => {
   let conn;
+  conn = await connection.getConnection();
   try {
-    conn = await connection.getConnection();
     await conn.beginTransaction();
     const { name, email, phone, address, userType, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,10 +38,9 @@ const registerHospital = async (req, res) => {
 
 const registerDoctor = async (req, res) => {
   const adminUUID = req.session.user.UUID;
-  let connection;
+  let conn = await connection.getConnection();
   try {
-    connection = await connection.getConnection();
-    await connection.beginTransaction();
+    await conn.beginTransaction();
 
     const { name, email, degree, specialization, designation, dateOfBirth, phone, address, userType, password, hospital_id } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,17 +48,17 @@ const registerDoctor = async (req, res) => {
     const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
     // Save user to the database
     const uuid = generateUuid();
-    const [results] = await connection.execute(query, [name, email, userType, hashedPassword, uuid]);
+    const [results] = await conn.execute(query, [name, email, userType, hashedPassword, uuid]);
     //Insert into patients table
     const query2 = `INSERT INTO doctors (user_id, dateOfBirth, phone_number, address, degree, specialization, designation, hospital_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    const [results2] = await connection.execute(query2, [results.insertId, dateOfBirth, phone, address, degree, specialization, designation, hospital_id]);
+    const [results2] = await conn.execute(query2, [results.insertId, dateOfBirth, phone, address, degree, specialization, designation, hospital_id]);
     await registerUser.registerUserFunction(uuid, name, adminUUID);
-    await connection.commit();
+    await conn.commit();
     // Handle successful insertion
     res.json({ message: `Doctor account for ${name} created successfully` });
   } catch (error) {
-    await connection.rollback()
+    await conn.rollback()
     res.status(500).json({ error: 'Error creating doctor account' });
   }
 };
