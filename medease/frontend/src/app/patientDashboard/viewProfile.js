@@ -28,6 +28,21 @@ useEffect(() => {
   fetchPatientData();
 }, []);
 
+function calculateAge(birthDate) {
+  const today = new Date();
+  const birthDateObj = new Date(birthDate);
+  let age = today.getFullYear() - birthDateObj.getFullYear();
+  const monthDiff = today.getMonth() - birthDateObj.getMonth();
+
+  // If the birth month is greater than the current month or
+  // if they are in the same month but the birth day is greater than the current day,
+  // then decrement the age by 1
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+      age--;
+  }
+
+  return age;
+}
 
   return (
     <div className="space-y-6">
@@ -47,7 +62,7 @@ useEffect(() => {
                   <strong>Name:</strong> {patientData.name}
                 </p>
                 <p className="text-gray-700">
-                  <strong>Age:</strong> {patientData.age}
+                  <strong>Age:</strong> {calculateAge(patientData.dateOfBirth)}
                 </p>
                 <p className="text-gray-700">
                   <strong>Gender:</strong> {patientData.gender}

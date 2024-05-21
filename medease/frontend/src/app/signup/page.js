@@ -1,6 +1,6 @@
 'use client'
 // pages/Signup.js
-import {React, useState} from "react";
+import { React, useState, useEffect } from "react";
 import Image from "next/image";
 import axios from 'axios';
 import { useRouter } from "next/navigation";
@@ -9,32 +9,49 @@ import { useRouter } from "next/navigation";
 const Signup = () => {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState('');
+  const [hospitals, setHospitals] = useState([]);
+
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/hospitals');
+        setHospitals(response.data);
+      } catch (error) {
+        console.error('Failed to fetch hospitals:', error);
+      }
+    };
+
+    fetchHospitals();
+  }, []);
+
 
   const handleSubmit = async (data) => {
-    console.log(data.password);
-    if(data.password == data.confirmPassword){
-    try {
-      const response = await axios.post('http://localhost:8000/api/users/registerPatient', {
-        ...data,
-      });
+    if (data.password == data.confirmPassword) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/users/registerPatient', {
+          ...data,
+        });
 
-      console.log(response.data);
-      router.push('/login');
-      // Handle success or redirect to login page
-    } catch (error) {
-      if (error.response) {
-        // The server responded with a status code other than 2xx
-        console.error('Registration error:', error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from the server');
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error setting up the request', error.message);
-      }}
+        console.log(response.data);
+        router.push('/login');
+        // Handle success or redirect to login page
+      } catch (error) {
+        if (error.response) {
+          // The server responded with a status code other than 2xx
+          setErrorMessage(error.response.data.error)
+          console.error('Registration error:', error.response.data);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('No response received from the server');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error setting up the request', error.message);
+        }
+      }
     }
-    else 
-    setErrorMessage("Passwords don't match");
+    else
+      setErrorMessage("Passwords don't match");
   };
   return (
     <div className="min-h-screen relative">
@@ -68,18 +85,20 @@ const Signup = () => {
               Sign Up
             </h2>
             <form className="w-full" onSubmit={(e) => {
-                  e.preventDefault();
-                  // Extract form data and pass it to the submit handler
-                  const formData = new FormData(e.target);
-                  const data = {};
-                  formData.forEach((value, key) => {
-                    data[key] = value;
-                  });
-                  data["userType"] = 4;
-                  handleSubmit(data);
-                }}>
+              e.preventDefault();
+              // Extract form data and pass it to the submit handler
+              const formData = new FormData(e.target);
+              const data = {};
+              formData.forEach((value, key) => {
+                data[key] = value;
+              });
+              data["userType"] = 4;
+              handleSubmit(data);
+              e.target.password.value ="";
+              e.target.confirmPassword.value ="";
+            }}>
               <div className="mb-6">
-                {errorMessage && <div className="error-message" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 font-medium" role="alert"><span>{errorMessage}</span></div>}
+                {errorMessage && <div className="error-message p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 font-medium" role="alert"><span>{errorMessage}</span></div>}
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-600 mb-1"
@@ -140,6 +159,7 @@ const Signup = () => {
                   name="dateOfBirth"
                   className="mt-1 p-4 w-full border rounded-lg"
                   placeholder="Enter your date of birth"
+                  max={new Date().toISOString().split('T')[0]}
                   required
                 />
               </div>
@@ -148,7 +168,7 @@ const Signup = () => {
                   htmlFor="gender"
                   className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  gender
+                  Gender
                 </label>
                 <select
                   id="gender"
@@ -176,6 +196,24 @@ const Signup = () => {
                   placeholder="Enter your address"
                   required
                 />
+              </div>
+              <div className="mb-6">
+                <label htmlFor="hospital" className="block text-sm font-medium text-gray-600 mb-1">
+                  Hospital
+                </label>
+                <select
+                  id="hospital_id"
+                  name="hospital_id"
+                  className="mt-1 p-4 w-full border rounded-lg"
+                  required
+                >
+                  <option value="">Select a Hospital</option>
+                  {hospitals.map((hospital) => (
+                    <option key={hospital.hospital_id} value={hospital.hospital_id}>
+                      {hospital.name} -- {hospital.address}
+                    </option>
+                  ))}
+                </select>
               </div>
               {/* <div className="mb-6">
                 <label
