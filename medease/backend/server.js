@@ -46,17 +46,17 @@ app.use('/api/users', userRoutes);
 //   console.log(`Server is running on port ${port}`);
 // });
 dbConnection
-    .getConnection()
-    .then(() => {
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
-    })
-    .catch((err) => {
-        console.log(`Failed to connect to the database: ${err.message}`);
+  .getConnection()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
     });
+  })
+  .catch((err) => {
+    console.log(`Failed to connect to the database: ${err.message}`);
+  });
 
- // API endpoint to fetch analytics data
+// API endpoint to fetch analytics data
 app.get('/api/analytics', (req, res) => {
   const queryPatients = "SELECT COUNT(*) as totalPatients FROM patients";
   const queryDoctors = "SELECT COUNT(*) as totalDoctors FROM doctors";
@@ -95,7 +95,25 @@ app.use(cookieParser());
 // API endpoint to fetch all doctors
 app.get('/api/doctors', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-  const query= "SELECT * FROM doctors INNER JOIN users ON doctors.user_id = users.id";
+  const query = `SELECT 
+  doctors.user_id,
+  doctors.doctor_id, 
+  doctors.degree, 
+  doctors.specialization, 
+  doctors.designation, 
+  hospitals.hospital_id,
+  doc.name AS name,
+  doc.UUID AS UUID,
+  u.name AS hospitalName,
+  hospitals.address AS hospitalAddress
+FROM 
+  doctors 
+INNER JOIN 
+  users doc ON doctors.user_id = doc.id 
+INNER JOIN 
+  hospitals ON doctors.hospital_id = hospitals.hospital_id 
+INNER JOIN 
+  users u ON hospitals.user_id = u.id;`;
   try {
     const doctors = await executeQuery(query);
     res.json(doctors);
@@ -143,10 +161,10 @@ app.put("/api/updateBeds", authenticateUser, async (req, res) => {
     // Update the bedsCounter in the database
     const query = "UPDATE hospitals INNER JOIN users ON hospitals.user_id = users.id SET beds = ? WHERE users.id = ?";
     const result = await dbConnection.query(query, [bedsCounter, userId]);
-    if(result[0].affectedRows === 0){
+    if (result[0].affectedRows === 0) {
       return res.status(500).json({ error: "Error updating beds counter" });
     }
-    return res.json({ message: "Beds counter updated successfully"});
+    return res.json({ message: "Beds counter updated successfully" });
   } catch (error) {
     console.error("Error updating beds counter:", error);
     return res.status(500).json({ error: "Internal server error" });
@@ -156,13 +174,13 @@ app.put("/api/updateBeds", authenticateUser, async (req, res) => {
 // Endpoint to fetch patient data
 app.get('/api/patients', authenticateUser, async (req, res) => {
   try {
-     
-     const userId = req.session.user.userId;
-    // Query to fetch patient data from MySQL
-  const query =
-    "SELECT * FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
 
-    const patients = await executeQuery(query,[userId]);
+    const userId = req.session.user.userId;
+    // Query to fetch patient data from MySQL
+    const query =
+      "SELECT * FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
+
+    const patients = await executeQuery(query, [userId]);
     res.json(patients);
   } catch (error) {
     console.error("Error fetching patients from MySQL:", error);
@@ -176,7 +194,7 @@ app.get('/api/patients', authenticateUser, async (req, res) => {
 // API endpoint to fetch all hospitals
 app.get('/api/hospitals', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-  const query= "SELECT id, hospital_id, name, address, phone_number, email, beds, UUID FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  const query = "SELECT id, hospital_id, name, address, phone_number, email, beds, UUID FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
   try {
     const hospitals = await executeQuery(query);
     res.json(hospitals);
@@ -202,4 +220,16 @@ app.delete("/api/users/:id", (req, res) => {
       res.status(204).send(); // No content, successful deletion
     }
   });
+});
+
+app.get('/hospitals', async (req, res) => {
+  // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+  const query = "SELECT id, hospital_id, name, address, phone_number, email, beds FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  try {
+    const hospitals = await executeQuery(query);
+    res.json(hospitals);
+  } catch (error) {
+    console.error("Error fetching hospitals from MySQL:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });

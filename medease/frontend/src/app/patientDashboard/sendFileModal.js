@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Modal from "../components/modal";
 
 const SendFileModal = ({ handleClose, currentFile }) => {
   const [doctorsList, setDoctorsList] = useState([]);
@@ -6,6 +7,9 @@ const SendFileModal = ({ handleClose, currentFile }) => {
   const [activeTab, setActiveTab] = useState('doctors'); 
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
       // Filtered lists based on search term
     const filteredDoctors = doctorsList.filter(doctor =>
@@ -61,38 +65,47 @@ const SendFileModal = ({ handleClose, currentFile }) => {
   }, []);
 
   // Function to handle sending a file to a doctor
-  const sendFileToDoctor = async (doctorId) => {
+  const sendFileToDoctor = async (doctor) => {
+    console.log(doctor)
     // Implement sending file logic here
-    console.log("Sending file to doctor with ID:", doctorId + " and file: " + currentFile);
+    console.log("Sending file to doctor with ID:", doctor.name + " and file: " + currentFile.fileName);
     try {
       const response = await fetch("http://localhost:8000/api/users/patient/grant", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({doctorUUID: doctorId, fileID: currentFile}),
+        body: JSON.stringify({doctorUUID: doctor.UUID, fileID: currentFile.ID, doctorID: doctor.user_id, fileName: currentFile.fileName}),
         credentials: "include",
       });
       const data = await response.json();
-
+      console.log(data);
+      if(response.ok){
       // Update the state with the fetched doctors
       // setDoctorsList(data);
-      console.log(data);
+      
+      setModalContent(data)
+      setModalIsOpen(true)
+      }
+      else{
+        setModalContent(data.error)
+        setModalIsOpen(true)
+      }
     } catch (error) {
       console.error("Error granting permission to doctor:", error);
     }
   };
   // Function to handle revoking a file from a doctor
-  const revokePermission = async (doctorId) => {
+  const revokePermission = async (doctor) => {
     // Implement sending file logic here
-    console.log("Revoking file from doctor with ID:", doctorId + "and file: " + currentFile);
+    console.log("Revoking file from doctor with ID:", doctor.name + " and file: " + currentFile.fileName);
     try {
       const response = await fetch("http://localhost:8000/api/users/patient/revoke", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({doctorUUID: doctorId, fileID: currentFile}),
+        body: JSON.stringify({doctorUUID: doctor.UUID, fileID: currentFile.ID}),
         credentials: "include",
       });
       const data = await response.json();
@@ -100,6 +113,17 @@ const SendFileModal = ({ handleClose, currentFile }) => {
       // Update the state with the fetched doctors
       // setDoctorsList(data);
       console.log(data);
+      if(response.ok){
+        // Update the state with the fetched doctors
+        // setDoctorsList(data);
+        
+        setModalContent(data)
+        setModalIsOpen(true)
+        }
+        else{
+          setModalContent(data.error)
+          setModalIsOpen(true)
+        }
     } catch (error) {
       console.error("Error granting permission to doctor:", error);
     }
@@ -148,13 +172,13 @@ return (
                 <span>{doctor.degree} {doctor.name}- {doctor.designation}</span>
                 <div className="flex mt-2 sm:mt-0 space-x-2">
                   <button
-                    onClick={() => sendFileToDoctor(doctor.UUID)}
+                    onClick={() => sendFileToDoctor(doctor)}
                     className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded"
                   >
                     Send File
                   </button>
                   <button
-                    onClick={() => revokePermission(doctor.UUID)}
+                    onClick={() => revokePermission(doctor)}
                     className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded"
                   >
                     Revoke Access
@@ -173,13 +197,13 @@ return (
                 <span>{hospital.name}- {hospital.address}</span>
                 <div className="flex mt-2 sm:mt-0 space-x-2">
                   <button
-                    onClick={() => sendFileToDoctor(hospital.UUID)}
+                    onClick={() => sendFileToDoctor(hospital)}
                     className="bg-green-700 hover:bg-green-500 text-white font-bold py-1 px-2 rounded"
                   >
                     Send File
                   </button>
                   <button
-                    onClick={() => revokePermission(hospital.UUID)}
+                    onClick={() => revokePermission(hospital)}
                     className="bg-green-700 hover:bg-green-500 text-white font-bold py-1 px-2 rounded"
                   >
                     Revoke Access
@@ -190,8 +214,12 @@ return (
           </ul>
         )}
       </div>
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   </div>
+
 </div>
 
 );

@@ -8,6 +8,7 @@ import PatientDashboardHeader from "./patientDashboardHeader"
 import BrowseDoctors from "./browseDoctor";
 import TakeAdmission from "./takeAdmission";
 import EditAccountForm from "./editAccount";
+import ViewAppointments from "./viewAppointments";
 
 const PatientDashboard = () => {
   const [activeTab, setActiveTab] = useState("viewProfile");
@@ -57,7 +58,7 @@ const PatientDashboard = () => {
           {activeTab === "takeAdmission" && (
             <div className="space-y-6">
               <h2 className="text-xl font-semibold text-white mb-4 text-center">
-               Take Admission
+               Browse Hospitals
               </h2>
               <TakeAdmission/>
             </div>
@@ -67,7 +68,11 @@ const PatientDashboard = () => {
             <EditAccountForm/>
             
           )}
+          {activeTab === "viewAppointments" && (
 
+            <ViewAppointments />
+
+          )}
           {/* ...
     
           {activeTab === "makePayment" && (

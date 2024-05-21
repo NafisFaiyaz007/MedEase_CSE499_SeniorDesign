@@ -17,7 +17,7 @@ router.get('/message', (req, res) => {
 });
 // User creation
 router.post('/registerHospital', userController.registerHospital);
-router.post('/registerDoctor', userController.registerDoctor);
+
 router.post('/registerPatient', userController.registerPatient);
 
 // User login
@@ -34,6 +34,7 @@ router.get('/get', fileController.getFile);
 //Fabric routes
 router.use(userController.checkSession)
 //router.use(cookieParser());
+router.post('/registerDoctor', userController.registerDoctor);
 router.post('/registerAdmin', registerAdmin.registerAdmin);
 router.post('/registerUser', registerUser.registerUserApi);
 router.post('/patient/uploadFile', upload.single('file'), patientFunction.uploadFile);
@@ -72,6 +73,16 @@ router.get("/hospital/doctors", utils.hospitalGetDoctors);
 router.post("/hospital/transferPatient", utils.transferPatient);
 router.get("/hospital/analytics", utils.hospitalAnalytics);
 // router.post('/up', upload.single('file'), hl.up);
+router.get('/patient/isRegistered', patientFunction.isRegistered);
+router.get("/hospital/pendingPatients", utils.hospitalPendingPatients);
+router.post("/hospital/registerIntoBlockchain", utils.registerPatientToBlockchain);
+router.get("/patient/doctorSchedule/:doctorID", utils.PatientViewDoctorSchedule);
+router.post("/patient/bookSlot", utils.patientBookSlot);
+router.get("/patient/getPatientAppointments", utils.getPatientAppointments);
+router.get("/doctor/completeCheckup/:appointmentID", utils.completeCheckup);
+router.get('/notifications', utils.notifications);
+router.post('/notifications/read', utils.markAsRead);
+
 
   
 module.exports = router;

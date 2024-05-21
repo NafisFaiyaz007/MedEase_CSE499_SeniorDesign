@@ -11,6 +11,7 @@ import DoctorList from "./DoctorList";
 import PatientList from "./patientList"
 import ApproveAdmission from "./approveAdmission";
 import * as hospitalFunction from "./hospitalFunctions"
+import PendingRegistration from "./pendingRegistration";
 
 // Dummy data, replace with actual data
 // const hospitalData = {
@@ -158,6 +159,16 @@ const HospitalDashboard = () => {
             >
               Approve Admission
             </button>
+            <button
+              onClick={() => setActiveTab("pendingPatients")}
+              className={`${
+                activeTab === "pendingPatients"
+                  ? "bg-cyan-500 text-white"
+                  : "bg-gray-200 text-gray-600"
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+            >
+              Pending Patients
+            </button>
           </div>
         </div>
 
@@ -234,6 +245,12 @@ const HospitalDashboard = () => {
             <PatientList
               handlePatientSelection={handlePatientSelection}
               handleDeletePatient={handleDeletePatient}
+            />
+          )}
+          {activeTab === "pendingPatients" && (
+            <PendingRegistration
+              // handlePatientSelection={handlePatientSelection}
+              // handleDeletePatient={handleDeletePatient}
             />
           )}
         </div>

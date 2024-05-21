@@ -63,7 +63,21 @@ const doctorUploadFile = async (req, res) => {
             try {
                 const fs = await createNode();
                 const data = req.file.buffer;
-                cid = await fs.addBytes(data);
+                // cid = await fs.addBytes(data);
+                const key = crypto.createHash('sha256').update(ownerID).digest();
+                const iv = Buffer.alloc(16, 0);
+                const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+        
+                let encrypted = cipher.update(data);
+                encrypted = Buffer.concat([encrypted, cipher.final()]);
+                const encryptedContent = Buffer.concat([iv, encrypted]);
+
+
+                //console.log(req.file)
+                // Add content to IPFS
+                // const bytes = Buffer.from(encrypted, "utf-8");
+                cid = await fs.addFile({ path: req.file.originalname, content: encryptedContent,
+                    mimeType: 'application/octet-stream' })
                 res.status(201).send('Your file has been uploaded');
             }
             catch (e) {
@@ -94,6 +108,7 @@ const doctorUploadFile = async (req, res) => {
 
 const doctorGetSingleFile = async (req, res) => {
     const id = req.body.fileID;
+    const ownerID = req.body.ownerID;
     // const ownerID = req.body.patientUUID;
     const viewer = req.session.user.UUID;
     console.log("viewer: "+ viewer);
@@ -148,9 +163,20 @@ const doctorGetSingleFile = async (req, res) => {
                 // text += decoder.decode(chunk, { stream: true });
                 data.push(chunk);
               }
-              const buffer = Buffer.concat(data);
+            //   const buffer = Buffer.concat(data);
 
-              res.send(buffer);
+            const encryptedContent = Buffer.concat(data);
+            const iv = encryptedContent.slice(0, 16);
+            const encryptedData = encryptedContent.slice(16);
+        
+            const key = crypto.createHash('sha256').update(ownerID).digest();
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            let decrypted = decipher.update(encryptedData);
+            decrypted = Buffer.concat([decrypted, decipher.final()]);
+        
+            // Set response content type to octet-stream
+            res.set('Content-Type', 'application/octet-stream');
+            res.send(decrypted);
             } catch (error) {
               console.log(`Error retrieving data for CID "${cid}":`, error);
               res.status(500).send("Error retrieving data");

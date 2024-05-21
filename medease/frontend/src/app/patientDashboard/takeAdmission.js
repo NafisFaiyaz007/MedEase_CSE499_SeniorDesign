@@ -28,17 +28,26 @@ const TakeAdmission = () => {
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               {hospital.name}
             </h3>
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">
+              {hospital.address}
+            </h3>
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">
+              {hospital.email}
+            </h3>
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">
+              {hospital.phone_number}
+            </h3>
             <p className="text-sm text-gray-500 mb-2">
               Available Beds: {hospital.beds}
             </p>
             
           </div>
-          <button
+          {/* <button
             className="bg-purple-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-purple-700 transition duration-300 self-end"
             onClick={() => takeAdmission(hospital)}
           >
            Take Admission
-          </button>
+          </button> */}
         </div>
       ))}
     </div>

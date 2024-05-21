@@ -26,13 +26,13 @@ const registerHospital = async (hospitalUUID) => {
            // Enroll super admin
            caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
            //-hospital-admin.org1.example.com');
-           await enrollAdmin(caClient, wallet, mspOrg1, 'hospitaladmin');
+           await enrollHospitalAdmin(caClient, wallet, mspOrg1, hospitalUUID, 'hospitaladmin');
            console.log('Hospital enrolled successfully');
        } else {
            console.log('Hospital identity already exists in the wallet');
        }
 
-       return ('Hospital enrolled successfully');
+    //    return ('Hospital enrolled successfully');
        // Check if hospital admin identity already exists in the wallet
     //    const hospitalAdminIdentity = await wallet.get(hospitalAdminID);
     //    if (!hospitalAdminIdentity) {
@@ -49,6 +49,46 @@ const registerHospital = async (hospitalUUID) => {
        return { error: 'Failed to enroll admin' };
    }
 }
+
+const enrollHospitalAdmin = async (caClient, wallet, orgMspId, hospitalUUID, role) => {
+	try {
+        // Check if the role is 'superadmin' or 'hospitaladmin'
+        if (role !== 'superadmin' && role !== 'hospitaladmin') {
+            throw new Error('Invalid admin role specified');
+        }
+
+        // Check if the user is already enrolled
+        const identity = await wallet.get(hospitalUUID);
+        if (identity) {
+            console.log('An identity for the admin already exists in the wallet');
+            return;
+        }
+
+        // Enroll admin based on the specified role
+        const enrollment = await caClient.enroll({
+            enrollmentID: `admin`,
+            enrollmentSecret: 'adminpw',
+            role: role, // Pass the role to the CA server during enrollment
+        });
+
+        // Create a new identity
+        const x509Identity = {
+            credentials: {
+                certificate: enrollment.certificate,
+                privateKey: enrollment.key.toBytes(),
+            },
+            mspId: orgMspId,
+            type: 'X.509',
+        };
+
+        // Import the new identity into the wallet
+        await wallet.put(hospitalUUID, x509Identity);
+        console.log('Successfully enrolled hospital admin');
+
+    } catch (error) {
+        console.error(`Failed to enroll hospital admin: ${error}`);
+        throw error;
+    }
+};
 // Call the main function
-//main();
 module.exports = {registerHospital};

@@ -9,6 +9,8 @@ import axios from 'axios';
 import AnalyticsCard from "./analyticsCard";
 import CreateAccountForm from "./createAccountForm";
 import DeleteAccount from "./deleteAccount";
+import Modal from "../components/modal";
+
 
 
 
@@ -16,6 +18,8 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
   const [selectedAccountType, setSelectedAccountType] = useState("hospital");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   const adminName = "John Doe"; // Replace with the actual admin name
 
@@ -25,6 +29,10 @@ const AdminDashboard = () => {
     console.log("Logout clicked");
   };
 
+const  handleModal = (message) => {
+    setModalContent(message);
+    setModalIsOpen(true);
+  }
    
   const handleCreateAccountClick = (accountType) => {
     setSelectedAccountType(accountType);
@@ -141,6 +149,7 @@ const AdminDashboard = () => {
                 selectedAccountType={selectedAccountType}
                 showCreateAccountModal={showCreateAccountModal}
                 setShowCreateAccountModal={setShowCreateAccountModal}
+                handleOnSubmitModal = {handleModal}
               />
             </div>
           </div>
@@ -149,6 +158,9 @@ const AdminDashboard = () => {
          <DeleteAccount/>
         )}
       </div>
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   );
 };

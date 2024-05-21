@@ -8,7 +8,7 @@ const UpdateBedsCounter = ({
   handleBedsCounterDecrement,
 }) => {
   const [bedsCounter, setBedsCounter] = useState('');
-  const [beds, setBeds] = useState('');
+  const [beds, setBeds] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
 
@@ -56,7 +56,7 @@ const UpdateBedsCounter = ({
 
   return (
     <div className="space-y-4">
-      {beds && <h2 className="text-xl font-semibold text-white mb-4">
+      { <h2 className="text-xl font-semibold text-white mb-4">
         Currently Available Beds: {beds}
       </h2>}
       <h2 className="text-xl font-semibold text-white mb-4">

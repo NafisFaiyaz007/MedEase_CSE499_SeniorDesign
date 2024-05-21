@@ -31,7 +31,7 @@ export const fetchDoctorList = async () => {
 };
 export const fetchPatientList = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/users/hospital/patients", {credentials: "include"}); // Adjust the endpoint based on your server
+    const response = await fetch("http://localhost:8000/api/users/hospital/patients", { credentials: "include" }); // Adjust the endpoint based on your server
     const data = await response.json();
     return data;
   } catch (error) {
@@ -39,6 +39,35 @@ export const fetchPatientList = async () => {
     return [];
   }
 };
+
+export const fetchUnregisteredPatients = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/hospital/pendingPatients", { credentials: "include" }); // Adjust the endpoint based on your server
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching patient list:", error);
+    return [];
+  }
+};
+
+export const handleApproveRegistration = async (patient) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/users/hospital/registerIntoBlockchain", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ patientUserID: patient.id, patientUUID: patient.UUID, patientName: patient.name }), credentials: "include"
+    }); // Adjust the endpoint based on your server
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching patient list:", error);
+    return [];
+  }
+};
+
 
 export const handleDoctorSelection = (doctor) => {
   // Implement logic to handle doctor selection
@@ -48,32 +77,33 @@ export const handleDeleteDoctor = () => {
   // Implement logic to delete the selected doctor
 };
 export const handleDeleteSelectedPatient = async () => {
-   if (selectedPatient) {
-     // Call the provided handleDeletePatient function
-     await handleDeletePatient(selectedPatient);
-     // Update patient list after deletion
-     const updatedPatients = patientList.filter(
-       (patient) => patient.id !== selectedPatient.id
-     );
-     setPatientList(updatedPatients);
-     // Reset selectedPatient after deletion
-     setSelectedPatient(null);
-   }
- };
+  if (selectedPatient) {
+    // Call the provided handleDeletePatient function
+    await handleDeletePatient(selectedPatient);
+    // Update patient list after deletion
+    const updatedPatients = patientList.filter(
+      (patient) => patient.id !== selectedPatient.id
+    );
+    setPatientList(updatedPatients);
+    // Reset selectedPatient after deletion
+    setSelectedPatient(null);
+  }
+};
 
 
 export const handleDoctorFormChange = (e) => {
   // Implement logic to handle form change
 };
 
-export const handleCreateDoctor = async (doctorForm) => {
+export const handleCreateDoctor = async (doctorForm, handleOnSubmitModal) => {
   try {
     //doctorForm.userType = 3;
     // Send a POST request to your backend API to create a new doctor
-    const response = await axios.post("http://localhost:8000/api/users/registerDoctor", {...doctorForm});
+    const response = await axios.post("http://localhost:8000/api/users/registerDoctor", { ...doctorForm });
 
     // Handle success - clear the form and display a success message
     console.log("Doctor created successfully:", response.data);
+    handleOnSubmitModal(response.data.message)
     // setDoctorForm({
     //   name: "",
     //   email: "",
@@ -87,6 +117,7 @@ export const handleCreateDoctor = async (doctorForm) => {
     // Optionally, you can display a success message to the user
   } catch (error) {
     // Handle error - display an error message to the user
+    handleOnSubmitModal(error.response.data.error)
     console.error("Error creating doctor:", error);
     // Optionally, you can display an error message to the user
   }
@@ -102,7 +133,7 @@ export const handleBedsCounterDecrement = () => {
 
 export const getBedsCount = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/users/getBedsCount",  {method: "GET", credentials: "include"}); // Adjust the endpoint based on your server
+    const response = await fetch("http://localhost:8000/api/users/getBedsCount", { method: "GET", credentials: "include" }); // Adjust the endpoint based on your server
     const data = await response.json();
     console.log(data[0].beds)
     return data[0].beds;
@@ -114,13 +145,13 @@ export const getBedsCount = async () => {
 export const handleTransferPatient = async (selectedPatient, newHospitalID) => {
   console.log(selectedPatient)
   if (selectedPatient) {
-    try{
-      const response = await fetch("http://localhost:8000/api/users/hospital/transferPatient",  {method: "POST", headers: { 'Content-Type': 'application/json' }, credentials: "include", body: JSON.stringify({ newHospitalID: newHospitalID, patientID: selectedPatient }),}); // Adjust the endpoint based on your server
+    try {
+      const response = await fetch("http://localhost:8000/api/users/hospital/transferPatient", { method: "POST", headers: { 'Content-Type': 'application/json' }, credentials: "include", body: JSON.stringify({ newHospitalID: newHospitalID, patientID: selectedPatient }), }); // Adjust the endpoint based on your server
       const data = await response.json();
-      if(response.ok){
+      if (response.ok) {
         return data;
       }
-    } catch(error) {
+    } catch (error) {
       console.error("Error while transferring patient: " + error);
       console.log("eeroorr")
       return data;
@@ -129,16 +160,16 @@ export const handleTransferPatient = async (selectedPatient, newHospitalID) => {
 };
 
 export const fetchAnalytics = async () => {
-    try{
-      const response = await fetch("http://localhost:8000/api/users/hospital/analytics",  {method: "GET", headers: { 'Content-Type': 'application/json' }, credentials: "include",}); // Adjust the endpoint based on your server
-      const data = await response.json();
-      if(response.ok){
-        console.log(data.totalPatients)
-        return data;
-      }
-    } catch(error) {
-      console.error("Error while transferring patient: " + error);
-      console.log("eeroorr")
+  try {
+    const response = await fetch("http://localhost:8000/api/users/hospital/analytics", { method: "GET", headers: { 'Content-Type': 'application/json' }, credentials: "include", }); // Adjust the endpoint based on your server
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data.totalPatients)
       return data;
     }
+  } catch (error) {
+    console.error("Error while transferring patient: " + error);
+    console.log("eeroorr")
+    return data;
+  }
 };

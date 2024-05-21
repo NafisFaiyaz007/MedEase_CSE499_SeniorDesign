@@ -91,62 +91,63 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
       {/* List of Patients */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
   {patientList.map((patient) => (
-    <div
-      key={patient.id}
-      className={`bg-white p-6 rounded-md shadow-md `}
-    >
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-        Name: {patient.name}
-      </h3>
-      <h6 className="text-lg font-thin text-gray-500 mb-2">
-        Age: {calculateAge(patient.dateOfBirth)}
-      </h6>
-      <h6 className="text-lg font-thin text-gray-500 mb-2">
-        <b>Phone: </b> {patient.phone_number}
-      </h6>
-      <h6 className="text-lg font-thin text-gray-500 mb-2">
-        <b>Email: </b> {patient.email}
-      </h6>
-      <h6 className="text-lg font-thin text-gray-500 mb-2">
-        <b>Gender: </b> {patient.gender}
-      </h6>
-      <h6 className="text-lg font-thin text-gray-500 mb-2">
-        <b>Address: </b> {patient.address}
-      </h6>
-      <div className="flex justify-start items-center space-x-4 mt-4">
-        <button
-          onClick={() => {
-            handlePatientSelection(patient);
-            // setSelectedPatient(patient);
-          }}
-          className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-        >
-          Delete Patient
-        </button>
-        <button
-          onClick={() => {
-            setTransferModal(true)
-            setSelectedPatient(patient)
-            // hospitalFunction.handleTransferPatient
-          }}
-          className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-        >
-          Transfer Patient {patient.id}
-        </button>
-        <button
-          onClick={() =>  openUploadModal(patient)}
-          className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-        >
-          Upload File
-        </button>
-        <button
-          onClick={() =>  openReportsModal(patient)}
-          className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-        >
-          View Report
-        </button>
-      </div>
-    </div>
+   <div
+   key={patient.id}
+   className={`bg-white p-6 rounded-md shadow-md `}
+ >
+   <h3 className="text-lg font-semibold text-gray-700 mb-2">
+     Name: {patient.name}
+   </h3>
+   <h6 className="text-lg font-thin text-gray-500 mb-2">
+     Age: {calculateAge(patient.dateOfBirth)}
+   </h6>
+   <h6 className="text-lg font-thin text-gray-500 mb-2">
+     <b>Phone: </b> {patient.phone_number}
+   </h6>
+   <h6 className="text-lg font-thin text-gray-500 mb-2">
+     <b>Email: </b> {patient.email}
+   </h6>
+   <h6 className="text-lg font-thin text-gray-500 mb-2">
+     <b>Gender: </b> {patient.gender}
+   </h6>
+   <h6 className="text-lg font-thin text-gray-500 mb-2">
+     <b>Address: </b> {patient.address}
+   </h6>
+   <div className="flex flex-wrap justify-start items-center space-x-4 space-y-4 mt-4">
+     <button
+       onClick={() => {
+         handlePatientSelection(patient);
+         // setSelectedPatient(patient);
+       }}
+       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
+     >
+       Delete Patient
+     </button>
+     <button
+       onClick={() => {
+         setTransferModal(true);
+         setSelectedPatient(patient);
+         // hospitalFunction.handleTransferPatient
+       }}
+       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
+     >
+       Transfer Patient {patient.id}
+     </button>
+     <button
+       onClick={() => openUploadModal(patient)}
+       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
+     >
+       Upload File
+     </button>
+     <button
+       onClick={() => openReportsModal(patient)}
+       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
+     >
+       View Report
+     </button>
+   </div>
+ </div>
+ 
   ))}
 </div>
 

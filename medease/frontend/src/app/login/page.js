@@ -16,6 +16,7 @@ const Login = () => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
+    event.target.password.value = "";
     try {
       const response = await axios.post('http://localhost:8000/api/users/login', {
       email,

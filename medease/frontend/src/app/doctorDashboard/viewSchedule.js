@@ -19,25 +19,26 @@ const ViewSchedule = () => {
   const [selectedPdfFile, setSelectedPdfFile] = useState(null);
   useEffect(() => {
     // Fetch data from the doctor database here
-    const getPatientList = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/users/doctor/viewSchedule", { method: "POST", credentials: "include" });
-        const data = await response.json();
-        if (response.ok) {
-          console.log(data)
-          setScheduleData(data)
-        }
-        // Update the state with the fetched doctors
-        // setAvailableDoctors(data);
-      } catch (error) {
-        console.error("Error fetching patient:", error);
-      }
-    };
+   
 
     // Call the fetchDoctors function when the component mounts
     getPatientList();
   }, [])
 
+  const getPatientList = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/users/doctor/viewSchedule", { method: "POST", credentials: "include" });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data)
+        setScheduleData(data)
+      }
+      // Update the state with the fetched doctors
+      // setAvailableDoctors(data);
+    } catch (error) {
+      console.error("Error fetching patient:", error);
+    }
+  };
   const openReportsModal = (patient) => {
     setSelectedPatient(patient);
     handleGetReports(patient, updateReports);
@@ -64,45 +65,22 @@ const ViewSchedule = () => {
     setIsFileModalOpen(true);
   };
 
-  // const scheduleData = [
-  //   {
-  //     id: 1,
-  //     patientName: "John Doe",
-  //     day: "Monday",
-  //     date: "April 25",
-  //     appointmentTime: "10:00 AM",
-  //     doctor: "Dr. Smith",
-  //     department: "Cardiology",
-  //   },
-  //   {
-  //     id: 2,
-  //     patientName: "Jane Smith",
-  //     day: "Tuesday",
-  //     date: "April 26",
-  //     appointmentTime: "11:00 AM",
-  //     doctor: "Dr. Johnson",
-  //     department: "Dermatology",
-  //   },
-  //   {
-  //     id: 3,
-  //     patientName: "Michael Johnson",
-  //     day: "Wednesday",
-  //     date: "April 27",
-  //     appointmentTime: "12:00 PM",
-  //     doctor: "Dr. Brown",
-  //     department: "Neurology",
-  //   },
-  //   {
-  //     id: 4,
-  //     patientName: "Emily Brown",
-  //     day: "Thursday",
-  //     date: "April 28",
-  //     appointmentTime: "02:00 PM",
-  //     doctor: "Dr. Anderson",
-  //     department: "Ophthalmology",
-  //   },
-  // ];
-
+  const completeCheckup = async (appointment) => {
+    const x =appointment.appointment_id;
+    try {
+      const response = await fetch(`http://localhost:8000/api/users/doctor/completeCheckup/${appointment.appointment_id}`, { method: "GET", credentials: "include", });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data)
+        getPatientList();
+        // setScheduleData(data)
+      }
+      // Update the state with the fetched doctors
+      // setAvailableDoctors(data);
+    } catch (error) {
+      console.error("Error fetching patient:", error);
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -141,6 +119,12 @@ const ViewSchedule = () => {
               >
                 {/* Doctor */}
               </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b"
+              >
+                {/* Doctor */}
+              </th>
               {/* <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b"
@@ -169,6 +153,11 @@ const ViewSchedule = () => {
                   <button className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
                     onClick={() => openReportsModal(scheduleItem)}>View Reports</button>
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">
+                  {/* {scheduleItem.doctor} */}
+                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
+                    onClick={() => completeCheckup(scheduleItem)}>Complete</button>
+                </td>
                 {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">
                   {scheduleItem.department}
                 </td>  */}
@@ -186,10 +175,7 @@ const ViewSchedule = () => {
               {selectedPatient.name}'s Reports
             </h2>
             {/* Display patient reports here */}
-            {/* You can fetch and display the reports dynamically based on the selectedPatient data */}
-            <p>This is where the reports will be displayed.</p>
-            {/* Display patient reports here */}
-            <table className="w-full">
+            {reports.length>0 && <table className="w-full">
               <thead>
                 <tr>
                   <th>File Name</th>
@@ -213,7 +199,7 @@ const ViewSchedule = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table>}
             <button
               onClick={closeReportsModal}
               className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300 mt-2"
@@ -238,7 +224,7 @@ const ViewSchedule = () => {
                 &times; CLOSE
               </button>
               <div className="p-6">
-                {selectedPdfFile && <PdfComp pdfFile={selectedPdfFile} />}
+                {selectedPdfFile && <PdfComp props={selectedPdfFile} fetchFromBlockchain={true}/>}
               </div>
             </div>
           </div>

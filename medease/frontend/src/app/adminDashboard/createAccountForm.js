@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const CreateAccountForm = ({
   selectedAccountType,
   showCreateAccountModal,
   setShowCreateAccountModal,
+  handleOnSubmitModal
 }) => {
   //const [selectedAccountType, setSelectedAccountType] = useState("");
   //const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
+  const [hospitals, setHospitals] = useState([]);
+
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/hospitals');
+        setHospitals(response.data);
+      } catch (error) {
+        console.error('Failed to fetch hospitals:', error);
+      }
+    };
+
+    fetchHospitals();
+  }, []);
+
+  function getMaxDate() {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    return maxDate.toISOString().split('T')[0];
+  }
 
  const handleCloseModal = () => {
    console.log("Closing modal");
@@ -37,13 +59,13 @@ const CreateAccountForm = ({
         {
           ...formData,
           userType: uType,
-        }
+        }, {withCredentials: true}
       );
-
-      console.log(response.data);
+      handleOnSubmitModal(response.data.message)
       // Handle success or redirect to login page
     } catch (error) {
       // Handle errors
+      handleOnSubmitModal(error.response.data.error)
       console.error("Error:", error);
     }
 
@@ -57,7 +79,7 @@ const CreateAccountForm = ({
 
   return (
 
-
+<div>
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -162,7 +184,7 @@ const CreateAccountForm = ({
                   htmlFor="specialization"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  specialization
+                  Specialization
                 </label>
                 <input
                   type="text"
@@ -173,26 +195,29 @@ const CreateAccountForm = ({
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="hospital"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="hospital" className="block text-sm font-medium text-gray-600 mb-1">
                   Hospital
                 </label>
-                <input
-                  type="text"
-                  id="hospital"
-                  name="hospital"
+                <select
+                  id="hospital_id"
+                  name="hospital_id"
+                  className="mt-1 p-4 w-full border rounded-lg"
                   required
-                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-                />
+                >
+                  <option value="">Select a Hospital</option>
+                  {hospitals.map((hospital) => (
+                    <option key={hospital.hospital_id} value={hospital.hospital_id}>
+                      {hospital.name} -- {hospital.address}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="designation"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  designation
+                  Designation
                 </label>
                 <input
                   type="text"
@@ -203,37 +228,22 @@ const CreateAccountForm = ({
                 />
               </div>
               <div className="mb-4">
-                <label
+              <label
                   htmlFor="dateOfBirth"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-600 mb-1"
                 >
-                  Date of Birth
+                  Date Of Birth
                 </label>
                 <input
-                  // type="age"
+                  type="date"
                   id="dateOfBirth"
                   name="dateOfBirth"
+                  className="mt-1 p-4 w-full border rounded-lg"
+                  placeholder="Enter your date of birth"
+                  max={getMaxDate()}
                   required
-                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                 />
               </div>
-
-              <div className="mb-4">
-                <label
-                  htmlFor="hospital_id"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Hospital ID
-                </label>
-                <input
-                  type="text"
-                  id="hospital_id"
-                  name="hospital_id"
-                  required
-                  className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
               <div className="mb-4">
                 <label
                   htmlFor="address"
@@ -377,6 +387,8 @@ const CreateAccountForm = ({
         </button>
       </div>
     </form>
+    </div>
+    
   );
 };
 

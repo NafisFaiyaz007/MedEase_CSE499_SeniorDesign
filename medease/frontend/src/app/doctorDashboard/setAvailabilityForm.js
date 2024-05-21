@@ -109,7 +109,18 @@ fetch("http://localhost:8000/api/users/doctor/removeAppointmentSlot", {
         <input
           id="datePicker"
           type="date"
-          onChange={(e) => setSelectedDate(e.target.value)} // Use the passed prop function
+          min={new Date().toISOString().split('T')[0]}
+          onChange={(e) => {
+            const selected = e.target.value;
+            const today = new Date().toISOString().split('T')[0];
+            if (selected >= today) {
+              setSelectedDate(selected);
+            } else {
+              // Show an error message or handle invalid date selection
+              setModalContent('Please select a future or present date.'); // Set error message in modal
+              setModalIsOpen(true); // Open the modal on error
+            }
+          }} // Use the passed prop function
           className="px-3 py-2 text-black rounded-md focus:outline-2 focus:outline-blue-500"
         />
       </div>

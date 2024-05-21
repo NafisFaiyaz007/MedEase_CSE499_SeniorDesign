@@ -47,7 +47,9 @@ const PdfComp = ({props, fetchFromBlockchain}) => {
       console.log(pdfFile)
       const response = await axios.post(
         "http://localhost:8000/api/users/doctor/readFile",
-        {fileID: pdfFile.ID },
+        {fileID: pdfFile.ID, 
+          ownerID: pdfFile.ownerID
+         },
         {
           responseType: 'blob',
           withCredentials: true

@@ -1,8 +1,17 @@
 // CreateDoctorForm.js
-import React from "react";
+import {React, useState} from "react";
 import * as hospitalFunction from "./hospitalFunctions";
+import Modal from "../components/modal";
 
 const CreateDoctorForm = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+
+  const  handleModal = (message) => {
+    setModalContent(message);
+    setModalIsOpen(true);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -12,7 +21,7 @@ const CreateDoctorForm = () => {
     });
     data["userType"] = 3;
     console.log(data);
-    hospitalFunction.handleCreateDoctor(data);
+    hospitalFunction.handleCreateDoctor(data, handleModal);
   }
 
   return (
@@ -207,6 +216,9 @@ const CreateDoctorForm = () => {
           </div>
         </form>
       </div>
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
     </div>
   );
 };
