@@ -100,9 +100,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("dashboard")}
               className={`${
                 activeTab === "dashboard"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Dashboard
             </button>
@@ -111,9 +111,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("createDoctor")}
               className={`${
                 activeTab === "createDoctor"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Create Doctor
             </button>
@@ -122,9 +122,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("doctorList")}
               className={`${
                 activeTab === "doctorList"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               View Doctors
             </button>
@@ -133,9 +133,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("patientList")}
               className={`${
                 activeTab === "patientList"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               View Patients
             </button>
@@ -143,9 +143,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("updateBeds")}
               className={`${
                 activeTab === "updateBeds"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Update Beds
             </button>
@@ -153,9 +153,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("approveAdmission")}
               className={`${
                 activeTab === "approveAdmission"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Approve Admission
             </button>
@@ -163,9 +163,9 @@ const HospitalDashboard = () => {
               onClick={() => setActiveTab("pendingPatients")}
               className={`${
                 activeTab === "pendingPatients"
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-cyan-600 text-white"
                   : "bg-gray-200 text-gray-600"
-              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-500 hover:text-white transition duration-300`}
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Pending Patients
             </button>
@@ -187,7 +187,7 @@ const HospitalDashboard = () => {
                     <p className="text-lg font-semibold text-gray-700">
                       {card.title}
                     </p>
-                    <p className="text-3xl font-bold text-cyan-500">
+                    <p className="text-3xl font-bold text-cyan-600">
                       {card.count}
                     </p>
                   </div>

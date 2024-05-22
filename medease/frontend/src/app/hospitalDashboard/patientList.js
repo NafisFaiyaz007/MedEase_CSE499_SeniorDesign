@@ -65,7 +65,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
   }
   const showPdf = async (file) => {
     // const pdf = await handleViewReport(fileID);
-    // setCurrentFileID(`http://localhost:5000/files/${pdf}`);
+    // setCurrentFileID(`http://localhost:6000/files/${pdf}`);
     setSelectedPdfFile(file);
     setIsFileModalOpen(true);
   };
@@ -90,77 +90,76 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
     <div className="space-y-4">
       {/* List of Patients */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-  {patientList.map((patient) => (
-   <div
-   key={patient.id}
-   className={`bg-white p-6 rounded-md shadow-md `}
- >
-   <h3 className="text-lg font-semibold text-gray-700 mb-2">
-     Name: {patient.name}
-   </h3>
-   <h6 className="text-lg font-thin text-gray-500 mb-2">
-     Age: {calculateAge(patient.dateOfBirth)}
-   </h6>
-   <h6 className="text-lg font-thin text-gray-500 mb-2">
-     <b>Phone: </b> {patient.phone_number}
-   </h6>
-   <h6 className="text-lg font-thin text-gray-500 mb-2">
-     <b>Email: </b> {patient.email}
-   </h6>
-   <h6 className="text-lg font-thin text-gray-500 mb-2">
-     <b>Gender: </b> {patient.gender}
-   </h6>
-   <h6 className="text-lg font-thin text-gray-500 mb-2">
-     <b>Address: </b> {patient.address}
-   </h6>
-   <div className="flex flex-wrap justify-start items-center space-x-4 space-y-4 mt-4">
-     <button
-       onClick={() => {
-         handlePatientSelection(patient);
-         // setSelectedPatient(patient);
-       }}
-       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-     >
-       Delete Patient
-     </button>
-     <button
-       onClick={() => {
-         setTransferModal(true);
-         setSelectedPatient(patient);
-         // hospitalFunction.handleTransferPatient
-       }}
-       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-     >
-       Transfer Patient {patient.id}
-     </button>
-     <button
-       onClick={() => openUploadModal(patient)}
-       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-     >
-       Upload File
-     </button>
-     <button
-       onClick={() => openReportsModal(patient)}
-       className="bg-cyan-500 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300"
-     >
-       View Report
-     </button>
-   </div>
- </div>
- 
-  ))}
-</div>
+        {patientList.map((patient) => (
+          <div
+            key={patient.id}
+            className={`bg-white p-6 rounded-md shadow-md `}
+          >
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              Name: {patient.name}
+            </h3>
+            <h6 className="text-lg font-thin text-gray-600 mb-2">
+              Age: {calculateAge(patient.dateOfBirth)}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-600 mb-2">
+              <b>Phone: </b> {patient.phone_number}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-600 mb-2">
+              <b>Email: </b> {patient.email}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-600 mb-2">
+              <b>Gender: </b> {patient.gender}
+            </h6>
+            <h6 className="text-lg font-thin text-gray-600 mb-2">
+              <b>Address: </b> {patient.address}
+            </h6>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
+              <button
+                onClick={() => {
+                  handlePatientSelection(patient);
+                  // setSelectedPatient(patient);
+                }}
+                className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
+              >
+                Delete Patient
+              </button>
+              <button
+                onClick={() => {
+                  setTransferModal(true);
+                  setSelectedPatient(patient);
+                  // hospitalFunction.handleTransferPatient
+                }}
+                className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
+              >
+                Transfer Patient {patient.id}
+              </button>
+              <button
+                onClick={() => openUploadModal(patient)}
+                className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
+              >
+                Upload File
+              </button>
+              <button
+                onClick={() => openReportsModal(patient)}
+                className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
+              >
+                View Report
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Delete Button */}
-        {/* <button
+      {/* <button
           onClick={hospitalFunction.handleDeleteSelectedPatient}
-          className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+          className="bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
         >
           Delete Selected Patient
         </button>
         <button
           onClick={hospitalFunction.handleTransferPatient}
-          className="bg-red-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
+          className="bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-700 transition duration-300"
         >
           Transfer Patient
         </button> */}
@@ -176,34 +175,34 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
             {/* You can fetch and display the reports dynamically based on the selectedPatient data */}
             <p>This is where the reports will be displayed.</p>
             {/* Display patient reports here */}
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>File Name</th>
-            <th>Date Uploaded</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reports.map(report => (
-            <tr key={report.ID}>
-              <td>{report.fileName}</td>
-              <td>{formatDate(report.uploaded)}</td>
-              <td>
-                <button
-                  onClick={() => showPdf(report)}//handleViewReport(report.ID)}
-                  className="bg-cyan-500 text-white px-3 py-1 rounded-md hover:bg-cyan-700 transition duration-300"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Date Uploaded</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reports.map((report) => (
+                  <tr key={report.ID}>
+                    <td>{report.fileName}</td>
+                    <td>{formatDate(report.uploaded)}</td>
+                    <td>
+                      <button
+                        onClick={() => showPdf(report)} //handleViewReport(report.ID)}
+                        className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 transition duration-300"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             <button
               onClick={closeReportsModal}
-              className="bg-cyan-500 text-white px-3 py-1 rounded-md hover:bg-cyan-700 transition duration-300 mt-2"
+              className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 transition duration-300 mt-2"
             >
               Close
             </button>
@@ -216,7 +215,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
             className="flex items-center justify-center min-h-screen"
             ref={modalRef}
           >
-            <div className="fixed inset-0 bg-gray-500 justify=center opacity-75"></div>
+            <div className="fixed inset-0 bg-gray-600 justify=center opacity-75"></div>
             <div className="z-20 bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-full relative">
               <button
                 className="absolute top-0 right-0 mt-4 mr-4 text-red-700 cursor-pointer"
@@ -225,14 +224,21 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
                 &times; CLOSE
               </button>
               <div className="p-6">
-                {selectedPdfFile && <PdfComp props={selectedPdfFile} fetchFromBlockchain={true} />}
+                {selectedPdfFile && (
+                  <PdfComp props={selectedPdfFile} fetchFromBlockchain={true} />
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
-    {transferModal && (<TransferPatientModal handleClose = {handleCloseTransferModal} patient={selectedPatient.id}/>)}
-    {uploadModalOpen && (<UploadModal patient={selectedPatient}/>)}
+      {transferModal && (
+        <TransferPatientModal
+          handleClose={handleCloseTransferModal}
+          patient={selectedPatient.id}
+        />
+      )}
+      {uploadModalOpen && <UploadModal patient={selectedPatient} />}
     </div>
   );
 };
