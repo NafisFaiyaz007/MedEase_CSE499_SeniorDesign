@@ -149,7 +149,7 @@ const HospitalDashboard = () => {
             >
               Update Beds
             </button>
-            <button
+            {/* <button
               onClick={() => setActiveTab("approveAdmission")}
               className={`${
                 activeTab === "approveAdmission"
@@ -158,7 +158,7 @@ const HospitalDashboard = () => {
               } px-6 py-3 rounded-md focus:outline-none hover:bg-cyan-600 hover:text-white transition duration-300`}
             >
               Approve Admission
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveTab("pendingPatients")}
               className={`${
@@ -224,13 +224,13 @@ const HospitalDashboard = () => {
             />
           )}
 
-          {activeTab === "approveAdmission" && (
+          {/* {activeTab === "approveAdmission" && (
             <ApproveAdmission
               admissionsToApprove={hospitalFunction.admissionsToApprove}
               handleApproveAdmission={hospitalFunction.handleApproveAdmission}
               handleRejectAdmission={hospitalFunction.handleRejectAdmission}
             />
-          )}
+          )} */}
 
           {/* View  Doctor list Section */}
           {activeTab === "doctorList" && (
