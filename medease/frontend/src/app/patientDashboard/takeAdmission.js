@@ -22,7 +22,7 @@ const TakeAdmission = () => {
       {hospitalBeds.map((hospital, index) => (
         <div
           key={index}
-          className="bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 flex flex-col justify-between"
+          className="bg-white p-6 rounded-md shadow-md flex flex-col justify-between"
         >
           <div>
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
