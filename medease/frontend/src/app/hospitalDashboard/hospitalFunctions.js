@@ -99,7 +99,7 @@ export const handleCreateDoctor = async (doctorForm, handleOnSubmitModal) => {
   try {
     //doctorForm.userType = 3;
     // Send a POST request to your backend API to create a new doctor
-    const response = await axios.post("http://localhost:8000/api/users/registerDoctor", { ...doctorForm });
+    const response = await axios.post("http://localhost:8000/api/users/registerDoctor2", { ...doctorForm }, {withCredentials:true});
 
     // Handle success - clear the form and display a success message
     console.log("Doctor created successfully:", response.data);

@@ -78,7 +78,8 @@ const doctorUploadFile = async (req, res) => {
                 // const bytes = Buffer.from(encrypted, "utf-8");
                 cid = await fs.addFile({ path: req.file.originalname, content: encryptedContent,
                     mimeType: 'application/octet-stream' })
-                res.status(201).send('Your file has been uploaded');
+                // res.status(201).send('Your file has been uploaded');
+                // return;
             }
             catch (e) {
                 console.log(e);
@@ -93,6 +94,7 @@ const doctorUploadFile = async (req, res) => {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             }
             res.status(201).send('Your file has been uploaded to ledger');
+            return;
         }
         catch (e) {
             console.log("asset already exists");
@@ -103,6 +105,7 @@ const doctorUploadFile = async (req, res) => {
         // Disconnect from the gateway when the application is closing
         // This will close all connections to the network
         gateway.disconnect();
+        return;
     }
 }
 
@@ -177,6 +180,7 @@ const doctorGetSingleFile = async (req, res) => {
             // Set response content type to octet-stream
             res.set('Content-Type', 'application/octet-stream');
             res.send(decrypted);
+            return
             } catch (error) {
               console.log(`Error retrieving data for CID "${cid}":`, error);
               res.status(500).send("Error retrieving data");
@@ -192,6 +196,7 @@ const doctorGetSingleFile = async (req, res) => {
     }
     finally {
         gateway.disconnect();
+        return;
     }
 }
 
@@ -224,5 +229,73 @@ const doctorGetAllFiles = async (req, res) => {
     }
 }
 
-module.exports = { doctorUploadFile, doctorGetAllFiles, doctorGetSingleFile };
+const uploadPrescription = async (req, res) => {
+    const ownerID = req.body.patientUUID;
+    const uploader = req.session.user.UUID;//req.body.UUID
+    const fileName = req.files[0].originalname;
+
+    const gateway = new Gateway();
+    try {
+        const ccp = buildCCPOrg1();
+        //const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
+        const wallet = await buildWallet(Wallets, walletPath);
+
+        await gateway.connect(ccp, {
+            wallet,
+            identity: uploader,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        const network = await gateway.getNetwork(channelName);
+        const contract = network.getContract(chaincodeName);
+        let cid = "";
+        try {
+            try {
+                const fs = await createNode();
+                const data = req.files[0].buffer;
+                // cid = await fs.addBytes(data);
+                const key = crypto.createHash('sha256').update(ownerID).digest();
+                const iv = Buffer.alloc(16, 0);
+                const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+        
+                let encrypted = cipher.update(data);
+                encrypted = Buffer.concat([encrypted, cipher.final()]);
+                const encryptedContent = Buffer.concat([iv, encrypted]);
+
+
+                //console.log(req.file)
+                // Add content to IPFS
+                // const bytes = Buffer.from(encrypted, "utf-8");
+                cid = await fs.addFile({ path: req.files[0].originalname, content: encryptedContent,
+                    mimeType: 'application/octet-stream' })
+                // res.status(201).send('Your file has been uploaded');
+            }
+            catch (e) {
+                console.log(e);
+                res.status(500).send('An error occurred while uploading the file');
+
+            }
+            let fileHash = cid;
+            console.log('\n--> Submit Transaction: DoctorCreateRecord, creates new asset with ID, name, hash, ownerID, date, doctorID arguments');
+            result = await contract.submitTransaction('DoctorCreateRecord', fileName, fileHash, ownerID, new Date().toISOString(), uploader);
+            console.log('*** Result: committed');
+            if (`${result}` !== '') {
+                console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            }
+            res.status(201).send('Your file has been uploaded to ledger');
+            return;
+        }
+        catch (e) {
+            console.log("asset already exists");
+            console.log(e);
+            // res.status(500).send('An error occurred while uploading the file');
+        }
+    } finally {
+        // Disconnect from the gateway when the application is closing
+        // This will close all connections to the network
+        gateway.disconnect();
+        return;
+    }
+}
+
+module.exports = { doctorUploadFile, doctorGetAllFiles, doctorGetSingleFile, uploadPrescription };
 // ./network.sh deployCC -ccn basic -ccp mychaincode -ccl javascript

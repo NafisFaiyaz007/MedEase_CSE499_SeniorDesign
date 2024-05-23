@@ -126,6 +126,7 @@ const uploadFile = async (req, res) => {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
             }
             res.status(201).json({ message: 'Your file has been uploaded to ledger' });
+            return;
         }
         catch (e) {
             console.log("asset already exists");
@@ -136,6 +137,7 @@ const uploadFile = async (req, res) => {
         // Disconnect from the gateway when the application is closing
         // This will close all connections to the network
         gateway.disconnect();
+        return;
     }
 }
 
@@ -178,25 +180,40 @@ const getSingleFile = async (req, res) => {
             try {
                 for await (const chunk of fs.cat(cid)) {
                     // text += decoder.decode(chunk, { stream: true });
+                    console.log('Received chunk of data');
+
                     data.push(chunk);
                 }
+                // fs.close()
+                console.log('All chunks received, processing data...');
+
                 // const buffer = Buffer.concat(data);
                 const encryptedContent = Buffer.concat(data);
                 const iv = encryptedContent.slice(0, 16);
                 const encryptedData = encryptedContent.slice(16);
             
+                console.log('Starting decryption...');
+
                 const key = crypto.createHash('sha256').update(ownerID).digest();
                 const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
                 let decrypted = decipher.update(encryptedData);
                 decrypted = Buffer.concat([decrypted, decipher.final()]);
             
+                console.log('Decryption complete, sending data...');
+
                 // Set response content type to octet-stream
                 res.set('Content-Type', 'application/octet-stream');
-                res.send(decrypted);
+                res.send(decrypted); 
+                return;
             } catch (error) {
+                console.error('Error processing data:', error);
                 console.log(`Error retrieving data for CID "${cid}":`, error);
                 res.status(500).send("Error retrieving data");
             }
+            // finally {
+            //     // Ensure all streams are closed, even if an error occurred
+            //     await  fs.close(); // Assuming 'fs' has a close method relevant to how you opened it
+            // }
         }
         catch {
             //res.status(500).json({ error: 'File does not exist' });
@@ -205,6 +222,8 @@ const getSingleFile = async (req, res) => {
         }
     } finally {
         gateway.disconnect();
+        console.log("disconnecting")
+        return;
     }
 }
 
@@ -410,5 +429,57 @@ const isRegistered = async (req, res) => {
         gateway.disconnect();
     }
 }
-module.exports = { init, uploadFile, getSingleFile, deleteFile, getAllFiles, getAllDocuments, grantPermission, revokePermission , isRegistered};
+const downloadFile = async (req, res) => {
+    const id = req.body.fileID;
+    console.log(id)
+    const ownerID = req.session.user.UUID; // or req.body.patientUUID;
+    const gateway = new Gateway();
+
+    try {
+        const ccp = buildCCPOrg1();
+        const wallet = await buildWallet(Wallets, walletPath);
+
+        await gateway.connect(ccp, { wallet, identity: ownerID, discovery: { enabled: true, asLocalhost: true } });
+        const network = await gateway.getNetwork(channelName);
+        const contract = network.getContract(chaincodeName);
+
+        console.log('\n--> Evaluate Transaction: ReadDocument, function returns an asset with a given assetID: ' + id);
+        const result = await contract.evaluateTransaction('ReadDocument', id);
+        const cid = JSON.parse(result.toString()).fileHash;
+
+        if (!cid) {
+            res.status(404).send('File not found');
+            return;
+        }
+
+        const fs = await createNode();
+        let data = [];
+        try {
+            for await (const chunk of fs.cat(cid)) {
+                data.push(chunk);
+            }
+            const encryptedContent = Buffer.concat(data);
+            const iv = encryptedContent.slice(0, 16);
+            const encryptedData = encryptedContent.slice(16);
+            const key = crypto.createHash('sha256').update(ownerID).digest();
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            let decrypted = decipher.update(encryptedData);
+            decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+            const filename = 'downloaded-file'; // You could use a dynamic name based on the request or file metadata
+
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+            res.setHeader('Content-Type', 'application/octet-stream');
+            res.send(decrypted);
+        } catch (error) {
+            console.error('Error processing data:', error);
+            res.status(500).send("Error retrieving data");
+        }
+    } finally {
+        gateway.disconnect();
+        return;
+    }
+}
+
+module.exports = { init, uploadFile, getSingleFile, deleteFile, getAllFiles, getAllDocuments, grantPermission, revokePermission , isRegistered, downloadFile};
 // ./network.sh deployCC -ccn basic -ccp mychaincode -ccl javascript

@@ -1,7 +1,11 @@
 const connection = require('../db');
 const registerUser = require('../fabric/registerUser');
 
-
+async function getDoctorUserIDfromDoctorID(doctorID) {
+    const query1 = "SELECT user_id FROM doctors WHERE doctors.doctor_id = ?";
+    const [doctorUserID] = await connection.execute(query1, [doctorID]);
+    return doctorUserID[0].user_id;
+}
 async function getDoctorUUID(userID) {
     const query1 = "SELECT doctor_id FROM doctors INNER JOIN users ON doctors.user_id = users.id WHERE users.id = ?";
     const [doctorID] = await connection.execute(query1, [userID]);
@@ -97,7 +101,7 @@ const doctorGetAvailableSlots = async (req, res) => {
         const query2 = "SELECT `AppointmentSlots`.*, doctors.doctor_id FROM`appointmentSlots` INNER JOIN `doctors` ON`appointmentSlots`.doctor_id = `doctors`.doctor_id  WHERE`appointmentSlots`.doctor_id = ? AND `available` = 1";
         const [results] = await connection.execute(query2, [doctorID[0].doctor_id]);
         res.send(results);
-    } catch (e){
+    } catch (e) {
         console.log(e)
         res.status(500).json({ error: 'Failed to fetch appointment slots' });
     }
@@ -216,14 +220,24 @@ const hospitalGetDoctors = async (req, res) => {
 const transferPatient = async (req, res) => {
     const newHospitalID = req.body.newHospitalID;
     const patientID = req.body.patientID;
+    let conn = await connection.getConnection();
     try {
+        await conn.beginTransaction()
         const query = "UPDATE `patients` SET `hospital_id`= ? WHERE `user_id`= ?";
-        const result = await connection.execute(query, [newHospitalID, patientID])
+        const result = await conn.execute(query, [newHospitalID, patientID])
         if (result[0].affectedRows === 0) {
             return res.status(500).json("Error transferring patient");
         }
+        const query2 = "SELECT name FROM users INNER JOIN hospitals ON hospitals.`user_id`= users.id WHERE hospitals.hospital_id = ? AND hospitals.`user_id`= users.id";
+        const [hospitalName] = await conn.execute(query2, [newHospitalID])
+
+        const message = `You have been transferred to ${hospitalName[0].name}`;
+        await conn.execute("INSERT INTO `Notifications`(`user_id`, `message`, `is_read`, `created_at`) VALUES (?, ?, FALSE, NOW())", [patientID, message]);
+
+        await conn.commit();
         return res.json("Patient transferred successfully");
     } catch {
+        await conn.rollback()
         res.status(500).json("Error transferring patient");
     }
 }
@@ -304,37 +318,42 @@ const patientBookSlot = async (req, res) => {
     const slot = req.body.slot;
     const userID = req.session.user.userId;
     //Query the user id and appointment time into AvailableSlots table
+    conn = await connection.getConnection();
     try {
-        conn = await connection.getConnection();
 
         // Start a transaction
         await conn.beginTransaction();
         const query = "SELECT * FROM `patients` INNER JOIN users ON patients.user_id = users.id WHERE user_id = ?";
-        const [result1] = await connection.execute(query, [userID]);
+        const [result1] = await conn.execute(query, [userID]);
         const query1 = "SELECT * FROM `Patients_Doctors` WHERE doctor_id = ? AND patient_id = ?";
-        const [result] = await connection.execute(query1, [slot.doctor_id, result1[0].patient_id]);
+        const [result] = await conn.execute(query1, [slot.doctor_id, result1[0].patient_id]);
         if (!result[0]) {
             try {
                 const query1 = "SELECT * FROM `patients` INNER JOIN users ON patients.user_id = users.id WHERE user_id = ?";
-                const [result1] = await connection.execute(query1, [userID]);
+                const [result1] = await conn.execute(query1, [userID]);
                 const query2 = "INSERT INTO `Patients_Doctors`(`patient_id`, `doctor_id`) VALUES (?, ?)";
-                const [results] = await connection.execute(query2, [result1[0].patient_id, slot.doctor_id]);
-                // res.json({ message: "Registration successful" });
+                const [results] = await conn.execute(query2, [result1[0].patient_id, slot.doctor_id]);
+                // res.json({ message: "Registration successful" })             
 
-               
             } catch {
+                await conn.rollback();
                 res.status(500).json({ error: 'Failed to register' });
             }
         }
-         // const userID = req.session.user.userId;
-         
-         const query3 = "SELECT patient_id FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
-         const [patientID] = await connection.execute(query3, [userID]);
-         // console.log(slot.doctor_id, patientID[0].patient_id, slot.start_time.toString(), slot.id);
-         const query4 = "INSERT INTO `appointments`(`doctor_id`, `patient_id`, `appointment_date`, `appointment_slot_id`) VALUES (?, ?, ?, ?)";
-         const [results2] = await connection.execute(query4, [slot.doctor_id, patientID[0].patient_id, new Date(slot.start_time).toISOString().slice(0, 19).replace('T', ' '), slot.id]);
-         const updateQuery = "UPDATE `AppointmentSlots` SET `available` = 0 WHERE id = ?";
-         const [updateResults] = await connection.execute(updateQuery, [slot.id]);
+        // const userID = req.session.user.userId;
+
+        const query3 = "SELECT patient_id FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
+        const [patientID] = await conn.execute(query3, [userID]);
+        // console.log(slot.doctor_id, patientID[0].patient_id, slot.start_time.toString(), slot.id);
+        const query4 = "INSERT INTO `appointments`(`doctor_id`, `patient_id`, `appointment_date`, `appointment_slot_id`) VALUES (?, ?, ?, ?)";
+        const [results2] = await conn.execute(query4, [slot.doctor_id, patientID[0].patient_id, new Date(slot.start_time).toISOString().slice(0, 19).replace('T', ' '), slot.id]);
+        const updateQuery = "UPDATE `AppointmentSlots` SET `available` = 0 WHERE id = ?";
+        const [updateResults] = await conn.execute(updateQuery, [slot.id]);
+        const doctorUserID = await getDoctorUserIDfromDoctorID(slot.doctor_id);
+        console.log(doctorUserID)
+        const message = `${req.session.user.name} booked an appointment with you.`;
+        await conn.execute("INSERT INTO `Notifications`(`user_id`, `message`, `is_read`, `created_at`) VALUES (?, ?, FALSE, NOW())", [doctorUserID, message]);
+
         await conn.commit();
 
         res.json({ message: "Appointment slot booked" });
@@ -381,7 +400,7 @@ const getPatientAppointments = async (req, res) => {
 }
 
 const completeCheckup = async (req, res) => {
-    
+
     // const userID = req.body.id;
     const appointmentID = req.params.appointmentID;
     // console.log(req.params)
@@ -400,37 +419,97 @@ const completeCheckup = async (req, res) => {
 // Fetch notifications for a user
 // router.get('/notifications', 
 const notifications = async (req, res) => {
-  const userId = req.session.user.userId; // Assuming user ID is available in req.user
-  try {
-    const [notifications] = await connection.execute(
-      'SELECT notification_id, message, is_read, created_at FROM Notifications WHERE user_id = ?',
-      [userId]
-    );
-    console.log(notifications.rows)
-    res.json(notifications);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Error fetching notifications');
-  }
+    const userId = req.session.user.userId; // Assuming user ID is available in req.user
+    try {
+        const [notifications] = await connection.execute(
+            'SELECT notification_id, message, is_read, created_at FROM Notifications WHERE user_id = ? AND is_read = FALSE  ORDER BY created_at DESC',
+            [userId]
+        );
+        res.json(notifications);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Error fetching notifications');
+    }
 };
 
 // Mark notification as read
 // router.post('/notifications/read',
-const markAsRead =  async (req, res) => {
-  const { notificationId } = req.body;
-  const userId = req.sessoin.user.userId; // Assuming user ID is available in req.user
+const markAsRead = async (req, res) => {
+    const { notificationId } = req.params;
+    const userId = req.session.user.userId; // Assuming user ID is available in req.user
 
-  try {
-    await connection.execute(
-      'UPDATE Notifications SET is_read = TRUE WHERE user_id = ? AND notification_id = ?',
-      [userId, notificationId]
-    );
-    res.send('Notification marked as read');
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
+    try {
+        await connection.execute(
+            'UPDATE Notifications SET is_read = TRUE WHERE user_id = ? AND notification_id = ?',
+            [userId, notificationId]
+        );
+        res.send('Notification marked as read');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 };
 
+const sendNotification = async (req, res) => {
+    const { message, doctorID } = req.body;
+    try {
+        connection.execute("INSERT INTO `Notifications`(`user_id`, `message`, `is_read`, `created_at`) VALUES (?, ?, FALSE, NOW())", [doctorID, message]);
+        res.json("Access Granted to Doctor");
+    } catch (error) {
+        res.status(500).send("Failed to send notification");
+    }
+}
+const askPermission = async (req, res) => {
+    const { ownerID, fileName } = req.body;
+    const message = `${req.session.user.name} has requested access to file ${fileName}`;
+    let conn = await connection.getConnection();
+    try {
+        const [user_id] =await conn.execute("SELECT id FROM users WHERE UUID = ?", [ownerID]);
+        console.log(user_id[0].id)
+        await conn.execute("INSERT INTO `Notifications`(`user_id`, `message`, `is_read`, `created_at`) VALUES (?, ?, FALSE, NOW())", [user_id[0].id, message]);
+        await conn.commit();
+        res.json("Request sent to patient.");
+    } catch (error) {
+        await conn.rollback();
+        res.status(500).send("Failed to send notification");
+    }
+}
+const doctorProfile = async (req, res) => {
+    // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
+    const userID = req.session.user.userId;
+    const query = `SELECT 
+    doctors.user_id,
+    doctors.doctor_id, 
+    doctors.degree, 
+    doctors.specialization, 
+    doctors.designation, 
+    doctors.address,
+    doctors.phone_number,
+    doctors.dateOfBirth,
+    doctors.address,
+    hospitals.hospital_id,
+    user.name AS name,
+    user.UUID AS UUID,
+    user.email,
+    u.name AS hospitalName,
+    hospitals.address AS hospitalAddress
+  FROM 
+    users user
+  INNER JOIN 
+    doctors  ON user.id = doctors.user_id 
+  INNER JOIN 
+    hospitals ON doctors.hospital_id = hospitals.hospital_id 
+  INNER JOIN 
+    users u ON hospitals.user_id = u.id
+  WHERE user.id = ?`;
+    try {
+      const [doctors] = await connection.execute(query, [userID]);
+    //   conso
+      res.json(doctors);
+    } catch (error) {
+      console.error("Error fetching doctors from MySQL:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  };
 
-module.exports = { getPatientList, registerUnderDoctor, getReports, setAvailability, doctorViewSchedule, PatientViewDoctorSchedule, getDoctorUUID, doctorGetAvailableSlots, doctorRemoveSlot, getBedsCount, hospitalGetPatients, hospitalGetDoctors, transferPatient, hospitalAnalytics, hospitalPendingPatients, registerPatientToBlockchain, patientBookSlot, getPatientAppointments, completeCheckup, notifications, markAsRead };
+module.exports = { getPatientList, registerUnderDoctor, getReports, setAvailability, doctorViewSchedule, PatientViewDoctorSchedule, getDoctorUUID, doctorGetAvailableSlots, doctorRemoveSlot, getBedsCount, hospitalGetPatients, hospitalGetDoctors, transferPatient, hospitalAnalytics, hospitalPendingPatients, registerPatientToBlockchain, patientBookSlot, getPatientAppointments, completeCheckup, notifications, markAsRead, askPermission, doctorProfile };

@@ -178,7 +178,13 @@ app.get('/api/patients', authenticateUser, async (req, res) => {
     const userId = req.session.user.userId;
     // Query to fetch patient data from MySQL
     const query =
-      "SELECT * FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
+      // "SELECT * FROM patients INNER JOIN users ON patients.user_id = users.id WHERE users.id = ?";
+     `SELECT patients.*, u.name AS hospital_name , users.*
+  FROM patients 
+  INNER JOIN users ON patients.user_id = users.id 
+INNER JOIN hospitals h ON h.hospital_id = patients.hospital_id 
+INNER JOIN users u ON h.user_id = u.id 
+WHERE users.id = ?`
 
     const patients = await executeQuery(query, [userId]);
     res.json(patients);
@@ -194,7 +200,7 @@ app.get('/api/patients', authenticateUser, async (req, res) => {
 // API endpoint to fetch all hospitals
 app.get('/api/hospitals', authenticateUser, async (req, res) => {
   // const query = "SELECT * FROM doctors"; // Assuming 'doctors' is your table name
-  const query = "SELECT id, hospital_id, name, address, phone_number, email, beds, UUID FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
+  const query = "SELECT id, hospital_id, user_id, name, address, phone_number, email, beds, UUID FROM hospitals INNER JOIN users ON hospitals.user_id = users.id";
   try {
     const hospitals = await executeQuery(query);
     res.json(hospitals);

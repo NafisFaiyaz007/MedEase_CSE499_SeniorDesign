@@ -1,17 +1,84 @@
 // PrescriptionModal.js
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import { jsPDF } from "jspdf";
+
 
 const PrescriptionModal = ({
   patientDetails,
   onClose,
   onPrescriptionSubmit,
 }) => {
+
+  const [doctor, setDoctor] = useState('');
+
+  useEffect(() => {
+    const fetchDoctorDetails = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/users/doctorProfile", {
+          method: "GET", // or "POST" based on your backend logic
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Fetched doctor data:", data); // Log the fetched data
+          setDoctor(data[0]);
+        } else {
+          console.error("Failed to fetch doctor data. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching doctor data:", error);
+      }
+    };
+
+    fetchDoctorDetails();
+  }, []);
+
+  const getCurrentDate = () => {
+    const date = new Date();
+    // Format as "YYYY-MM-DD", you can customize it as needed
+    const formattedDate = date.getFullYear() + '-' + 
+                          (date.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                          date.getDate().toString().padStart(2, '0');
+    return formattedDate;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle prescription submission logic here
-    // You can call onPrescriptionSubmit with the prescription details
-    // and close the modal afterward
+    const currentDate = getCurrentDate(); // Get the current date string
+
+    // Create a PDF document
+    const doc = new jsPDF();
+    // Add form data to the PDF
+    doc.text(`Prescription for: ${patientDetails.name}`, 10, 10);
+    doc.text(`Issued by: ${doctor.name}`, 10, 20);
+    doc.text(`Date: ${currentDate}`, 10, 30);
+    doc.text(`Medication: ${e.target.medication.value}`, 10, 40);
+    if (e.target.investigation.value) {
+      doc.text(`Investigation: ${e.target.investigation.value}`, 10, 50);
+    }
+  
+    // Generate the PDF as a blob
+    const pdfBlob = doc.output('blob');
+  
+    // Create FormData and append the blob
+    const formData = new FormData();
+
+    formData.append('pdf', pdfBlob, `Prescription-${patientDetails.name}-${currentDate}-${doctor.name}.pdf`);
+    formData.append('patientUUID', patientDetails.UUID);
+    formData.append('medication', e.target.medication.value);
+    formData.append('investigation', e.target.investigation.value);
+  
+    // Optionally, handle form data submission here
+    onPrescriptionSubmit(formData);
+  
+    // Close the modal
+    onClose();
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center text-gray-800">

@@ -41,8 +41,35 @@ const registerDoctor = async (req, res) => {
   let conn = await connection.getConnection();
   try {
     await conn.beginTransaction();
-
     const { name, email, degree, specialization, designation, dateOfBirth, phone, address, userType, password, hospital_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
+    // Save user to the database
+    const uuid = generateUuid();
+    const [results] = await conn.execute(query, [name, email, userType, hashedPassword, uuid]);
+    //Insert into patients table
+    const query2 = `INSERT INTO doctors (user_id, dateOfBirth, phone_number, address, degree, specialization, designation, hospital_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const [results2] = await conn.execute(query2, [results.insertId, dateOfBirth, phone, address, degree, specialization, designation, hospital_id]);
+    await registerUser.registerUserFunction(uuid, name, adminUUID);
+    await conn.commit();
+    // Handle successful insertion
+    res.json({ message: `Doctor account for ${name} created successfully` });
+  } catch (error) {
+    await conn.rollback()
+    res.status(500).json({ error: 'Error creating doctor account' });
+  }
+};
+
+const registerDoctorByHospital = async (req, res) => {
+  const adminUUID = req.session.user.UUID;
+  let conn = await connection.getConnection();
+  try {
+    await conn.beginTransaction();
+    const { name, email, degree, specialization, designation, dateOfBirth, phone, address, userType, password } = req.body;
+      const [hospitalID] = await conn.execute("SELECT hospital_id FROM hospitals WHERE user_id = ?", [req.session.user.userId]);
+      const hospital_id = hospitalID[0].hospital_id
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const query = `INSERT INTO users (name, email, userType, password, UUID) VALUES (?, ?, ?, ?, ?)`;
@@ -228,5 +255,5 @@ const authenticateToken = (req, res, next) => {
   // });
 };
 module.exports = {
-  registerHospital, registerDoctor, registerPatient, login, checkSession, logout, userInfo, authenticateToken
+  registerHospital, registerDoctor, registerPatient, login, checkSession, logout, userInfo, authenticateToken, registerDoctorByHospital
 }

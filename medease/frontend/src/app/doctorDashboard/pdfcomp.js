@@ -12,6 +12,7 @@ const PdfComp = ({props, fetchFromBlockchain}) => {
   const [isAllowed, setIsAllowed] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  const [permissionModal, setPermissionModal] = useState(false);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -84,7 +85,8 @@ const PdfComp = ({props, fetchFromBlockchain}) => {
             const errorText = reader.result;
             console.error('Error fetching file:', JSON.parse(errorText).error);
             setModalContent(JSON.parse(errorText).error);
-            setModalIsOpen(true);
+            // setModalIsOpen(true);
+            setPermissionModal(true)
         };
         reader.readAsText(error.response.data);
     } else {
@@ -93,7 +95,27 @@ const PdfComp = ({props, fetchFromBlockchain}) => {
     }
     }
   }
+  function closeModal() {
+    document.getElementById('my-modal').style.display = 'none';
+    setPermissionModal(false)
+}
 
+async function askPermission() {
+    // Implement the function to ask for permissions
+    console.log('Asking for permission...');
+    const response = await axios.post(
+      "http://localhost:8000/api/users/askPermission",
+      {fileName: pdfFile.fileName,
+        ownerID: pdfFile.ownerID
+       },
+      {
+        withCredentials: true
+      }
+
+    );
+    console.log(response.statusText == "OK")
+    closeModal();  // Optionally close the modal after the action
+}
   return (
     <div className="pdf-div p-5">
       {isPdf && isAllowed && (
@@ -115,10 +137,33 @@ const PdfComp = ({props, fetchFromBlockchain}) => {
       )}
 
       {isImage && isAllowed && <img src={URL.createObjectURL(new Blob([data], { type: 'image/jpeg' }))} alt="Image" />}
-      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+      {/* <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         {modalContent}
-      </Modal>
+      </Modal> */}
+      {!isAllowed && permissionModal && (<div>
+<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal"></div>
+
+
+<div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+
+    <div className="mt-3 text-center">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Notification</h3>
+
+        <div className="mt-2 px-7 py-5"> 
+            <p className="text-sm text-gray-500">{modalContent}</p>
+        </div>
     </div>
+
+
+    <div className="flex justify-around p-4">
+        <button className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-auto shadow-sm hover:bg-gray-400" onClick={()=> {closeModal()}}>Close</button>
+        <button className="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-auto shadow-sm hover:bg-blue-700" onClick={()=> {askPermission()}}>Ask Permission</button>
+    </div>
+</div>
+</div>)
+}
+    </div>
+    
   );
 };
 

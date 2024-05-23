@@ -124,7 +124,7 @@ const CreateDoctorForm = () => {
           {/* ... (other fields in Column 1) */}
 
           {/* Column 2 */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               htmlFor="hospital"
               className="block text-sm  text-gray-700"
@@ -138,7 +138,7 @@ const CreateDoctorForm = () => {
               required
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label
               htmlFor="designation"
@@ -157,7 +157,7 @@ const CreateDoctorForm = () => {
 
           
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               htmlFor="hospital_id"
               className="block text-sm  text-gray-700"
@@ -171,7 +171,7 @@ const CreateDoctorForm = () => {
               required
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <label

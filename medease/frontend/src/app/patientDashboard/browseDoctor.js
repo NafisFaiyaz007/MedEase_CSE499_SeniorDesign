@@ -11,6 +11,7 @@ const BrowseDoctors = () => {
   const [scheduleData, setScheduleData] = useState('');
   const [showModal, setShowModal] = useState(false)
   const modalRef = useRef();
+  const [buttonClicked, setButtonClicked] = useState(false);
 
 
 
@@ -78,6 +79,7 @@ const BrowseDoctors = () => {
         // console.log(data)
         setScheduleData(data)
         setShowModal(true)
+        setButtonClicked(true);
       }
       // Update the state with the fetched doctors
       // setAvailableDoctors(data);
@@ -126,7 +128,7 @@ const BrowseDoctors = () => {
           {filteredDoctors.map((doctor, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-md shadow-md flex flex-col justify-between"
+              className="bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 flex flex-col justify-between"
             >
               <div>
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
@@ -150,7 +152,7 @@ const BrowseDoctors = () => {
           ))}
         </div>
         {/* </div> */}
-        {scheduleData.length > 0 && (<div>
+        {buttonClicked && (<div>
           <div className="fixed inset-0 bg-black opacity-50" onClick={() => setScheduleData('')}></div>
           <div className={`fixed z-10 inset-0 overflow-y-auto `}>
             {/* Background overlay */}
@@ -164,7 +166,6 @@ const BrowseDoctors = () => {
                     {/* Table header */}
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b">Patient Name</th>
                         <th className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b">Day</th>
                         <th className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b">Date</th>
                         <th className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b">Appointment Time</th>
@@ -172,10 +173,10 @@ const BrowseDoctors = () => {
                       </tr>
                     </thead>
                     {/* Table body */}
+                    {scheduleData.length > 0 && (
                     <tbody className="bg-white divide-y divide-gray-200">
                       {scheduleData.map((scheduleItem) => (
                         <tr key={scheduleItem.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b">{scheduleItem.name}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">{getDay(scheduleItem.start_time)}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">{getDate(scheduleItem.start_time)}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">{getTime(scheduleItem.start_time)}</td>
@@ -185,9 +186,13 @@ const BrowseDoctors = () => {
                         </tr>
                       ))}
                     </tbody>
+                    
+        )}
                   </table>
                   <div className="flex justify-end mt-4">
-                    <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300" onClick={() => setScheduleData('')}>Close</button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300" onClick={() => {setScheduleData('');
+                      setButtonClicked(false);
+                    }}>Close</button>
                   </div>               
                  </div>
               </div>
@@ -196,8 +201,9 @@ const BrowseDoctors = () => {
           {modalContent}
         </Modal>
           </div>
-        </div>
+          </div>
         )}
+
 {/* 
         <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
           {modalContent}

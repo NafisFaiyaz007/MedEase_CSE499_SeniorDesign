@@ -3,46 +3,46 @@ import React, { useState, useEffect } from "react";
 const ViewProfile = () => {
   const [patientData, setPatientData] = useState(null);
 
-useEffect(() => {
-  const fetchPatientData = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/api/patients", {
-        method: "GET", // or "POST" based on your backend logic
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Fetched patient data:", data); // Log the fetched data
-        setPatientData(data[0]);
-      } else {
-        console.error("Failed to fetch patient data. Status:", response.status);
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/users/doctorProfile", {
+          method: "GET", // or "POST" based on your backend logic
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Fetched patient data:", data); // Log the fetched data
+          setPatientData(data[0]);
+        } else {
+          console.error("Failed to fetch patient data. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching patient data:", error);
-    }
-  };
+    };
 
-  fetchPatientData();
-}, []);
+    fetchPatientData();
+  }, []);
 
-function calculateAge(birthDate) {
-  const today = new Date();
-  const birthDateObj = new Date(birthDate);
-  let age = today.getFullYear() - birthDateObj.getFullYear();
-  const monthDiff = today.getMonth() - birthDateObj.getMonth();
+  function calculateAge(birthDate) {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDiff = today.getMonth() - birthDateObj.getMonth();
 
-  // If the birth month is greater than the current month or
-  // if they are in the same month but the birth day is greater than the current day,
-  // then decrement the age by 1
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+    // If the birth month is greater than the current month or
+    // if they are in the same month but the birth day is greater than the current day,
+    // then decrement the age by 1
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
       age--;
-  }
+    }
 
-  return age;
-}
+    return age;
+  }
 
   return (
     <div className="space-y-6">
@@ -57,27 +57,33 @@ function calculateAge(birthDate) {
               Personal Information:
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              {/* <div> */}
                 <p className="text-gray-700">
                   <strong>Name:</strong> {patientData.name}
                 </p>
                 <p className="text-gray-700">
-                  <strong>Age:</strong> {calculateAge(patientData.dateOfBirth)}
+                  <strong>Phone Number:</strong> {patientData.phone_number}
                 </p>
                 <p className="text-gray-700">
-                  <strong>Gender:</strong> {patientData.gender}
+                  <strong>Address:</strong> {patientData.address}
                 </p>
-              </div>
-              <div>
+                <p className="text-gray-700">
+                  <strong>Hospital:</strong> {patientData.hospitalName}
+                </p>
                 <p className="text-gray-700">
                   <strong>Email:</strong> {patientData.email}
                 </p>
-              </div>
-              <div>
-                <p className="text-gray-700">
-                  <strong>Hospital:</strong> {patientData.hospital_name}
-                </p>
-              </div>
+              <p className="text-gray-700">
+                <strong>Degree:</strong> {patientData.degree}
+              </p>
+              <p className="text-gray-700">
+                <strong>Specialization:</strong> {patientData.specialization}
+              </p>
+              <p className="text-gray-700">
+                <strong>Designation:</strong> {patientData.designation}
+              </p>
+
+
             </div>
           </div>
 

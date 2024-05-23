@@ -150,12 +150,12 @@ fetch("http://localhost:8000/api/users/doctor/removeAppointmentSlot", {
         <table className="min-w-full border border-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th
+              {/* <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b"
               >
                 Patient Name
-              </th>
+              </th> */}
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-bold text-red-600 uppercase tracking-wider border-b"
@@ -191,9 +191,9 @@ fetch("http://localhost:8000/api/users/doctor/removeAppointmentSlot", {
           <tbody className="bg-white divide-y divide-gray-200">
             {scheduleData.map((scheduleItem) => (
               <tr key={scheduleItem.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b">
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b">
                   {scheduleItem.name}
-                </td>
+                </td> */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">
                   {getDay(scheduleItem.start_time)}
                 </td>

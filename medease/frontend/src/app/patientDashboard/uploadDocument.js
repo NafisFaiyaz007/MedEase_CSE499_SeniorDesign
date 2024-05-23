@@ -129,7 +129,56 @@ const UploadDocuments = () => {
 
   const handleDownloadFile = async (file) => {
     console.log("handle download file");
-    console.log(file);
+    // console.log(file);
+    try {
+      // Create a FormData object
+      const formData = new FormData();
+      // Append the file to the FormData object
+      console.log("id: "+ file.ID)
+      formData.append("file", file);
+      formData.append("fileName", file.name)
+      formData.append("accessList", []);
+      formData.append("fileID", file.ID);
+      const body = {
+        fileID: file.ID//'patient1_8918a7b97ed45aed0c760ba5d4bbc304fdebe4194eedf22e23c72a105873693b'
+      };
+      const response = await axios.post(
+        "http://localhost:8000/api/users/patient/download",
+        body,
+        { responseType:'blob', withCredentials: true }
+
+      );
+      if (response.data) {
+        let contentType;
+        if(file.name?.endsWith(".pdf")){
+         contentType = "application/pdf";
+        } else {
+          contentType = "image/png"
+        }
+        const blob = new Blob([response.data], { type: contentType });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const contentDisposition = response.headers['content-disposition'];
+        let fileName = file.name;  // Default file name
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (fileNameMatch.length === 2) fileName = fileNameMatch[1];
+        }
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        link.remove();
+    }
+    
+
+    } catch (error) {
+      // console.error('Error fetching file:', error);
+      setModalContent(error.response?.data?.error || 'An unexpected error occurred');
+      setModalIsOpen(true);
+    }
+
   };
 
   const handleCloseModal = () => {
@@ -186,25 +235,25 @@ const UploadDocuments = () => {
                 <span>{file.fileName || file.name}</span>
                 <div className="flex items-center space-x-2" id="view">
                   <button
-                    className="bg-emerald-500 text-white px-2 py-1 rounded-md hover:bg-emerald-700"
+                    className="bg-emerald-600 text-white px-2 py-1 rounded-md hover:bg-emerald-700"
                     onClick={() => handleUploadFile(file)}
                   >
                     Upload
                   </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
+                  {/* <button
+                    className="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-700"
                     onClick={() => handleRemoveFile(index)}
                   >
                     Remove
-                  </button>
-                  <button
-                    className="bg-sky-500 text-white px-2 py-1 rounded-md hover:bg-sky-700"
+                  </button> */}
+                  {/* <button
+                    className="bg-sky-600 text-white px-2 py-1 rounded-md hover:bg-sky-700"
                     onClick={() => handleSendFile(file)}
                   >
                     Manage Access
-                  </button>
+                  </button> */}
                   <button
-                    className="bg-indigo-500 text-white px-2 py-1 rounded-md hover:bg-indigo-700"
+                    className="bg-indigo-600 text-white px-2 py-1 rounded-md hover:bg-indigo-700"
                     onClick={() => showPdf(file)}
                   >
                     View
@@ -235,12 +284,12 @@ const UploadDocuments = () => {
               >
                 <span>{file.fileName || file.name}</span>
                 <div className="flex items-center space-x-2" id="view">
-                  <button
-                    className="bg-emerald-500 text-white px-2 py-1 rounded-md hover:bg-emerald-700"
+                  {/* <button
+                    className="bg-emerald-600 text-white px-2 py-1 rounded-md hover:bg-emerald-700"
                     onClick={() => handleDownloadFile(file)}
                   >
                     Download
-                  </button>
+                  </button> */}
                   {/* <button
                     className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-green-700"
                     onClick={() => handleRemoveFile(index)}
@@ -248,13 +297,13 @@ const UploadDocuments = () => {
                     Remove
                   </button> */}
                   <button
-                    className="bg-sky-500 text-white px-2 py-1 rounded-md hover:bg-sky-700"
+                    className="bg-sky-600 text-white px-2 py-1 rounded-md hover:bg-sky-700"
                     onClick={() => handleSendFile(file)}
                   >
                     Manage Access
                   </button>
                   <button
-                    className="bg-indigo-500 text-white px-2 py-1 rounded-md hover:bg-indigo-600"
+                    className="bg-indigo-600 text-white px-2 py-1 rounded-md hover:bg-indigo-600"
                     onClick={() => {
                       setExists(true);
                       showPdf(file)

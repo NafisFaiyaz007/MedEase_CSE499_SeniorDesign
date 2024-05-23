@@ -34,6 +34,9 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
      fetchData();
    }, []);
 
+   const toggleUploadModal = () => {
+    setUploadModalOpen(!uploadModalOpen);
+};
    const openUploadModal = (patient) =>{
     setUploadModalOpen(true);
     setSelectedPatient(patient)
@@ -114,7 +117,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
               <b>Address: </b> {patient.address}
             </h6>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
-              <button
+              {/* <button
                 onClick={() => {
                   handlePatientSelection(patient);
                   // setSelectedPatient(patient);
@@ -122,7 +125,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
                 className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
               >
                 Delete Patient
-              </button>
+              </button> */}
               <button
                 onClick={() => {
                   setTransferModal(true);
@@ -131,7 +134,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
                 }}
                 className="bg-cyan-600 font-semibold text-white px-2 py-2 rounded-md focus:outline-none hover:bg-cyan-900 transition duration-300 w-full"
               >
-                Transfer Patient {patient.id}
+                Transfer Patient
               </button>
               <button
                 onClick={() => openUploadModal(patient)}
@@ -238,7 +241,7 @@ const PatientList = ({ handlePatientSelection, handleDeletePatient }) => {
           patient={selectedPatient.id}
         />
       )}
-      {uploadModalOpen && <UploadModal patient={selectedPatient} />}
+      {uploadModalOpen && <UploadModal patient={selectedPatient} onClose={toggleUploadModal}/>}
     </div>
   );
 };

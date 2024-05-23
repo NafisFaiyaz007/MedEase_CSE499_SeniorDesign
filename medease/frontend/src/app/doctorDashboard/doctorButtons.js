@@ -11,7 +11,17 @@ const DoctorDashboardHeader = ({ activeTab, setActiveTab }) => {
 
           {/* Tabs */}
           <div className="flex flex-col space-y-4">
-            <button
+          <button
+              onClick={() => setActiveTab("viewProfile")}
+              className={`${
+                activeTab === "viewProfile"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-600"
+              } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
+            >
+              View Profile
+            </button>
+            {/* <button
               onClick={() => setActiveTab("editAccount")}
               className={`${
                 activeTab === "editAccount"
@@ -20,7 +30,7 @@ const DoctorDashboardHeader = ({ activeTab, setActiveTab }) => {
               } px-6 py-3 rounded-md focus:outline-none hover:bg-blue-800 hover:text-white transition duration-300`}
             >
               Edit Account
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveTab("setAvailability")}
               className={`${
@@ -52,6 +62,7 @@ const DoctorDashboardHeader = ({ activeTab, setActiveTab }) => {
             >
               View Schedule
             </button>
+
           </div>
           </div>
   );

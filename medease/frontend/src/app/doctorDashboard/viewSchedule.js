@@ -168,47 +168,48 @@ const ViewSchedule = () => {
       </div>)}
       {/* Reports Modal */}
       {selectedPatient && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-          <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
-          <div className="bg-white p-4 rounded-md z-10">
-            <h2 className="text-xl font-semibold mb-2">
-              {selectedPatient.name}'s Reports
-            </h2>
-            {/* Display patient reports here */}
-            {reports.length>0 && <table className="w-full">
-              <thead>
-                <tr>
-                  <th>File Name</th>
-                  <th>Date Uploaded</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.map(report => (
-                  <tr key={report.ID}>
-                    <td>{report.fileName}</td>
-                    <td>{formatDate(report.uploaded)}</td>
-                    <td>
-                      <button
-                        onClick={() => showPdf(report)}//handleViewReport(report.ID)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>}
-            <button
-              onClick={closeReportsModal}
-              className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300 mt-2"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+  <div>
+    <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center overflow-y-auto">
+      <div className="bg-white p-4 rounded-md z-10 overflow-y-auto max-h-full">
+        <h2 className="text-xl font-semibold mb-2 sticky top-0 bg-white z-10">
+          {selectedPatient.name}'s Reports
+        </h2>
+        {reports.length>0 && <table className="w-full">
+          <thead>
+            <tr>
+              <th className="sticky top-0 bg-white z-10">File Name</th>
+              <th className="sticky top-0 bg-white z-10">Date Uploaded</th>
+              <th className="sticky top-0 bg-white z-10">Action</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 overflow-y-auto max-h-96">
+            {reports.map((report) => (
+              <tr key={report.ID}>
+                <td>{report.fileName}</td>
+                <td>{formatDate(report.uploaded)}</td>
+                <td>
+                  <button
+                    onClick={() => showPdf(report)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300"
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>}
+        <button
+          onClick={closeReportsModal}
+          className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-300 mt-2"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       {isFileModalOpen && (
         <div className="fixed z-100 inset-0 overflow-y-auto">
           <div

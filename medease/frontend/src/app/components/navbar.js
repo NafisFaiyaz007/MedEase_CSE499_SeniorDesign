@@ -69,13 +69,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from 'axios';
 import { useRouter } from "next/navigation";
+import useSessionChecker from "./sessionChecker";
 
 const Navbar = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
-
+  useSessionChecker();
   useEffect(() => {
     axios.get('http://localhost:8000/api/users/info', { withCredentials: true })
       .then(response => setUser(response.data))
@@ -98,6 +99,7 @@ const Navbar = () => {
       router.push('/login');
     } catch (error) {
       console.error('Logout failed', error);
+      router.push('/login');
       // Handle error if needed
     }
   };
@@ -105,6 +107,30 @@ const Navbar = () => {
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
   };
+
+  const markAsRead = async (notificationId, index) => {
+    console.log("clicked: "+ notificationId)
+    try {
+      // Send a request to your backend endpoint
+      const response = await fetch(`http://localhost:8000/api/users/notifications/read/${notificationId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+      });
+  
+      if (response.ok) {
+        // Update the state to remove the notification
+        setNotifications(prevNotifications => prevNotifications.filter((_, i) => i !== index));
+      } else {
+        console.error("Failed to mark notification as read");
+      }
+    } catch (error) {
+      console.error("Error marking notification as read: ", error);
+    }
+  };
+  
 
   return (
     <nav className="bg-slate-200 px-6 py-0 shadow-md mb-4">
@@ -140,7 +166,7 @@ const Navbar = () => {
               <div className="absolute right-0 mt-2 w-64 bg-white border rounded shadow-lg z-50">
                 <ul className="divide-y divide-gray-200">
                   {notifications.length > 0 && notifications.map((notification, index) => (
-                    <li key={index} className="px-4 py-2 text-sm text-gray-700">
+                    <li key={index} className="px-4 py-2 text-sm text-gray-700" onClick={() => markAsRead(notification.notification_id, index)}>
                       {notification.message}
                     </li>
                   ))}

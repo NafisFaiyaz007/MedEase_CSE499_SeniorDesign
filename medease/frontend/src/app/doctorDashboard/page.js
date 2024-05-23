@@ -11,10 +11,11 @@ import EditAccountForm from "./editAccountForm";
 import SetAvailabilityForm from "./setAvailabilityForm";
 import ViewSchedule from "./viewSchedule";
 import DoctorDashboardHeader from "./doctorButtons";
+import ViewProfile from "./viewProfile";
 
 
 const DoctorDashboard = () => {
- const [activeTab, setActiveTab] = useState("editAccount");
+ const [activeTab, setActiveTab] = useState("viewProfile");
 //  const [selectedDate, setSelectedDate] = React.useState(new Date());
 //  const [selectedTime, setSelectedTime] = React.useState("");
 
@@ -71,14 +72,16 @@ const DoctorDashboard = () => {
         {/* Right half */}
         <div className="flex-1">
           {/* Content based on active tab */}
-          {activeTab === "editAccount" && (
+                    {/* View Profile */}
+                    {activeTab === "viewProfile" && <ViewProfile />}
+          {/* {activeTab === "editAccount" && (
             <EditAccountForm
               doctorInfo={doctorInfo}
               handleEditAccount={DoctorFunctions.handleEditAccount}
               handleDeleteAccount={DoctorFunctions.handleDeleteAccount}
               handleEditAccountChange={DoctorFunctions.handleEditAccountChange}
             />
-          )}
+          )} */}
 
           {/* Set Availability */}
           {activeTab === "setAvailability" && (
@@ -105,6 +108,7 @@ const DoctorDashboard = () => {
           )}
           {/* View Schedule */}
           {activeTab === "viewSchedule" && <ViewSchedule />}
+
         </div>
       </div>
     </div>

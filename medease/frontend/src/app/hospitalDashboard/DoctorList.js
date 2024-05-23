@@ -47,12 +47,12 @@ const DoctorList = ({ handleDoctorSelection, handleDeleteDoctor }) => {
               <b>Designation:</b> {doctor.designation}
             </h6>
             {/* Delete Button */}
-            <button
+            {/* <button
               onClick={() => hospitalFunction.handleDoctorSelection(doctor)}
               className="bg-red-700 font-semibold text-white px-4 py-2 rounded-md focus:outline-none hover:bg-red-900 transition duration-300"
             >
               Delete Doctor
-            </button>
+            </button> */}
             {/* <button
               onClick={() => hospitalFunction.handleDoctorSelection(doctor)}
               className="bg-green-700 font-semibold text-white mx-5 px-4 py-2 rounded-md focus:outline-none hover:bg-green-900 transition duration-300"

@@ -3,6 +3,7 @@ import PrescriptionModal from "./prescription";
 import { handleGetReports, formatDate } from "./doctorFunctions";
 import PdfComp from "./pdfcomp";
 import { pdfjs } from "react-pdf";
+import axios from "axios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -62,9 +63,31 @@ const DoctorPatientList = ({ onDelete, onExamine }) => {
     setShowModal(false);
   };
 
-  const handlePrescriptionSubmit = (prescriptionDetails) => {
+  const handlePrescriptionSubmit = async (prescriptionDetails) => {
     // Handle the prescription submission logic here
     console.log("Prescription submitted:", prescriptionDetails);
+    console.log(prescriptionDetails)
+    try {
+      // Construct the fetch request to send the FormData to the server
+      const response = await fetch('http://localhost:8000/api/users/prescriptions', {
+        method: 'POST',
+        body: prescriptionDetails,
+        credentials: 'include', // Include cookies in case your API requires authentication
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const responseData = await response.json(); // Assuming your server responds with JSON
+      console.log('Server response:', responseData);
+  
+      // Close the modal after successful submission
+      handleCloseModal();
+    } catch (error) {
+      console.error('Failed to submit prescription:', error);
+      // Handle errors here, such as showing a message to the user
+    }
     // Close the modal after submission
     handleCloseModal();
   };

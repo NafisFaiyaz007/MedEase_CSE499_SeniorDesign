@@ -9,12 +9,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url
 ).toString();
 
-const UploadModal = ({patient}) => {
+const UploadModal = ({ patient, onClose }) => {
     const [fileToUpload, setFileToUpload] = useState([]);
     const [selectedPdfFile, setSelectedPdfFile] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSendFileModalOpen, setIsSendFileModalOpen] = useState(false);
     const modalRef = useRef();
+
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
 
     const handleChooseFile = async (file) => {
@@ -30,11 +34,11 @@ const UploadModal = ({patient}) => {
             formData.append("file", file);
             formData.append("fileName", file.name); // Name of the file
             formData.append("patientUUID", patient.UUID); // Patient's UUID
-        
+
             // Assuming 'accessList' is supposed to be sent as an array,
             // and needs to be stringified if it involves complex objects or arrays
             formData.append("accessList", JSON.stringify([])); // Send it as a JSON string if needed
-        
+
             // Make the axios POST request
             const response = await axios.post(
                 "http://localhost:8000/api/users/doctor/uploadFile",
@@ -46,14 +50,18 @@ const UploadModal = ({patient}) => {
                     withCredentials: true
                 }
             );
-        
+
             // Handle response here
-            console.log('File uploaded successfully:', response.data);
+            // console.log('File uploaded successfully:', response.data);
+            setModalContent(response.data)
+            setModalIsOpen(true)
         } catch (error) {
             // Handle error here
             console.error('Error uploading file:', error);
+            setModalContent("Failed to upload file");
+            setModalIsOpen(true)
         }
-        
+
         // try {
         //     // Create a FormData object
         //     const formData = new FormData();
@@ -96,6 +104,7 @@ const UploadModal = ({patient}) => {
         setIsModalOpen(false);
     };
 
+
     const handleRemoveFile = async (index) => {
         const updatedFiles = [...fileToUpload];
         updatedFiles.splice(index, 1);
@@ -114,10 +123,12 @@ const UploadModal = ({patient}) => {
         setIsModalOpen(true);
     };
     return (
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 
-            <div class="bg-sky-600 p-6 rounded-lg shadow-lg max-w-lg">
+            <div className="bg-sky-600 p-6 rounded-lg shadow-lg max-w-lg">
                 <div className="space-y-6">
+                    <button className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-300"
+                        onClick={onClose}>Close</button>
                     <h2 className="text-xl font-semibold text-white mb-4 text-center">
                         Upload/View Documents
                     </h2>
@@ -198,6 +209,9 @@ const UploadModal = ({patient}) => {
                     </div>
                 </div>
             )}
+            <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                {modalContent}
+            </Modal>
         </div>
     );
 }

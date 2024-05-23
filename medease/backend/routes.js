@@ -35,6 +35,8 @@ router.get('/get', fileController.getFile);
 router.use(userController.checkSession)
 //router.use(cookieParser());
 router.post('/registerDoctor', userController.registerDoctor);
+
+router.post('/registerDoctor2', userController.registerDoctorByHospital);
 router.post('/registerAdmin', registerAdmin.registerAdmin);
 router.post('/registerUser', registerUser.registerUserApi);
 router.post('/patient/uploadFile', upload.single('file'), patientFunction.uploadFile);
@@ -81,7 +83,11 @@ router.post("/patient/bookSlot", utils.patientBookSlot);
 router.get("/patient/getPatientAppointments", utils.getPatientAppointments);
 router.get("/doctor/completeCheckup/:appointmentID", utils.completeCheckup);
 router.get('/notifications', utils.notifications);
-router.post('/notifications/read', utils.markAsRead);
+router.post('/notifications/read/:notificationId', utils.markAsRead);
+router.post('/askPermission', utils.askPermission);
+router.get('/doctorProfile', utils.doctorProfile);
+router.post('/patient/download', patientFunction.downloadFile);
+router.post('/prescriptions', upload.any(), doctorFunction.uploadPrescription);
 
 
   
