@@ -1,7 +1,7 @@
 # MedEase: A Blockchain-Based Electronic Health Record System
 
 MedEase is a blockchain-powered Electronic Health Record (EHR) system that aims to revolutionize healthcare data management. By leveraging blockchain technology, MedEase ensures secure, efficient, and transparent handling of patient records, empowering patients and healthcare providers alike.
-
+![MedEase Poster](./Documents/499%20thesis%20poster%20Blockchain%20based%20Electronic%20health%20record%20system.png)
 ## Features
 
 - **Secure Data Management**: Uses blockchain to ensure data integrity and security.
