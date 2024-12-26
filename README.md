@@ -14,10 +14,9 @@ MedEase is a blockchain-powered Electronic Health Record (EHR) system that aims 
 
 - **Frontend**: React.js
 - **Backend**: Node.js, Express.js
-- **Blockchain**: Ethereum (or preferred blockchain platform)
-- **Database**: MongoDB
-- **Authentication**: JWT (JSON Web Tokens)
-- **Smart Contracts**: Solidity
+- **Blockchain**: Hyperledger Fabric
+- **Database**: MySQL
+- **Authentication**: express-mysql-session
 - **Design Framework**: Tailwind CSS
 
 ## Installation
@@ -28,8 +27,8 @@ Follow these steps to set up the project locally:
 
 - Node.js (v14 or higher)
 - npm or yarn
-- MongoDB
-- Metamask (or any Ethereum-compatible wallet)
+- MySQL
+- Hyperledger Fabric
 
 ### Steps
 
@@ -99,7 +98,7 @@ MedEase_CSE499_SeniorDesign/
 ## Contributors
 
 - **Chowdhury Nafis Faiyaz** ([NafisFaiyaz007](https://github.com/NafisFaiyaz007))
-- **Ayman Ibne Hakim**
+- **Ayman Ibne Hakim** ([AymanIHakim](https://github.com/AymanIHakim))
 
 ## License
 
